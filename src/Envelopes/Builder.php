@@ -74,7 +74,7 @@ class Builder
      * @param string $userId
      * @param int|null $timestamp
      * @param string|null $email
-     * @param string|null $failed
+     * @param bool|null $failed
      *
      * @return Builder
      */
