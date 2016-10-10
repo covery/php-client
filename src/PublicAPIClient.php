@@ -53,12 +53,17 @@ class PublicAPIClient
     {
         $request = $this->credentials->signRequest($request);
         try {
+            $this->logger->info('Sending request to ' . $request->getUri());
+            $before = microtime(true);
             $response = $this->transport->send($request);
+            $this->logger->info(sprintf('Request done in %.2f', microtime(true) - $before));
         } catch (\Exception $inner) {
+            $this->logger->error($inner->getMessage(), ['exception' => $inner]);
             // Wrapping exception
             throw new Exception('Error sending request', 0, $inner);
         }
         $code = $response->getStatusCode();
+        $this->logger->debug('Received status code ' . $code);
 
         if ($code >= 400) {
             // Analyzing response
@@ -67,6 +72,7 @@ class PublicAPIClient
                 $message = $response->getHeaderLine('X-Maxwell-Error-Message');
                 $type = $response->getHeaderLine('X-Maxwell-Error-Type');
                 if (strpos($type, 'AuthorizationRequiredException') !== false) {
+                    $this->logger->error('Authentication failure ' . $message);
                     throw new AuthException($message, $code);
                 }
 
@@ -74,9 +80,14 @@ class PublicAPIClient
                     case 'Empty auth token':
                     case 'Empty signature':
                     case 'Empty nonce':
+                        $this->logger->error('Authentication failure ' . $message);
                         throw new AuthException($message, $code);
                 }
+
+                $this->logger->error('Covery error ' . $message);
+                throw new DeliveredException($message, $code);
             }
+
 
             throw new Exception("Communication failed with status code {$code}");
         }

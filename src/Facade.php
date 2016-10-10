@@ -48,9 +48,6 @@ class Facade
     public static function setCredentials(CredentialsInterface $credentials)
     {
         self::$credentials = $credentials;
-        if (self::$transport !== null) {
-            self::$client = new PublicAPIClient(self::$credentials, self::$transport, self::$logger);
-        }
     }
 
     /**
@@ -61,9 +58,25 @@ class Facade
     public static function setTransport(TransportInterface $transport)
     {
         self::$transport = $transport;
-        if (self::$credentials !== null) {
-            self::$client = new PublicAPIClient(self::$credentials, self::$transport, self::$logger);
+    }
+
+    /**
+     * Utility method to take client
+     *
+     * @return PublicAPIClient
+     * @throws Exception
+     */
+    private static function getClient()
+    {
+        if (self::$client === null) {
+            if (self::$credentials !== null && self::$transport !== null) {
+                self::$client = new PublicAPIClient(self::$credentials, self::$transport, self::$logger);
+            } else {
+                throw new Exception('Unable to obtain client - credentials and/or transport not set');
+            }
         }
+
+        return self::$client;
     }
 
     /**
@@ -79,11 +92,7 @@ class Facade
      */
     public static function ping()
     {
-        if (self::$client === null) {
-            throw new Exception('Credentials and/or transport not provided');
-        }
-
-        return self::$client->ping();
+        return self::getClient()->ping();
     }
 
     /**
@@ -96,11 +105,7 @@ class Facade
      */
     public static function sendEvent(EnvelopeInterface $envelope)
     {
-        if (self::$client === null) {
-            throw new Exception('Credentials and/or transport not provided');
-        }
-
-        return self::$client->sendEvent($envelope);
+        return self::getClient()->sendEvent($envelope);
     }
 
     /**
@@ -112,10 +117,6 @@ class Facade
      */
     public static function makeDecision(EnvelopeInterface $envelope)
     {
-        if (self::$client === null) {
-            throw new Exception('Credentials and/or transport not provided');
-        }
-
-        return self::$client->makeDecision($envelope);
+        return self::getClient()->makeDecision($envelope);
     }
 }
