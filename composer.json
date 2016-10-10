@@ -1,0 +1,31 @@
+{
+  "name": "covery/client",
+  "description": "Covery official client",
+  "homepage": "https://covery.ai/",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Anton Dorofieiev",
+      "email": "gotterdemarung@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Covery\\Client\\": "src/"
+    }
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "psr/http-message": "~1.0",
+    "psr/log": "~1.0",
+    "guzzlehttp/psr7": ">=1.0.0"
+  },
+  "suggest": {
+    "guzzlehttp/guzzle": ">=6.0.0"
+  },
+  "require-dev": {
+    "guzzlehttp/guzzle": "6.2.2"
+  }
+}
