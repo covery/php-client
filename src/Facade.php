@@ -31,6 +31,11 @@ class Facade
     private static $logger;
 
     /**
+     * @var string|null
+     */
+    private static $url = null;
+
+    /**
      * Set logger
      *
      * @param LoggerInterface $logger
@@ -61,6 +66,16 @@ class Facade
     }
 
     /**
+     * Set custom Covery url
+     *
+     * @param string $url
+     */
+    public static function setOverrideUrl($url)
+    {
+        self::$url = $url;
+    }
+
+    /**
      * Utility method to take client
      *
      * @return PublicAPIClient
@@ -70,7 +85,7 @@ class Facade
     {
         if (self::$client === null) {
             if (self::$credentials !== null && self::$transport !== null) {
-                self::$client = new PublicAPIClient(self::$credentials, self::$transport, self::$logger);
+                self::$client = new PublicAPIClient(self::$credentials, self::$transport, self::$url, self::$logger);
             } else {
                 throw new Exception('Unable to obtain client - credentials and/or transport not set');
             }
