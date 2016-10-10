@@ -2,6 +2,8 @@
 
 namespace Covery\Client;
 
+use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Requests\Event;
 use Covery\Client\Requests\Ping;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
@@ -25,6 +27,11 @@ class PublicAPIClient
     private $logger;
 
     /**
+     * @var ValidatorV1
+     */
+    private $validator;
+
+    /**
      * Client constructor.
      * @param CredentialsInterface $credentials
      * @param TransportInterface $transport
@@ -38,12 +45,18 @@ class PublicAPIClient
         $this->credentials = $credentials;
         $this->transport = $transport;
         $this->logger = $logger === null ? new NullLogger() : $logger;
+        $this->validator = new ValidatorV1();
     }
 
     private function send(RequestInterface $request)
     {
         $request = $this->credentials->signRequest($request);
-        $response = $this->transport->send($request);
+        try {
+            $response = $this->transport->send($request);
+        } catch (\Exception $inner) {
+            // Wrapping exception
+            throw new Exception('Error sending request', 0, $inner);
+        }
         $code = $response->getStatusCode();
 
         if ($code >= 400) {
@@ -53,14 +66,14 @@ class PublicAPIClient
                 $message = $response->getHeaderLine('X-Maxwell-Error-Message');
                 $type = $response->getHeaderLine('X-Maxwell-Error-Type');
                 if (strpos($type, 'AuthorizationRequiredException') !== false) {
-                    throw new AuthException($message);
+                    throw new AuthException($message, $code);
                 }
 
                 switch ($message) {
                     case 'Empty auth token':
                     case 'Empty signature':
                     case 'Empty nonce':
-                        throw new AuthException($message);
+                        throw new AuthException($message, $code);
                 }
             }
 
@@ -107,7 +120,7 @@ class PublicAPIClient
      * On any problem (network, credentials, server side) this method
      * will throw an exception
      *
-     * @return mixed
+     * @return string
      * @throws Exception
      */
     public function ping()
@@ -118,5 +131,28 @@ class PublicAPIClient
         }
 
         return $data['level'];
+    }
+
+    /**
+     * Sends envelope to Covery and returns it's ID on Covery side
+     * Before sending, validation is performed
+     *
+     * @param EnvelopeInterface $envelope
+     * @return int
+     * @throws Exception
+     */
+    public function sendEvent(EnvelopeInterface $envelope)
+    {
+        // Validating
+        $this->validator->validate($envelope);
+
+        // Sending
+        $data = $this->readJson($this->send(new Event($envelope)));
+
+        if (!is_array($data) || !isset($data['requestId']) || !is_int($data['requestId'])) {
+            throw new Exception("Malformed response");
+        }
+
+        return $data['requestId'];
     }
 }

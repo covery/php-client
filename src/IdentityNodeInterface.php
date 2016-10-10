@@ -10,7 +10,7 @@ namespace Covery\Client;
  *
  * @package Covery\Client
  */
-interface IdentityNode
+interface IdentityNodeInterface
 {
     /**
      * Returns Identity type

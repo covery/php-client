@@ -85,4 +85,21 @@ class Facade
 
         return self::$client->ping();
     }
+
+    /**
+     * Sends envelope to Covery and returns it's ID on Covery side
+     * Before sending, validation is performed
+     *
+     * @param EnvelopeInterface $envelope
+     * @return int
+     * @throws Exception
+     */
+    public static function sendEvent(EnvelopeInterface $envelope)
+    {
+        if (self::$client === null) {
+            throw new Exception('Credentials and/or transport not provided');
+        }
+
+        return self::$client->sendEvent($envelope);
+    }
 }

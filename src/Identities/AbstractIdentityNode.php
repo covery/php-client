@@ -2,7 +2,7 @@
 
 namespace Covery\Client\Identities;
 
-use Covery\Client\IdentityNode;
+use Covery\Client\IdentityNodeInterface;
 
 /**
  * Class AbstractIdentityNode
@@ -20,7 +20,7 @@ use Covery\Client\IdentityNode;
  *
  * @package Covery\Client
  */
-abstract class AbstractIdentityNode implements IdentityNode
+abstract class AbstractIdentityNode implements IdentityNodeInterface
 {
     /**
      * @var string
