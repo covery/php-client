@@ -1,6 +1,7 @@
 <?php
 
 namespace Covery\Client;
+
 use Psr\Log\LoggerInterface;
 
 /**

@@ -33,7 +33,7 @@ class PublicAPIClient
     public function __construct(
         CredentialsInterface $credentials,
         TransportInterface $transport,
-        LoggerInterface $logger= null
+        LoggerInterface $logger = null
     ) {
         $this->credentials = $credentials;
         $this->transport = $transport;
