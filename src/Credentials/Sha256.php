@@ -27,9 +27,13 @@ class Sha256 implements CredentialsInterface
     {
         if (!is_string($token)) {
             throw new \InvalidArgumentException('Token must be string');
+        } elseif (strlen($token) !== 32) {
+            throw new \InvalidArgumentException('Token must be exact 32 characters long');
         }
         if (!is_string($secret)) {
             throw new \InvalidArgumentException('Secret must be string');
+        } elseif (strlen($secret) !== 32) {
+            throw new \InvalidArgumentException('Secret must be exact 32 characters long');
         }
         if (!function_exists('hash')) {
             throw new \Exception('Unable to build Sha256 credentials - function "hash" not exists');
