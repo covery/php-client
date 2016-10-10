@@ -233,6 +233,7 @@ class Builder
      * Provides website URL to envelope
      *
      * @param string $websiteUrl
+     *
      * @return $this
      */
     public function addWebsiteData($websiteUrl = '')
@@ -241,6 +242,7 @@ class Builder
             throw new \InvalidArgumentException('Website URL must be string');
         }
 
+        $this->replace('website_url', $websiteUrl);
         return $this;
     }
 
