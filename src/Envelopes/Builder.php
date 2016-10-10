@@ -207,7 +207,7 @@ class Builder
      * Replaces value in internal array if provided value not empty
      *
      * @param string $key
-     * @param string|int|float|null $value
+     * @param string|int|float|bool|null $value
      */
     private function replace($key, $value)
     {
