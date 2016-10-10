@@ -124,6 +124,14 @@ class Envelope implements EnvelopeInterface
     /**
      * @inheritDoc
      */
+    public function count()
+    {
+        return count($this->data);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function toArray()
     {
         return $this->data;

@@ -9,7 +9,7 @@ namespace Covery\Client;
  *
  * @package Covery\Client
  */
-interface EnvelopeInterface extends \IteratorAggregate, \ArrayAccess
+interface EnvelopeInterface extends \IteratorAggregate, \ArrayAccess, \Countable
 {
     /**
      * @return string

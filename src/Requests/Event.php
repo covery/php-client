@@ -14,25 +14,10 @@ use GuzzleHttp\Psr7\Request;
  *
  * @package Covery\Client\Requests
  */
-class Event extends Request
+class Event extends AbstractEnvelopeRequest
 {
     public function __construct(EnvelopeInterface $envelope)
     {
-        // Building request
-        $ids = array();
-        foreach ($envelope->getIdentities() as $id) {
-            $ids[] = $id->getType() . '=' . $id->getId();
-        }
-
-        $packet = array('type' => $envelope->getType(), 'sequence_id' => $envelope->getSequenceId());
-
-        parent::__construct(
-            'POST',
-            TransportInterface::DEFAULT_URL . 'api/sendEvent',
-            array(
-                'X-Identities' => implode('&', $ids)
-            ),
-            json_encode(array_merge($packet, $envelope->toArray()))
-        );
+        parent::__construct('api/sendEvent', $envelope);
     }
 }

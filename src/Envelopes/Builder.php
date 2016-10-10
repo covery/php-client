@@ -32,6 +32,7 @@ class Builder
      * @param int|null $timestamp If null provided, takes current time
      * @param bool|null $isEmailConfirmed
      * @param bool|null $idPhoneConfirmed
+     *
      * @return Builder
      */
     public static function confirmationEvent(
@@ -63,6 +64,49 @@ class Builder
             $isEmailConfirmed,
             $idPhoneConfirmed,
             null
+        );
+    }
+
+    /**
+     * Returns builder for login event
+     *
+     * @param string $sequenceId
+     * @param string $userId
+     * @param int|null $timestamp
+     * @param string|null $email
+     * @param string|null $failed
+     *
+     * @return Builder
+     */
+    public static function loginEvent(
+        $sequenceId,
+        $userId,
+        $timestamp = null,
+        $email = null,
+        $failed = null
+    ) {
+        $builder = new self('login', $sequenceId);
+        if ($timestamp === null) {
+            $timestamp = time();
+        }
+
+        return $builder->addUserData(
+            $email,
+            $userId,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $timestamp,
+            null,
+            null,
+            null,
+            $failed
         );
     }
 
