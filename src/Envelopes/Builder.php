@@ -111,6 +111,63 @@ class Builder
     }
 
     /**
+     * Returns builder for registration event
+     *
+     * @param string $sequenceId
+     * @param string $userId
+     * @param int|null $timestamp
+     * @param string|null $email
+     * @param string|null $userName
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param int|null $age
+     * @param string|null $gender
+     * @param string|null $phone
+     * @param string|null $country
+     * @param string|null $socialType
+     *
+     * @return Builder
+     */
+    public static function registrationEvent(
+        $sequenceId,
+        $userId,
+        $timestamp = null,
+        $email = null,
+        $userName = null,
+        $firstName = null,
+        $lastName = null,
+        $age = null,
+        $gender = null,
+        $phone = null,
+        $country = null,
+        $socialType = null
+    ) {
+        $builder = new self('registration', $sequenceId);
+        if ($timestamp === null) {
+            $timestamp = time();
+        }
+
+        return $builder->addUserData(
+            $email,
+            $userId,
+            $phone,
+            $userName,
+            $firstName,
+            $lastName,
+            $gender,
+            $age,
+            $country,
+            $socialType,
+            $timestamp,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+    }
+
+    /**
      * Builder constructor.
      *
      * @param string $envelopeType
