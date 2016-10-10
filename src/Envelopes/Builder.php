@@ -27,8 +27,8 @@ class Builder
     /**
      * Returns builder for confirmation event
      *
-     * @param $sequenceId
-     * @param $userId
+     * @param string $sequenceId
+     * @param string $userId
      * @param int|null $timestamp If null provided, takes current time
      * @param bool|null $isEmailConfirmed
      * @param bool|null $idPhoneConfirmed
@@ -106,7 +106,7 @@ class Builder
      * Replaces value in internal array if provided value not empty
      *
      * @param string $key
-     * @param string|int|float $value
+     * @param string|int|float|null $value
      */
     private function replace($key, $value)
     {
@@ -146,9 +146,9 @@ class Builder
     /**
      * Provides IP information for envelope
      *
-     * @param string $ip User's IP address
-     * @param string $realIp User's real IP address, if available
-     * @param string $merchantIp Your website's IP address
+     * @param string|null $ip User's IP address
+     * @param string|null $realIp User's real IP address, if available
+     * @param string|null $merchantIp Your website's IP address
      *
      * @return $this
      */
@@ -174,21 +174,21 @@ class Builder
     /**
      * Provides browser information for envelope
      *
-     * @param string $deviceFingerprint
-     * @param string $userAgent
-     * @param string $cpuClass
-     * @param string $screenOrientation
-     * @param string $screenResolution
-     * @param string $os
+     * @param string|null $deviceFingerprint
+     * @param string|null $userAgent
+     * @param string|null $cpuClass
+     * @param string|null $screenOrientation
+     * @param string|null $screenResolution
+     * @param string|null $os
      * @param int|null $timezoneOffset
-     * @param string $languages
-     * @param string $language
-     * @param string $languageBrowser
-     * @param string $languageUser
-     * @param string $languageSystem
-     * @param bool $cookieEnabled
-     * @param bool $doNotTrack
-     * @param bool $ajaxValidation
+     * @param string|null $languages
+     * @param string|null $language
+     * @param string|null $languageBrowser
+     * @param string|null $languageUser
+     * @param string|null $languageSystem
+     * @param bool|null $cookieEnabled
+     * @param bool|null $doNotTrack
+     * @param bool|null $ajaxValidation
      *
      * @return $this
      */
@@ -277,22 +277,22 @@ class Builder
     /**
      * Provides user data for envelope
      *
-     * @param string $email
-     * @param string $userId
-     * @param string $phone
-     * @param string $userName
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $gender
-     * @param int $age
-     * @param string $country
-     * @param string $socialType
-     * @param int $registrationTimestamp
-     * @param int $loginTimeStamp
-     * @param int $confirmationTimeStamp
-     * @param bool $emailConfirmed
-     * @param bool $phoneConfirmed
-     * @param bool $loginFailed
+     * @param string|null $email
+     * @param string|null $userId
+     * @param string|null $phone
+     * @param string|null $userName
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $gender
+     * @param int|null $age
+     * @param string|null $country
+     * @param string|null $socialType
+     * @param int|null $registrationTimestamp
+     * @param int|null $loginTimeStamp
+     * @param int|null $confirmationTimeStamp
+     * @param bool|null $emailConfirmed
+     * @param bool|null $phoneConfirmed
+     * @param bool|null $loginFailed
      *
      * @return $this
      */
@@ -389,17 +389,17 @@ class Builder
     /**
      * Provides credit card data to envelope
      *
-     * @param string $transactionId
-     * @param string $transactionSource
-     * @param string $transactionType
-     * @param string $transactionMode
-     * @param string $transactionTimestamp
-     * @param string $transactionCurrency
-     * @param string $transactionAmount
-     * @param float $amountConverted
-     * @param string $paymentMethod
-     * @param string $paymentSystem
-     * @param string $paymentMidName
+     * @param string|null $transactionId
+     * @param string|null $transactionSource
+     * @param string|null $transactionType
+     * @param string|null $transactionMode
+     * @param string|null $transactionTimestamp
+     * @param string|null $transactionCurrency
+     * @param string|null $transactionAmount
+     * @param float|null $amountConverted
+     * @param string|null $paymentMethod
+     * @param string|null $paymentSystem
+     * @param string|null $paymentMidName
      *
      * @return $this
      */
@@ -468,11 +468,11 @@ class Builder
     /**
      * Provides Card data to envelope
      *
-     * @param int $cardBin
-     * @param string $cardLast4
-     * @param int $expirationMonth
-     * @param int $expirationYear
-     * @param string $cardId
+     * @param int|null $cardBin
+     * @param string|null $cardLast4
+     * @param int|null $expirationMonth
+     * @param int|null $expirationYear
+     * @param string|null $cardId
      *
      * @return $this
      */
@@ -511,14 +511,14 @@ class Builder
     /**
      * Provides billing data to envelope
      *
-     * @param string $billingFirstName
-     * @param string $billingLastName
-     * @param string $billingFullName
-     * @param string $billingCountry
-     * @param string $billingState
-     * @param string $billingCity
-     * @param string $billingAddress
-     * @param string $billingZip
+     * @param string|null $billingFirstName
+     * @param string|null $billingLastName
+     * @param string|null $billingFullName
+     * @param string|null $billingCountry
+     * @param string|null $billingState
+     * @param string|null $billingCity
+     * @param string|null $billingAddress
+     * @param string|null $billingZip
      *
      * @return $this
      */
@@ -572,9 +572,9 @@ class Builder
     /**
      * Provides product information to envelope
      *
-     * @param float $productQuantity
-     * @param string $productName
-     * @param string $productDescription
+     * @param float|null $productQuantity
+     * @param string|null $productName
+     * @param string|null $productDescription
      *
      * @return $this
      */
