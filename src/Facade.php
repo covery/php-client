@@ -102,4 +102,20 @@ class Facade
 
         return self::$client->sendEvent($envelope);
     }
+
+    /**
+     * Sends envelope to Covery for analysis
+     *
+     * @param EnvelopeInterface $envelope
+     * @return Result
+     * @throws Exception
+     */
+    public static function makeDecision(EnvelopeInterface $envelope)
+    {
+        if (self::$client === null) {
+            throw new Exception('Credentials and/or transport not provided');
+        }
+
+        return self::$client->makeDecision($envelope);
+    }
 }

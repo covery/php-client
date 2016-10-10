@@ -3,6 +3,7 @@
 namespace Covery\Client;
 
 use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\Ping;
 use Psr\Http\Message\RequestInterface;
@@ -154,5 +155,37 @@ class PublicAPIClient
         }
 
         return $data['requestId'];
+    }
+
+    /**
+     * Sends envelope to Covery for analysis
+     *
+     * @param EnvelopeInterface $envelope
+     * @return Result
+     * @throws Exception
+     */
+    public function makeDecision(EnvelopeInterface $envelope)
+    {
+        // Validating
+        $this->validator->validate($envelope);
+
+        // Sending
+        $data = $this->readJson($this->send(new Decision($envelope)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        try {
+            return new Result(
+                $data['requestId'],
+                $data['score'],
+                $data['accept'],
+                $data['reject'],
+                $data['manual']
+            );
+        } catch (\Exception $error) {
+            throw new Exception('Malformed response', 0, $error);
+        }
     }
 }
