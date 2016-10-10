@@ -60,7 +60,7 @@ class PublicAPIClient
         } catch (\Exception $inner) {
             $this->logger->error($inner->getMessage(), ['exception' => $inner]);
             // Wrapping exception
-            throw new Exception('Error sending request', 0, $inner);
+            throw new IoException('Error sending request', 0, $inner);
         }
         $code = $response->getStatusCode();
         $this->logger->debug('Received status code ' . $code);
