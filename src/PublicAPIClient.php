@@ -6,7 +6,6 @@ use Covery\Client\Envelopes\ValidatorV1;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\Ping;
-use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -35,37 +34,30 @@ class PublicAPIClient
     private $validator;
 
     /**
-     * @var string|null
-     */
-    private $url;
-
-    /**
      * Client constructor.
      * @param CredentialsInterface $credentials
      * @param TransportInterface $transport
-     * @param string|null $overrideURl
      * @param LoggerInterface|null $logger
      */
     public function __construct(
         CredentialsInterface $credentials,
         TransportInterface $transport,
-        $overrideURl = null,
         LoggerInterface $logger = null
     ) {
         $this->credentials = $credentials;
         $this->transport = $transport;
         $this->logger = $logger === null ? new NullLogger() : $logger;
         $this->validator = new ValidatorV1();
-        if ($overrideURl !== null) {
-            if (substr($overrideURl, -1) != '/') {
-                $overrideURl .= '/';
-            }
-
-            $this->url = $overrideURl;
-        }
     }
 
-    private function send(RequestInterface $request)
+    /**
+     * Sends PSR-7 compatible request to Covery and returns
+     *
+     * @param RequestInterface $request
+     * @return string
+     * @throws IoException
+     */
+    public function send(RequestInterface $request)
     {
         $request = $this->prepareRequest($request);
         try {
@@ -96,16 +88,6 @@ class PublicAPIClient
      */
     private function prepareRequest(RequestInterface $request)
     {
-        $requestUrl = strval($request->getUri());
-        if ($this->url !== null
-            && substr($requestUrl, 0, strlen(TransportInterface::DEFAULT_URL)) === TransportInterface::DEFAULT_URL
-        ) {
-            // Replacing
-            $request = $request->withUri(
-                new Uri(str_replace(TransportInterface::DEFAULT_URL, $this->url, $requestUrl))
-            );
-        }
-
         return $this->credentials->signRequest($request);
     }
 
