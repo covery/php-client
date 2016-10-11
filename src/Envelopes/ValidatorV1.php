@@ -4,6 +4,7 @@ namespace Covery\Client\Envelopes;
 
 use Covery\Client\EnvelopeInterface;
 use Covery\Client\EnvelopeValidationException;
+use Covery\Client\IdentityNodeInterface;
 
 class ValidatorV1
 {
@@ -144,51 +145,115 @@ class ValidatorV1
     );
 
     /**
-     * Checks envelope validity and throws an exception on error
+     * Analyzes SequenceID
+     *
+     * @param string $sequenceId
+     * @return string[]
+     */
+    public function analyzeSequenceId($sequenceId)
+    {
+        if (!is_string($sequenceId)) {
+            return array('SequenceID is not a string');
+        }
+        $len = strlen($sequenceId);
+        if ($len < 6 || $len > 40) {
+            return array(sprintf(
+                'Invalid SequenceID length. It must be in range [6, 40], but %d received.',
+                $len
+            ));
+        }
+
+        return array();
+    }
+
+    /**
+     * Analyzes identities from envelope
+     *
+     * @param IdentityNodeInterface[] $identities
+     * @return string
+     */
+    public function analyzeIdentities(array $identities)
+    {
+        $detail = array();
+        if (count($identities) === 0) {
+            $detail[] = 'At least one Identity must be supplied';
+        } else {
+            foreach ($identities as $i => $identity) {
+                if (!$identity instanceof IdentityNodeInterface) {
+                    $detail[] = $i . '-th elements of Identities not implements IdentityNodeInterface';
+                }
+            }
+        }
+
+        return $detail;
+    }
+
+    /**
+     * Analyzes envelope type and mandatory fields
      *
      * @param EnvelopeInterface $envelope
-     * @throws EnvelopeValidationException
+     * @return string[]
      */
-    public function validate(EnvelopeInterface $envelope)
+    public function analyzeTypeAndMandatoryFields(EnvelopeInterface $envelope)
     {
-        $details = [];
-
-        // Checking sequenceId
-        if (strlen($envelope->getSequenceId()) < 6 || strlen($envelope->getSequenceId()) > 40) {
-            $details[] = sprintf(
-                'Invalid SequenceID length. It must be in range [6, 40], but %d received.',
-                strlen($envelope->getSequenceId())
+        $type = $envelope->getType();
+        if (!is_string($type)) {
+            return array('Envelope type must be string');
+        } elseif (!isset(self::$types[$type])) {
+            return array(
+                sprintf('Envelope type "%s" not supported by this client version', $type)
             );
-        }
-
-        // Checking identity nodes
-        if (count($envelope->getIdentities()) === 0) {
-            $details[] = 'At least one Identity must be supplied';
-        }
-
-        // Checking envelope type
-        if (!isset(self::$types[$envelope->getType()])) {
-            $details[] = sprintf('Envelope type "%s" not supported by this client version', $envelope->getType());
         } else {
-            $typeInfo = self::$types[$envelope->getType()];
+            $details = array();
+            $typeInfo = self::$types[$type];
+
             // Mandatory fields check
             foreach ($typeInfo['mandatory'] as $name) {
                 if (!isset($envelope[$name]) || empty($envelope[$name])) {
                     $details[] = sprintf(
                         'Field "%s" is mandatory for "%s", but not provided',
                         $name,
-                        $envelope->getType()
+                        $type
                     );
                 }
             }
 
-            // Per field check
+            // Field presence check
             $fields = array_merge($typeInfo['mandatory'], $typeInfo['optional']);
             $customCount = 0;
             foreach ($envelope as $key => $value) {
-                // Is custom?
-                if (strlen($key) >= 7 && substr($key, 0, 7) === 'custom_') {
+                if ($this->isCustom($type)) {
                     $customCount++;
+                }
+                if (!in_array($key, $fields)) {
+                    $details[] = sprintf('Field "%s" not found in "%s"', $key, $envelope->getType());
+                }
+            }
+
+            if ($customCount > 0) {
+                $details[] = sprintf('Expected 10 or less custom fields, but %d provided', $customCount);
+            }
+
+            return $details;
+        }
+    }
+
+    /**
+     * Analyzes field types
+     *
+     * @param EnvelopeInterface $envelope
+     * @return array
+     */
+    public function analyzeFieldTypes(EnvelopeInterface $envelope)
+    {
+        $type = $envelope->getType();
+        if (is_string($type) && isset(self::$types[$type])) {
+            $details = array();
+
+            // Per field check
+            foreach ($envelope as $key => $value) {
+                // Is custom?
+                if ($this->isCustom($key)) {
                     if (!is_string($value)) {
                         $details[] = sprintf(
                             'All custom values must be string, but for "%s" %s was provided',
@@ -196,58 +261,93 @@ class ValidatorV1
                             $value === null ? 'null' : gettype($value)
                         );
                     }
-                } else {
-                    if (!in_array($key, $fields)) {
-                        $details[] = sprintf('Field "%s" not found in "%s"', $key, $envelope->getType());
-                    } else {
-                        // Checking type
-                        switch (self::$dataTypes[$key]) {
-                            case 'string':
-                                if (!is_string($value)) {
-                                    $details[] = sprintf(
-                                        'Field "%s" must be string, but %s provided',
-                                        $key,
-                                        $value === null ? 'null' : gettype($value)
-                                    );
-                                }
-                                break;
-                            case 'int':
-                                if (!is_int($value)) {
-                                    $details[] = sprintf(
-                                        'Field "%s" must be int, but %s provided',
-                                        $key,
-                                        $value === null ? 'null' : gettype($value)
-                                    );
-                                }
-                                break;
-                            case 'float':
-                                if (!is_float($value) && !is_int($value)) {
-                                    $details[] = sprintf(
-                                        'Field "%s" must be float/double, but %s provided',
-                                        $key,
-                                        $value === null ? 'null' : gettype($value)
-                                    );
-                                }
-                                break;
-                            case 'bool':
-                                if (!is_bool($value)) {
-                                    $details[] = sprintf(
-                                        'Field "%s" must be boolean, but %s provided',
-                                        $key,
-                                        $value === null ? 'null' : gettype($value)
-                                    );
-                                }
-                                break;
-                            default:
-                                $details[] = sprintf('Unknown type for "%s"', $key);
-                        }
+                } elseif (isset(self::$dataTypes[$key])) {
+                    // Checking type
+                    switch (self::$dataTypes[$key]) {
+                        case 'string':
+                            if (!is_string($value)) {
+                                $details[] = sprintf(
+                                    'Field "%s" must be string, but %s provided',
+                                    $key,
+                                    $value === null ? 'null' : gettype($value)
+                                );
+                            } elseif (strlen($value) > 255) {
+                                $details[] = sprintf(
+                                    'Received %d bytes to string key "%s" - value is too long',
+                                    strlen($value),
+                                    $key
+                                );
+                            }
+                            break;
+                        case 'int':
+                            if (!is_int($value)) {
+                                $details[] = sprintf(
+                                    'Field "%s" must be int, but %s provided',
+                                    $key,
+                                    $value === null ? 'null' : gettype($value)
+                                );
+                            }
+                            break;
+                        case 'float':
+                            if (!is_float($value) && !is_int($value)) {
+                                $details[] = sprintf(
+                                    'Field "%s" must be float/double, but %s provided',
+                                    $key,
+                                    $value === null ? 'null' : gettype($value)
+                                );
+                            }
+                            break;
+                        case 'bool':
+                            if (!is_bool($value)) {
+                                $details[] = sprintf(
+                                    'Field "%s" must be boolean, but %s provided',
+                                    $key,
+                                    $value === null ? 'null' : gettype($value)
+                                );
+                            }
+                            break;
+                        default:
+                            $details[] = sprintf('Unknown type for "%s"', $key);
                     }
+                } else {
+                    $details[] = sprintf('Unknown type for "%s"', $key);
                 }
             }
+
+            return $details;
         }
+
+        return array();
+    }
+
+    /**
+     * Checks envelope validity and throws an exception on error
+     *
+     * @param EnvelopeInterface $envelope
+     * @throws EnvelopeValidationException
+     */
+    public function validate(EnvelopeInterface $envelope)
+    {
+        $details = array_merge(
+            $this->analyzeSequenceId($envelope->getSequenceId()),
+            $this->analyzeIdentities($envelope->getIdentities()),
+            $this->analyzeTypeAndMandatoryFields($envelope),
+            $this->analyzeFieldTypes($envelope)
+        );
 
         if (count($details) > 0) {
             throw new EnvelopeValidationException($details);
         }
+    }
+
+    /**
+     * Returns true if provided key belongs to custom fields family
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function isCustom($key)
+    {
+        return is_string($key) && strlen($key) >= 7 && substr($key, 0, 7) === 'custom_';
     }
 }
