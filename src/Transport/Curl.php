@@ -53,6 +53,7 @@ class Curl implements TransportInterface
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT_MS, $this->timeoutMillis);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
         curl_setopt($curl, CURLOPT_POSTFIELDS, $request->getBody()->getContents());
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_HEADER, 1);
