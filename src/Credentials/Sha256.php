@@ -55,9 +55,20 @@ class Sha256 implements CredentialsInterface
         $nonce = microtime(true) . mt_rand();
 
         // Generating signature
-        $signature = hash('sha256', $nonce . $request->getBody()->getContents() . $this->secret);
+        $stream = $request->getBody();
+        $body = $stream->getContents();
+        $signature = hash('sha256', $nonce . $body . $this->secret);
+
+        // Rewinding/rebuilding
+        if ($stream->isSeekable()) {
+            $stream->rewind();
+        } else {
+            $stream->close();
+            $stream = \GuzzleHttp\Psr7\stream_for($body);
+        }
 
         return $request
+            ->withBody($stream)
             ->withHeader('X-Auth-Token', $this->token)
             ->withHeader('X-Auth-Nonce', $nonce)
             ->withHeader('X-Auth-Signature', $signature)

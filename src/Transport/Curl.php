@@ -58,6 +58,10 @@ class Curl implements TransportInterface
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_HEADER, 1);
 
+        try {
+            $request->getBody()->close();
+        } catch (\Exception $ignore) {}
+
         $response = curl_exec($curl);
 
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
