@@ -2,6 +2,7 @@
 
 namespace Covery\Client;
 
+use Covery\Client\Credentials\Sha256;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -43,11 +44,12 @@ class Facade
     /**
      * Sets (or replaces) credentials
      *
-     * @param CredentialsInterface $credentials
+     * @param string $token
+     * @param string $secret
      */
-    public static function setCredentials(CredentialsInterface $credentials)
+    public static function setCredentials($token, $secret)
     {
-        self::$credentials = $credentials;
+        self::$credentials = new Sha256($token, $secret);
     }
 
     /**

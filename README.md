@@ -32,11 +32,10 @@ To do this, place the following code somewhere close to your application initial
 
 ```php
 use Covery\Client\Facade;
-use Covery\Client\Credentials\Sha256;
 use Covery\Client\Transport\Curl;
 
 Facade::setTransport(new Curl(5.0 /* Timeout */));
-Facade::setCredentials(new Sha256('<token>', '<secret>'));
+Facade::setCredentials('<token>', '<secret>');
 ```
 
 That's all!
