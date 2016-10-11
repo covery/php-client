@@ -2,16 +2,29 @@
 
 Official PHP Covery client
 
+* [How to start](#howto)
+* [Basic integration](#basic)
+* Internals
+  * [Facade](#facade)
+  * [PSR-3 logging](#psr) [PSR-4 autoloading](#psr) and (PSR-7 HTTP messages)(#psr)
+  * [Transports](#transports)
+  * [Health check](#ping)
+  * [Envelopes](#envelopes)
+  * [Results](#results)
+  * [Exceptions](#exceptions)
+
 [![Latest Stable Version](https://img.shields.io/packagist/v/covery/client.svg?style=flat-square)](https://packagist.org/packages/covery/client)
 [![Build Status](https://img.shields.io/travis/covery/php-client.svg?style=flat-square)](https://travis-ci.org/covery/php-client)
 [![Code quality](https://img.shields.io/scrutinizer/g/covery/php-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/covery/php-client/)
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D5.4-blue.svg?style=flat-square)](http://php.net/)
 
+<a name="howto" />
 # How to start
 
 1. Acquire access token and secret
 2. Install client using composer: `composer require "covery/client=^1.0.0"`
 
+<a name="basic" />
 # Basic integration
 
 First thing you need - initialize `Facade` with credentials and transport. 
@@ -50,17 +63,20 @@ if ($result->isReject()) {
 
 # Tech details
 
+<a name="facade" />
 ## Facade
 
 `Covery\Client\Facade` is static wrapper over `Covery\Client\PublicAPIClient`, so if you are using dependency injection
 or other application assembly logic, you may ignore `Facade` at all.
 
+<a name="psr" />
 ## PSR-3, PSR-4 and PSR7
 
 1. Covery client supports PSR-3 loggers. You may assign it to `Facade` using `Facade::setLogger` or to `PublicAPIClient`, using corresponding argument in constructor
 2. Covery client code uses PSR-4 autoloader. Just require `/vendor/autoload.php`
 3. All HTTP communication uses PSR-7 HTTP message, so it is pretty easy to extend client capatibilities
 
+<a name="transports" />
 ## Transports
 
 Covery client may use any class, that satisfies `Covery\Client\TransportInterface`, to send requests. Covery client ships with two major implementations:
@@ -68,12 +84,14 @@ Covery client may use any class, that satisfies `Covery\Client\TransportInterfac
 1. `Covery\Client\Transport\Curl` - simple PHP curl implementation
 2. `Covery\Client\Transport\OverGuzzle` - adapter over [Guzzle](https://github.com/guzzle/guzzle) HTTP client
 
+<a name="ping" />
 ## Health check
 
 To perform network accessibility and token validity tests, you must run `ping()` method inside `Facade`
 or `PublicAPIClient`. It will throw an exception on any problems or return your token access level on success. 
 In most cases, it will return `"DECISION"` as your token level.
 
+<a name="envelopes" />
 ## Envelopes
 
 Methods `sendEvent` and `makeDecision` requires envelope as argument. Envelope - is pack of following data:
@@ -97,6 +115,7 @@ You may provide as envelopes:
 2. Custom built `Covery\Client\Envelopes\Envelope`
 3. Envelopes built using `Covery\Client\Envelopes\Builder` (dont forget to invoke `build()` !)
 
+<a name="results" />
 ## Results
 
 1. `ping` will return `string` containing current token access level on success
@@ -106,6 +125,7 @@ You may provide as envelopes:
    * Method `isAccept()` will return `true` if covery did not found fraud in incoming envelope data
    * Method `isReject()` will return `true` if covery found fraud in incoming envelope data
 
+<a name="exceptions" />
 ## Exception tree
 
 * `Covery\Client\Exception` - base exception for all others
