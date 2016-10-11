@@ -96,7 +96,7 @@ In most cases it will return `"DECISION"` as your token level.
 Methods `sendEvent` and `makeDecision` require envelope as argument. Envelope is a pack of following data:
 
 * `SequenceID` - Event grouping identifier. Covery will attempt to group events using this field. It is recommended to use 
-   userID as a sequence ID. However, Covery requires a long string in this field, so you may use `md5($userId)` as `SequenceID` for better results.
+   userID as a sequence ID. However, Covery requires a long string (6-40 characters) in this field, so you may use `md5($userId)` as `SequenceID` for better results.
 * `Identities` - List of identities this event belongs to. For most cases a single `Identities\Stub` is enough.
 * `Type` - Event type, one of:
   * `registration` - registration event
