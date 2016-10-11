@@ -27,7 +27,7 @@ Official PHP Covery Client
 <a name="basic" />
 # Basic Integration
 
-First thing you need is to initialize `Facade` with credentials and transport. 
+The first thing you need is to initialize `Facade` with credentials and transport. 
 To do this, place the following code somewhere close to your application initialization:
 
 ```php
@@ -74,7 +74,7 @@ or other application assembly mechanism, you may prefer not to use `Facade`, and
 
 1. Covery client supports PSR-3 loggers. You may assign them to `Facade` calling `Facade::setLogger` or to `PublicAPIClient` passing a logger as a constructor argument.
 2. Covery client code uses PSR-4 autoloader. Just require `/vendor/autoload.php`.
-3. HTTP communication uses PSR-7 HTTP message, so you may extend the client's capatibilities as you see fit.
+3. HTTP communication uses PSR-7 HTTP message, so you may extend the client's capabilities as you see fit.
 
 <a name="transports" />
 ## Transports
