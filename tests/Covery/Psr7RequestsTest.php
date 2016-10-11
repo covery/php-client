@@ -8,7 +8,7 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
         self::assertSame('', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
-        self::assertSame(\Covery\Client\TransportInterface::DEFAULT_URL . 'api/ping', strval($req->getUri()));
+        self::assertSame('api/ping', strval($req->getUri()));
     }
 
     public function testEvent()
@@ -27,7 +27,7 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame(\Covery\Client\TransportInterface::DEFAULT_URL . 'api/sendEvent', strval($req->getUri()));
+        self::assertSame('api/sendEvent', strval($req->getUri()));
 
         $req = new \Covery\Client\Requests\Event($withStub);
         self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
@@ -37,7 +37,7 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame(\Covery\Client\TransportInterface::DEFAULT_URL . 'api/sendEvent', strval($req->getUri()));
+        self::assertSame('api/sendEvent', strval($req->getUri()));
     }
 
     public function testDecision()
@@ -56,7 +56,7 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame(\Covery\Client\TransportInterface::DEFAULT_URL . 'api/makeDecision', strval($req->getUri()));
+        self::assertSame('api/makeDecision', strval($req->getUri()));
 
         $req = new \Covery\Client\Requests\Decision($withStub);
         self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
@@ -66,6 +66,6 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame(\Covery\Client\TransportInterface::DEFAULT_URL . 'api/makeDecision', strval($req->getUri()));
+        self::assertSame('api/makeDecision', strval($req->getUri()));
     }
 }

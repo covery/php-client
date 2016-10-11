@@ -3,8 +3,6 @@
 namespace Covery\Client\Requests;
 
 use Covery\Client\EnvelopeInterface;
-use Covery\Client\TransportInterface;
-use GuzzleHttp\Psr7\Request;
 
 /**
  * Class Decision

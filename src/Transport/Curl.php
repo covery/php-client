@@ -60,7 +60,8 @@ class Curl implements TransportInterface
 
         try {
             $request->getBody()->close();
-        } catch (\Exception $ignore) {}
+        } catch (\Exception $ignore) {
+        }
 
         $response = curl_exec($curl);
 

@@ -88,6 +88,14 @@ class PublicAPIClient
      */
     private function prepareRequest(RequestInterface $request)
     {
+        // Checking hostname presence
+        $uri = $request->getUri();
+        if ($uri->getHost() == '') {
+            $request = $request->withUri(
+                $uri->withHost(TransportInterface::DEFAULT_HOST)->withScheme(TransportInterface::DEFAULT_SCHEME)
+            );
+        }
+
         return $this->credentials->signRequest($request);
     }
 

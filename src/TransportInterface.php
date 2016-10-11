@@ -7,7 +7,8 @@ use Psr\Http\Message\ResponseInterface;
 
 interface TransportInterface
 {
-    const DEFAULT_URL = "https://covery.maxpay.com/";
+    const DEFAULT_HOST = "covery.maxpay.com";
+    const DEFAULT_SCHEME = "https";
 
     /**
      * Sends request

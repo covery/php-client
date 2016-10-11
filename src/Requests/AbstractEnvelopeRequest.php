@@ -3,7 +3,6 @@
 namespace Covery\Client\Requests;
 
 use Covery\Client\EnvelopeInterface;
-use Covery\Client\TransportInterface;
 use GuzzleHttp\Psr7\Request;
 
 /**
@@ -31,7 +30,7 @@ abstract class AbstractEnvelopeRequest extends Request
 
         parent::__construct(
             'POST',
-            TransportInterface::DEFAULT_URL . $apiPath,
+            $apiPath,
             array(
                 'X-Identities' => implode('&', $ids)
             ),
