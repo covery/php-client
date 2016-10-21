@@ -78,7 +78,7 @@ class ValidatorV1
     private static $types = array(
         'confirmation' => array(
             'mandatory' => array('confirmation_timestamp', 'user_merchant_id'),
-            'optional' => array('email_confirmed', 'phone_confirmed'),
+            'optional' => array('email_confirmed', 'phone_confirmed', 'email', 'phone'),
         ),
         'login' => array(
             'mandatory' => array('login_timestamp', 'user_merchant_id'),

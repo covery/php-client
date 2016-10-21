@@ -17,6 +17,7 @@ Official PHP Covery Client
   * [Envelopes](#envelopes)
   * [Results](#results)
   * [Exceptions](#exceptions)
+* [Changelog](#changelog)
 
 <a name="howto" />
 # How to Start
@@ -131,3 +132,10 @@ You may provide the following as envelopes:
     * `Covery\Client\AuthException` - authorization exception
   * `Covery\Client\IoException` - server communication error
     * `Covery\Client\TimeoutException` - timeout
+
+<a name="changelog" />
+## Changelog
+
+* `1.0.1`
+  * added optional `email` and `phone` to confirmation event
+* `1.0.0` - release

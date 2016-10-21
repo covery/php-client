@@ -32,6 +32,8 @@ class Builder
      * @param int|null $timestamp If null provided, takes current time
      * @param bool|null $isEmailConfirmed
      * @param bool|null $idPhoneConfirmed
+     * @param string|null $email
+     * @param string|null $phone
      *
      * @return Builder
      */
@@ -40,7 +42,9 @@ class Builder
         $userId,
         $timestamp = null,
         $isEmailConfirmed = null,
-        $idPhoneConfirmed = null
+        $idPhoneConfirmed = null,
+        $email = null,
+        $phone = null
     ) {
         $builder = new self('confirmation', $sequenceId);
         if ($timestamp === null) {
@@ -48,9 +52,9 @@ class Builder
         }
 
         return $builder->addUserData(
-            null,
+            $email,
             $userId,
-            null,
+            $phone,
             null,
             null,
             null,
