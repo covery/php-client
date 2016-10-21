@@ -75,6 +75,26 @@ class ValidatorV1
         'phone_confirmed' => 'bool',
     );
 
+    private static $sharedOptional = array(
+        'ajax_validation',
+        'cookie_enabled',
+        'cpu_class',
+        'device_fingerprint',
+        'do_not_track',
+        'ip',
+        'language',
+        'language_browser',
+        'language_system',
+        'language_user',
+        'languages',
+        'os',
+        'real_ip',
+        'screen_orientation',
+        'screen_resolution',
+        'timezone_offset',
+        'user_agent',
+    );
+
     private static $types = array(
         'confirmation' => array(
             'mandatory' => array('confirmation_timestamp', 'user_merchant_id'),
@@ -219,7 +239,7 @@ class ValidatorV1
             }
 
             // Field presence check
-            $fields = array_merge($typeInfo['mandatory'], $typeInfo['optional']);
+            $fields = array_merge($typeInfo['mandatory'], $typeInfo['optional'], self::$sharedOptional);
             $customCount = 0;
             foreach ($envelope as $key => $value) {
                 if ($this->isCustom($type)) {

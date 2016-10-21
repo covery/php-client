@@ -133,9 +133,13 @@ You may provide the following as envelopes:
   * `Covery\Client\IoException` - server communication error
     * `Covery\Client\TimeoutException` - timeout
 
+
 <a name="changelog" />
 ## Changelog
 
 * `1.0.1`
   * added optional `email` and `phone` to confirmation event
+  * added more optional fields to all packets: `ajax_validation`, `cookie_enabled`, `cpu_class`, `device_fingerprint`, 
+    `do_not_track`, `ip`, `language`, `language_browser`, `language_system`, `language_user`, `languages`, `os`, 
+    `real_ip`, `screen_orientation`, `screen_resolution`, `timezone_offset`, `user_agent`
 * `1.0.0` - release

@@ -47,6 +47,23 @@ class ValidatorV1Test extends \PHPUnit_Framework_TestCase
         self::assertSame('Field "foo" not found in "login"', $result[1]);
     }
 
+    public function testAnalyzeOptionalFieldsWithShared()
+    {
+        $env = new \Covery\Client\Envelopes\Envelope(
+            "login",
+            "123456",
+            array(),
+            array(
+                'login_timestamp' => 1,
+                'user_merchant_id' => 'x',
+                'os' => 'Some OS',
+                'real_ip' => '8.8.3.3',
+            )
+        );
+        $result = $this->validator->analyzeTypeAndMandatoryFields($env);
+        self::assertCount(0, $result);
+    }
+
     public function testAnalyzeFieldTypes()
     {
         $env = new \Covery\Client\Envelopes\Envelope("login", "123456", array(), array(
