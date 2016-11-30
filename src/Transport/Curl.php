@@ -66,6 +66,7 @@ class Curl implements TransportInterface
         $response = curl_exec($curl);
 
         $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $errno  = curl_errno($curl);
         $error  = curl_error($curl);
         curl_close($curl);
@@ -92,7 +93,9 @@ class Curl implements TransportInterface
             throw new IoException(sprintf('Curl error. Received status %s, curl error %s', $status, $error));
         }
 
-        list($rawHeaders, $body) = explode("\r\n\r\n", $response, 2);
+        $rawHeaders = substr($response, 0, $headerSize);
+        $body = trim(substr($response, $headerSize));
+
         $rawHeaders = explode("\n", $rawHeaders);
         $headers = array();
         foreach ($rawHeaders as $row) {
