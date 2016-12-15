@@ -73,6 +73,8 @@ class ValidatorV1
         'email_confirmed' => 'bool',
         'login_failed' => 'bool',
         'phone_confirmed' => 'bool',
+        'traffic_source' => 'string',
+        'affiliate_id' => 'string',
     );
 
     private static $sharedOptional = array(
@@ -116,6 +118,9 @@ class ValidatorV1
                 'phone',
                 'social_type',
                 'user_name',
+                'website_url',
+                'traffic_source',
+                'affiliate_id',
             ),
         ),
         'transaction' => array(
@@ -195,9 +200,7 @@ class ValidatorV1
     public function analyzeIdentities(array $identities)
     {
         $detail = array();
-        if (count($identities) === 0) {
-            $detail[] = 'At least one Identity must be supplied';
-        } else {
+        if (count($identities) > 0) {
             foreach ($identities as $i => $identity) {
                 if (!$identity instanceof IdentityNodeInterface) {
                     $detail[] = $i . '-th elements of Identities not implements IdentityNodeInterface';

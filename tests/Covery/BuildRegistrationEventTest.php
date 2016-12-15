@@ -19,13 +19,16 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
             'female',
             '+34235522',
             'New zealand',
-            'facebook'
+            'facebook',
+            'http://example.com',
+            'adwords',
+            '8965asd-2'
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('registration', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someLongString', $result->getSequenceId());
-        self::assertCount(11, $result);
+        self::assertCount(14, $result);
         self::assertSame('thisisuser', $result['user_merchant_id']);
         self::assertSame(320746, $result['registration_timestamp']);
         self::assertSame('user@site.net', $result['email']);
@@ -37,6 +40,9 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('+34235522', $result['phone']);
         self::assertSame('New zealand', $result['country']);
         self::assertSame('facebook', $result['social_type']);
+        self::assertSame('http://example.com', $result['website_url']);
+        self::assertSame('adwords', $result['traffic_source']);
+        self::assertSame('8965asd-2', $result['affiliate_id']);
         $validator->validate($result);
 
         // Minimal data
@@ -44,10 +50,10 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
         $result = \Covery\Client\Envelopes\Builder::registrationEvent(
             'someLongStringX',
             'thisisuser15'
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->build();
 
         self::assertSame('registration', $result->getType());
-        self::assertCount(1, $result->getIdentities());
+        self::assertCount(0, $result->getIdentities());
         self::assertSame('someLongStringX', $result->getSequenceId());
         self::assertCount(2, $result);
         self::assertSame('thisisuser15', $result['user_merchant_id']);

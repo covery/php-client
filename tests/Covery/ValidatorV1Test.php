@@ -24,7 +24,7 @@ class ValidatorV1Test extends \PHPUnit_Framework_TestCase
 
     public function testAnalyzeIdentitites()
     {
-        self::assertCount(1, $this->validator->analyzeIdentities(array()));
+        self::assertCount(0, $this->validator->analyzeIdentities(array()));
         self::assertCount(1, $this->validator->analyzeIdentities(array("foo")));
         self::assertCount(0, $this->validator->analyzeIdentities(array(new \Covery\Client\Identities\Stub())));
         self::assertCount(0, $this->validator->analyzeIdentities(array(

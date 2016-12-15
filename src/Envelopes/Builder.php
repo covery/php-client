@@ -129,6 +129,9 @@ class Builder
      * @param string|null $phone
      * @param string|null $country
      * @param string|null $socialType
+     * @param string|null $websiteUrl
+     * @param string|null $trafficSource
+     * @param string|null $affiliateId
      *
      * @return Builder
      */
@@ -144,14 +147,21 @@ class Builder
         $gender = null,
         $phone = null,
         $country = null,
-        $socialType = null
+        $socialType = null,
+        $websiteUrl = null,
+        $trafficSource = null,
+        $affiliateId = null
     ) {
         $builder = new self('registration', $sequenceId);
         if ($timestamp === null) {
             $timestamp = time();
         }
 
-        return $builder->addUserData(
+        return $builder->addWebsiteData(
+            $websiteUrl,
+            $trafficSource,
+            $affiliateId
+        )->addUserData(
             $email,
             $userId,
             $phone,
@@ -236,17 +246,27 @@ class Builder
     /**
      * Provides website URL to envelope
      *
-     * @param string $websiteUrl
+     * @param string|null $websiteUrl
+     * @param string|null $traffic_source
+     * @param string|null $affiliate_id
      *
      * @return $this
      */
-    public function addWebsiteData($websiteUrl = '')
+    public function addWebsiteData($websiteUrl = null, $traffic_source = null, $affiliate_id = null)
     {
-        if (!is_string($websiteUrl)) {
+        if ($websiteUrl !== null && !is_string($websiteUrl)) {
             throw new \InvalidArgumentException('Website URL must be string');
+        }
+        if ($traffic_source !== null && !is_string($traffic_source)) {
+            throw new \InvalidArgumentException('Traffic source must be string');
+        }
+        if ($affiliate_id !== null && !is_string($affiliate_id)) {
+            throw new \InvalidArgumentException('Affiliate ID must be string');
         }
 
         $this->replace('website_url', $websiteUrl);
+        $this->replace('traffic_source', $traffic_source);
+        $this->replace('affiliate_id', $affiliate_id);
         return $this;
     }
 
