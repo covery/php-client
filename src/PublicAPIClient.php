@@ -127,8 +127,10 @@ class PublicAPIClient
 
             $this->logger->error('Covery error ' . $message);
             throw new DeliveredException($message, $response->getStatusCode());
+        } elseif ($response->hasHeader('X-General-Failure')) {
+            // Remote fatal error
+            throw new DeliveredException('Antifraud fatal error', $response->getStatusCode());
         }
-
 
         throw new Exception("Communication failed with status code {$response->getStatusCode()}");
     }
