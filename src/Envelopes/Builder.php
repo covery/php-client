@@ -182,6 +182,75 @@ class Builder
     }
 
     /**
+     * Returns builder for payout request
+     *
+     * @param string $sequenceId
+     * @param string $userId
+     * @param string $payoutId
+     * @param string $cardId
+     * @param string $currency
+     * @param int|float $amount
+     * @param int|float $amountConverted
+     * @param int|null $payoutTimestamp
+     * @param string|null $method
+     * @param string|null $system
+     * @param string|null $mid
+     * @param string|null $firstname
+     * @param string|null $lastname
+     * @param string|null $country
+     * @param string|null $email
+     * @param string|null $phone
+     * @param int|null $cardBin
+     * @param string|null $cardLast4
+     * @param int|null $cardExpirationMonth
+     * @param int|null $cardExpirationYear
+     *
+     * @return $this
+     */
+    public static function payoutEvent(
+        $sequenceId,
+        $userId,
+        $payoutId,
+        $cardId,
+        $currency,
+        $amount,
+        $amountConverted,
+        $payoutTimestamp = null,
+        $method = null,
+        $system = null,
+        $mid = null,
+        $firstname = null,
+        $lastname = null,
+        $country = null,
+        $email = null,
+        $phone = null,
+        $cardBin = null,
+        $cardLast4 = null,
+        $cardExpirationMonth = null,
+        $cardExpirationYear = null
+    ) {
+        $builder = new self('payout', $sequenceId);
+        if ($payoutTimestamp === null) {
+            $payoutTimestamp = time();
+        }
+        return $builder->addPayoutData(
+            $payoutId,
+            $payoutTimestamp,
+            $cardId,
+            $amount,
+            $currency,
+            $method,
+            $system,
+            $mid,
+            $amountConverted,
+            $cardBin,
+            $cardLast4,
+            $cardExpirationMonth,
+            $cardExpirationYear
+        )->addShortUserData($email, $userId, $phone, $firstname, $lastname, $country);
+    }
+
+    /**
      * Builder constructor.
      *
      * @param string $envelopeType
@@ -441,35 +510,14 @@ class Builder
         $phoneConfirmed = false,
         $loginFailed = false
     ) {
-        if ($email !== null && !is_string($email)) {
-            throw new \InvalidArgumentException('Email must be string');
-        }
-        if (is_int($userId)) {
-            $userId = strval($userId);
-        }
-        if ($userId !== null && !is_string($userId)) {
-            throw new \InvalidArgumentException('UserId must be string or integer');
-        }
-        if ($phone !== null && !is_string($phone)) {
-            throw new \InvalidArgumentException('Phone must be string');
-        }
         if ($userName !== null && !is_string($userName)) {
             throw new \InvalidArgumentException('User name must be string');
-        }
-        if ($firstName !== null && !is_string($firstName)) {
-            throw new \InvalidArgumentException('First name must be string');
-        }
-        if ($lastName !== null && !is_string($lastName)) {
-            throw new \InvalidArgumentException('Last name must be string');
         }
         if ($gender !== null && !is_string($gender)) {
             throw new \InvalidArgumentException('Gender must be string');
         }
         if ($age !== null && !is_int($age)) {
             throw new \InvalidArgumentException('Age must be integer');
-        }
-        if ($country !== null && !is_string($country)) {
-            throw new \InvalidArgumentException('Country must be string');
         }
         if ($socialType !== null && !is_string($socialType)) {
             throw new \InvalidArgumentException('Social type must be string');
@@ -493,15 +541,11 @@ class Builder
             throw new \InvalidArgumentException('Login failed flag must be boolean');
         }
 
-        $this->replace('email', $email);
-        $this->replace('user_merchant_id', $userId);
-        $this->replace('phone', $phone);
+        $this->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country);
+
         $this->replace('user_name', $userName);
-        $this->replace('firstname', $firstName);
-        $this->replace('lastname', $lastName);
         $this->replace('gender', $gender);
         $this->replace('age', $age);
-        $this->replace('country', $country);
         $this->replace('social_type', $socialType);
         $this->replace('registration_timestamp', $registrationTimestamp);
         $this->replace('login_timestamp', $loginTimeStamp);
@@ -509,6 +553,58 @@ class Builder
         $this->replace('email_confirmed', $emailConfirmed);
         $this->replace('phone_confirmed', $phoneConfirmed);
         $this->replace('login_failed', $loginFailed);
+
+        return $this;
+    }
+
+    /**
+     * Provides user data for envelope
+     *
+     * @param string|null $email
+     * @param string|null $userId
+     * @param string|null $phone
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $country
+     *
+     * @return $this
+     */
+    public function addShortUserData(
+        $email = '',
+        $userId = '',
+        $phone = '',
+        $firstName = '',
+        $lastName = '',
+        $country = ''
+    ) {
+        if ($email !== null && !is_string($email)) {
+            throw new \InvalidArgumentException('Email must be string');
+        }
+        if (is_int($userId)) {
+            $userId = strval($userId);
+        }
+        if ($userId !== null && !is_string($userId)) {
+            throw new \InvalidArgumentException('UserId must be string or integer');
+        }
+        if ($phone !== null && !is_string($phone)) {
+            throw new \InvalidArgumentException('Phone must be string');
+        }
+        if ($firstName !== null && !is_string($firstName)) {
+            throw new \InvalidArgumentException('First name must be string');
+        }
+        if ($lastName !== null && !is_string($lastName)) {
+            throw new \InvalidArgumentException('Last name must be string');
+        }
+        if ($country !== null && !is_string($country)) {
+            throw new \InvalidArgumentException('Country must be string');
+        }
+
+        $this->replace('email', $email);
+        $this->replace('user_merchant_id', $userId);
+        $this->replace('phone', $phone);
+        $this->replace('firstname', $firstName);
+        $this->replace('lastname', $lastName);
+        $this->replace('country', $country);
 
         return $this;
     }
@@ -723,6 +819,97 @@ class Builder
         $this->replace('product_quantity', $productQuantity);
         $this->replace('product_name', $productName);
         $this->replace('product_description', $productDescription);
+
+        return $this;
+    }
+
+    /**
+     * Provides payout information to envelope
+     *
+     * @param string $payout_id
+     * @param int $payout_timestamp
+     * @param string $payout_card_id
+     * @param int|float $payout_amount
+     * @param string $payout_currency
+     * @param string|null $payout_method
+     * @param string|null $payout_system
+     * @param string|null $payout_mid
+     * @param int|float|null $amount_converted
+     * @param int|null $payout_card_bin
+     * @param string|null $payout_card_last4
+     * @param int|null $payout_expiration_month
+     * @param int|null $payout_expiration_year
+     *
+     * @return $this
+     */
+    public function addPayoutData(
+        $payout_id,
+        $payout_timestamp,
+        $payout_card_id,
+        $payout_amount,
+        $payout_currency,
+        $payout_method = null,
+        $payout_system = null,
+        $payout_mid = null,
+        $amount_converted = null,
+        $payout_card_bin = null,
+        $payout_card_last4 = null,
+        $payout_expiration_month = null,
+        $payout_expiration_year = null
+    ) {
+        if (!is_string($payout_id)) {
+            throw new \InvalidArgumentException('Payout ID must be string');
+        }
+        if (!is_int($payout_timestamp)) {
+            throw new \InvalidArgumentException('Payout timestamp must be int');
+        }
+        if (!is_string($payout_card_id)) {
+            throw new \InvalidArgumentException('Card ID must be string');
+        }
+        if (!is_float($payout_amount) && !is_int($payout_amount)) {
+            throw new \InvalidArgumentException('Amount must be number');
+        }
+        if (!is_string($payout_currency)) {
+            throw new \InvalidArgumentException('Payout currency must be string');
+        }
+        if ($payout_method !== null && !is_string($payout_method)) {
+            throw new \InvalidArgumentException('Payout method must be string');
+        }
+        if ($payout_system !== null && !is_string($payout_system)) {
+            throw new \InvalidArgumentException('Payout system must be string');
+        }
+        if ($payout_mid !== null && !is_string($payout_mid)) {
+            throw new \InvalidArgumentException('Payout MID must be string');
+        }
+        if ($amount_converted !== null && !is_float($amount_converted) && !is_int($amount_converted)) {
+            throw new \InvalidArgumentException('Payout converted amount must be number');
+        }
+        if ($payout_card_bin !== null && !is_int($payout_card_bin)) {
+            throw new \InvalidArgumentException('Payout card BIN must be integer');
+        }
+        if ($payout_card_last4 !== null && !is_string($payout_card_last4)) {
+            throw new \InvalidArgumentException('Payout last 4 must be string');
+        }
+        if ($payout_expiration_month !== null && !is_int($payout_expiration_month)) {
+            throw new \InvalidArgumentException('Payout card expiration month must be integer');
+        }
+        if ($payout_expiration_year !== null && !is_int($payout_expiration_year)) {
+            throw new \InvalidArgumentException('Payout card expiration year must be integer');
+        }
+
+        $this->replace('payout_id', $payout_id);
+        $this->replace('payout_timestamp', $payout_timestamp);
+        $this->replace('payout_card_id', $payout_card_id);
+        $this->replace('payout_amount', (float) $payout_amount);
+        $this->replace('payout_currency', $payout_currency);
+        $this->replace('payout_method', $payout_method);
+        $this->replace('payout_system', $payout_system);
+        $this->replace('payout_mid', $payout_mid);
+        $this->replace('payout_amount_converted', (float) $amount_converted);
+        $this->replace('payout_card_bin', $payout_card_bin);
+        $this->replace('payout_card_last4', $payout_card_last4);
+        $this->replace('payout_expiration_month', $payout_expiration_month);
+        $this->replace('payout_expiration_year', $payout_expiration_year);
 
         return $this;
     }

@@ -75,6 +75,19 @@ class ValidatorV1
         'phone_confirmed' => 'bool',
         'traffic_source' => 'string',
         'affiliate_id' => 'string',
+        'payout_id' => 'string',
+        'payout_timestamp' => 'int',
+        'payout_card_id' => 'string',
+        'payout_amount' => 'float',
+        'payout_currency' => 'string',
+        'payout_method' => 'string',
+        'payout_system' => 'string',
+        'payout_mid' => 'string',
+        'payout_amount_converted' => 'float',
+        'payout_card_bin' => 'int',
+        'payout_card_last4' => 'string',
+        'payout_expiration_month' => 'int',
+        'payout_expiration_year' => 'int',
     );
 
     private static $sharedOptional = array(
@@ -165,6 +178,31 @@ class ValidatorV1
                 'product_quantity',
                 'website_url',
                 'merchant_ip',
+            )
+        ),
+        'payout' => array(
+            'mandatory' => array(
+                'payout_timestamp',
+                'payout_id',
+                'user_merchant_id',
+                'payout_card_id',
+                'payout_amount',
+                'payout_currency',
+            ),
+            'optional' => array(
+                'payout_method',
+                'payout_system',
+                'payout_mid',
+                'payout_amount_converted',
+                'firstname',
+                'lastname',
+                'country',
+                'email',
+                'phone',
+                'payout_card_bin',
+                'payout_card_last4',
+                'payout_expiration_month',
+                'payout_expiration_year'
             )
         ),
     );

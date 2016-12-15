@@ -137,6 +137,11 @@ You may provide the following as envelopes:
 <a name="changelog" />
 ## Changelog
 
+* `1.0.3`
+  * new `payout` event introduced
+  * identity nodes are optional now
+  * new experimental `PersistentCurl` transport for workers
+* `1.0.2` cURL issue with status code 100 fixed
 * `1.0.1`
   * added optional `email` and `phone` to confirmation event
   * added more optional fields to all packets: `ajax_validation`, `cookie_enabled`, `cpu_class`, `device_fingerprint`, 
