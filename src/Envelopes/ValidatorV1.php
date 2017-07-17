@@ -35,6 +35,7 @@ class ValidatorV1
         'payment_method' => 'string',
         'payment_mid' => 'string',
         'payment_system' => 'string',
+        'payment_account_id' => 'string',
         'product_description' => 'string',
         'product_name' => 'string',
         'registration_useragent' => 'string',
@@ -88,6 +89,17 @@ class ValidatorV1
         'payout_card_last4' => 'string',
         'payout_expiration_month' => 'int',
         'payout_expiration_year' => 'int',
+        'install_timestamp' => 'int',
+        'refund_timestamp' => 'int',
+        'refund_id' => 'string',
+        'refund_amount' => 'float',
+        'refund_currency' => 'string',
+        'refund_amount_converted' => 'float',
+        'refund_source' => 'string',
+        'refund_type' => 'string',
+        'refund_code' => 'string',
+        'refund_reason' => 'string',
+        'agent_id' => 'string',
     );
 
     private static $sharedOptional = array(
@@ -141,17 +153,17 @@ class ValidatorV1
                 'transaction_amount',
                 'transaction_currency',
                 'transaction_id',
-                'transaction_mode',
                 'transaction_timestamp',
+                'user_merchant_id',
+            ),
+            'optional' => array(
+                'transaction_mode',
                 'transaction_type',
                 'card_bin',
                 'card_id',
                 'card_last4',
                 'expiration_month',
                 'expiration_year',
-                'user_merchant_id',
-            ),
-            'optional' => array(
                 'age',
                 'country',
                 'email',
@@ -163,6 +175,7 @@ class ValidatorV1
                 'payment_method',
                 'payment_mid',
                 'payment_system',
+                'payment_account_id',
                 'transaction_amount_converted',
                 'transaction_source',
                 'billing_address',
@@ -203,6 +216,34 @@ class ValidatorV1
                 'payout_card_last4',
                 'payout_expiration_month',
                 'payout_expiration_year'
+            )
+        ),
+        'install' => array(
+            'mandatory' => array(
+                'install_timestamp',
+            ),
+            'optional' => array(
+                'user_merchant_id',
+                'country',
+                'website_url',
+                'traffic_source',
+                'affiliate_id',
+            )
+        ),
+        'refund' => array(
+            'mandatory' => array(
+                'refund_timestamp',
+                'refund_id',
+                'refund_amount',
+                'refund_currency',
+            ),
+            'optional' => array(
+                'refund_amount_converted',
+                'refund_source',
+                'refund_type',
+                'refund_code',
+                'refund_reason',
+                'agent_id',
             )
         ),
     );
