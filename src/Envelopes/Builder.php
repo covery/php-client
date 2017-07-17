@@ -195,8 +195,8 @@ class Builder
      * @param string|null $method
      * @param string|null $system
      * @param string|null $mid
-     * @param string|null $firstname
-     * @param string|null $lastname
+     * @param string|null $firstName
+     * @param string|null $lastName
      * @param string|null $country
      * @param string|null $email
      * @param string|null $phone
@@ -205,7 +205,7 @@ class Builder
      * @param int|null $cardExpirationMonth
      * @param int|null $cardExpirationYear
      *
-     * @return $this
+     * @return Builder
      */
     public static function payoutEvent(
         $sequenceId,
@@ -219,8 +219,8 @@ class Builder
         $method = null,
         $system = null,
         $mid = null,
-        $firstname = null,
-        $lastname = null,
+        $firstName = null,
+        $lastName = null,
         $country = null,
         $email = null,
         $phone = null,
@@ -247,7 +247,225 @@ class Builder
             $cardLast4,
             $cardExpirationMonth,
             $cardExpirationYear
-        )->addShortUserData($email, $userId, $phone, $firstname, $lastname, $country);
+        )->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country);
+    }
+
+    /**
+     * Returns builder for transaction request
+     *
+     * @param string $sequenceId
+     * @param string $userId
+     * @param string $transactionId
+     * @param int|float $transactionAmount
+     * @param string $transactionCurrency
+     * @param int|null $transactionTimestamp
+     * @param string|null $transactionMode
+     * @param string|null $transactionType
+     * @param int|null $cardBin
+     * @param string|null $cardId
+     * @param string|null $cardLast4
+     * @param int|null $expirationMonth
+     * @param int|null $expirationYear
+     * @param int|null $age
+     * @param string|null $country
+     * @param string|null $email
+     * @param string|null $gender
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $phone
+     * @param string|null $userName
+     * @param string|null $paymentAccountId
+     * @param string|null $paymentMethod
+     * @param string|null $paymentMidName
+     * @param string|null $paymentSystem
+     * @param int|float|null $transactionAmountConverted
+     * @param string|null $transactionSource
+     * @param string|null $billingAddress
+     * @param string|null $billingCity
+     * @param string|null $billingCountry
+     * @param string|null $billingFirstName
+     * @param string|null $billingLastName
+     * @param string|null $billingFullName
+     * @param string|null $billingState
+     * @param string|null $billingZip
+     * @param string|null $productDescription
+     * @param string|null $productName
+     * @param int|float|null $productQuantity
+     * @param string|null $websiteUrl
+     * @param string|null $merchantIp
+     *
+     * @return Builder
+     */
+    public static function transactionEvent(
+        $sequenceId,
+        $userId,
+        $transactionId,
+        $transactionAmount,
+        $transactionCurrency,
+        $transactionTimestamp = null,
+        $transactionMode = null,
+        $transactionType = null,
+        $cardBin = null,
+        $cardId = null,
+        $cardLast4 = null,
+        $expirationMonth = null,
+        $expirationYear = null,
+        $age = null,
+        $country = null,
+        $email = null,
+        $gender = null,
+        $firstName = null,
+        $lastName = null,
+        $phone = null,
+        $userName = null,
+        $paymentAccountId = null,
+        $paymentMethod = null,
+        $paymentMidName = null,
+        $paymentSystem = null,
+        $transactionAmountConverted = null,
+        $transactionSource = null,
+        $billingAddress = null,
+        $billingCity = null,
+        $billingCountry = null,
+        $billingFirstName = null,
+        $billingLastName = null,
+        $billingFullName = null,
+        $billingState = null,
+        $billingZip = null,
+        $productDescription = null,
+        $productName = null,
+        $productQuantity = null,
+        $websiteUrl = null,
+        $merchantIp = null
+    ) {
+        $builder = new self('transaction', $sequenceId);
+        if ($transactionTimestamp === null) {
+            $transactionTimestamp = time();
+        }
+
+        return $builder
+            ->addCCTransactionData(
+                $transactionId,
+                $transactionSource,
+                $transactionType,
+                $transactionMode,
+                $transactionTimestamp,
+                $transactionCurrency,
+                $transactionAmount,
+                $transactionAmountConverted,
+                $paymentMethod,
+                $paymentSystem,
+                $paymentMidName,
+                $paymentAccountId
+            )
+            ->addBillingData(
+                $billingFirstName,
+                $billingLastName,
+                $billingFullName,
+                $billingCountry,
+                $billingState,
+                $billingCity,
+                $billingAddress,
+                $billingZip
+            )
+            ->addCardData($cardBin, $cardLast4, $expirationMonth, $expirationYear, $cardId)
+            ->addUserData(
+                $email,
+                $userId,
+                $phone,
+                $userName,
+                $firstName,
+                $lastName,
+                $gender,
+                $age,
+                $country
+            )
+            ->addProductData($productQuantity, $productName, $productDescription)
+            ->addWebsiteData($websiteUrl)
+            ->addIpData(null, null, $merchantIp);
+
+    }
+
+    /**
+     * Returns builder for install request
+     *
+     * @param string $sequenceId
+     * @param string|null $userId
+     * @param int|null $installTimestamp
+     * @param string|null $country
+     * @param string|null $websiteUrl
+     * @param string|null $trafficSource
+     * @param string|null $affiliateId
+     *
+     * @return Builder
+     */
+    public static function installEvent(
+        $sequenceId,
+        $userId = null,
+        $installTimestamp = null,
+        $country = null,
+        $websiteUrl = null,
+        $trafficSource = null,
+        $affiliateId = null
+    ) {
+        $builder = new self('install', $sequenceId);
+        if ($installTimestamp === null) {
+            $installTimestamp = time();
+        }
+
+        return $builder->addInstallData(
+            $installTimestamp
+        )->addWebsiteData($websiteUrl, $trafficSource, $affiliateId)
+        ->addShortUserData(null, $userId, null, null, null, $country);
+    }
+
+    /**
+     * Returns builder for refund request
+     *
+     * @param string $sequenceId
+     * @param string $refundId
+     * @param int|float $refundAmount
+     * @param string $refundCurrency
+     * @param int|null $refundTimestamp
+     * @param int|float|null $refundAmountConverted
+     * @param string|null $refundSource
+     * @param string|null $refundType
+     * @param string|null $refundCode
+     * @param string|null $refundReason
+     * @param string|null $agentId
+     *
+     * @return Builder
+     */
+    public static function refundEvent(
+        $sequenceId,
+        $refundId,
+        $refundAmount,
+        $refundCurrency,
+        $refundTimestamp = null,
+        $refundAmountConverted = null,
+        $refundSource = null,
+        $refundType = null,
+        $refundCode = null,
+        $refundReason = null,
+        $agentId = null
+    ) {
+        $builder = new self('refund', $sequenceId);
+        if ($refundTimestamp === null) {
+            $refundTimestamp = time();
+        }
+
+        return $builder->addRefundData(
+            $refundId,
+            $refundTimestamp,
+            $refundAmount,
+            $refundCurrency,
+            $refundAmountConverted,
+            $refundSource,
+            $refundType,
+            $refundCode,
+            $refundReason,
+            $agentId
+        );
     }
 
     /**
@@ -294,7 +512,7 @@ class Builder
      */
     private function replace($key, $value)
     {
-        if (!array_key_exists($key, $this->data) || !empty($value)) {
+        if ($value !== null && $value !== '' && $value !== 0 && $value !== 0.0) {
             $this->data[$key] = $value;
         }
     }
@@ -401,9 +619,9 @@ class Builder
         $languageBrowser = '',
         $languageUser = '',
         $languageSystem = '',
-        $cookieEnabled = false,
-        $doNotTrack = false,
-        $ajaxValidation = false
+        $cookieEnabled = null,
+        $doNotTrack = null,
+        $ajaxValidation = null
     ) {
         if ($deviceFingerprint !== null && !is_string($deviceFingerprint)) {
             throw new \InvalidArgumentException('Device fingerprint must be string');
@@ -506,9 +724,9 @@ class Builder
         $registrationTimestamp = 0,
         $loginTimeStamp = 0,
         $confirmationTimeStamp = 0,
-        $emailConfirmed = false,
-        $phoneConfirmed = false,
-        $loginFailed = false
+        $emailConfirmed = null,
+        $phoneConfirmed = null,
+        $loginFailed = null
     ) {
         if ($userName !== null && !is_string($userName)) {
             throw new \InvalidArgumentException('User name must be string');
@@ -623,6 +841,7 @@ class Builder
      * @param string|null $paymentMethod
      * @param string|null $paymentSystem
      * @param string|null $paymentMidName
+     * @param string|null $paymentAccountId
      *
      * @return $this
      */
@@ -634,10 +853,11 @@ class Builder
         $transactionTimestamp,
         $transactionCurrency,
         $transactionAmount,
-        $amountConverted = 0.0,
-        $paymentMethod = '',
-        $paymentSystem = '',
-        $paymentMidName = ''
+        $amountConverted = null,
+        $paymentMethod = null,
+        $paymentSystem = null,
+        $paymentMidName = null,
+        $paymentAccountId = null
     ) {
         if ($transactionId !== null && !is_string($transactionId)) {
             throw new \InvalidArgumentException('Transaction ID must be string');
@@ -669,6 +889,9 @@ class Builder
         if ($paymentMidName !== null && !is_string($paymentMidName)) {
             throw new \InvalidArgumentException('Payment MID name must be string');
         }
+        if ($paymentAccountId !== null && !is_string($paymentAccountId)) {
+            throw new \InvalidArgumentException('Payment account id must be string');
+        }
         if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
             throw new \InvalidArgumentException('Transaction amount converted must be float');
         }
@@ -684,6 +907,7 @@ class Builder
         $this->replace('payment_method', $paymentMethod);
         $this->replace('payment_system', $paymentSystem);
         $this->replace('payment_mid', $paymentMidName);
+        $this->replace('payment_account_id', $paymentAccountId);
 
         return $this;
     }
@@ -691,11 +915,11 @@ class Builder
     /**
      * Provides Card data to envelope
      *
+     * @param string|null $cardId
      * @param int|null $cardBin
      * @param string|null $cardLast4
      * @param int|null $expirationMonth
      * @param int|null $expirationYear
-     * @param string|null $cardId
      *
      * @return $this
      */
@@ -704,7 +928,7 @@ class Builder
         $cardLast4,
         $expirationMonth,
         $expirationYear,
-        $cardId = ''
+        $cardId = null
     ) {
         if ($cardId !== null && !is_string($cardId)) {
             throw new \InvalidArgumentException('Card ID must be string');
@@ -746,14 +970,14 @@ class Builder
      * @return $this
      */
     public function addBillingData(
-        $billingFirstName = '',
-        $billingLastName = '',
-        $billingFullName = '',
-        $billingCountry = '',
-        $billingState = '',
-        $billingCity = '',
-        $billingAddress = '',
-        $billingZip = ''
+        $billingFirstName = null,
+        $billingLastName = null,
+        $billingFullName = null,
+        $billingCountry = null,
+        $billingState = null,
+        $billingCity = null,
+        $billingAddress = null,
+        $billingZip = null
     ) {
         if ($billingFirstName !== null && !is_string($billingFirstName)) {
             throw new \InvalidArgumentException('Billing first name must be string');
@@ -802,9 +1026,9 @@ class Builder
      * @return $this
      */
     public function addProductData(
-        $productQuantity = 0.0,
-        $productName = '',
-        $productDescription = ''
+        $productQuantity = null,
+        $productName = null,
+        $productDescription = null
     ) {
         if ($productQuantity !== null && !is_int($productQuantity) && !is_float($productQuantity)) {
             throw new \InvalidArgumentException('Product quantity must be int or float');
@@ -826,90 +1050,181 @@ class Builder
     /**
      * Provides payout information to envelope
      *
-     * @param string $payout_id
-     * @param int $payout_timestamp
-     * @param string $payout_card_id
-     * @param int|float $payout_amount
-     * @param string $payout_currency
-     * @param string|null $payout_method
-     * @param string|null $payout_system
-     * @param string|null $payout_mid
-     * @param int|float|null $amount_converted
-     * @param int|null $payout_card_bin
-     * @param string|null $payout_card_last4
-     * @param int|null $payout_expiration_month
-     * @param int|null $payout_expiration_year
+     * @param string $payoutId
+     * @param int $payoutTimestamp
+     * @param string $payoutCardId
+     * @param int|float $payoutAmount
+     * @param string $payoutCurrency
+     * @param string|null $payoutMethod
+     * @param string|null $payoutSystem
+     * @param string|null $payoutMid
+     * @param int|float|null $amountConverted
+     * @param int|null $payoutCardBin
+     * @param string|null $payoutCardLast4
+     * @param int|null $payoutExpirationMonth
+     * @param int|null $payoutExpirationYear
      *
      * @return $this
      */
     public function addPayoutData(
-        $payout_id,
-        $payout_timestamp,
-        $payout_card_id,
-        $payout_amount,
-        $payout_currency,
-        $payout_method = null,
-        $payout_system = null,
-        $payout_mid = null,
-        $amount_converted = null,
-        $payout_card_bin = null,
-        $payout_card_last4 = null,
-        $payout_expiration_month = null,
-        $payout_expiration_year = null
+        $payoutId,
+        $payoutTimestamp,
+        $payoutCardId,
+        $payoutAmount,
+        $payoutCurrency,
+        $payoutMethod = null,
+        $payoutSystem = null,
+        $payoutMid = null,
+        $amountConverted = null,
+        $payoutCardBin = null,
+        $payoutCardLast4 = null,
+        $payoutExpirationMonth = null,
+        $payoutExpirationYear = null
     ) {
-        if (!is_string($payout_id)) {
+        if (!is_string($payoutId)) {
             throw new \InvalidArgumentException('Payout ID must be string');
         }
-        if (!is_int($payout_timestamp)) {
+        if (!is_int($payoutTimestamp)) {
             throw new \InvalidArgumentException('Payout timestamp must be int');
         }
-        if (!is_string($payout_card_id)) {
+        if (!is_string($payoutCardId)) {
             throw new \InvalidArgumentException('Card ID must be string');
         }
-        if (!is_float($payout_amount) && !is_int($payout_amount)) {
+        if (!is_float($payoutAmount) && !is_int($payoutAmount)) {
             throw new \InvalidArgumentException('Amount must be number');
         }
-        if (!is_string($payout_currency)) {
+        if (!is_string($payoutCurrency)) {
             throw new \InvalidArgumentException('Payout currency must be string');
         }
-        if ($payout_method !== null && !is_string($payout_method)) {
+        if ($payoutMethod !== null && !is_string($payoutMethod)) {
             throw new \InvalidArgumentException('Payout method must be string');
         }
-        if ($payout_system !== null && !is_string($payout_system)) {
+        if ($payoutSystem !== null && !is_string($payoutSystem)) {
             throw new \InvalidArgumentException('Payout system must be string');
         }
-        if ($payout_mid !== null && !is_string($payout_mid)) {
+        if ($payoutMid !== null && !is_string($payoutMid)) {
             throw new \InvalidArgumentException('Payout MID must be string');
         }
-        if ($amount_converted !== null && !is_float($amount_converted) && !is_int($amount_converted)) {
+        if ($amountConverted !== null && !is_float($amountConverted) && !is_int($amountConverted)) {
             throw new \InvalidArgumentException('Payout converted amount must be number');
         }
-        if ($payout_card_bin !== null && !is_int($payout_card_bin)) {
+        if ($payoutCardBin !== null && !is_int($payoutCardBin)) {
             throw new \InvalidArgumentException('Payout card BIN must be integer');
         }
-        if ($payout_card_last4 !== null && !is_string($payout_card_last4)) {
+        if ($payoutCardLast4 !== null && !is_string($payoutCardLast4)) {
             throw new \InvalidArgumentException('Payout last 4 must be string');
         }
-        if ($payout_expiration_month !== null && !is_int($payout_expiration_month)) {
+        if ($payoutExpirationMonth !== null && !is_int($payoutExpirationMonth)) {
             throw new \InvalidArgumentException('Payout card expiration month must be integer');
         }
-        if ($payout_expiration_year !== null && !is_int($payout_expiration_year)) {
+        if ($payoutExpirationYear !== null && !is_int($payoutExpirationYear)) {
             throw new \InvalidArgumentException('Payout card expiration year must be integer');
         }
 
-        $this->replace('payout_id', $payout_id);
-        $this->replace('payout_timestamp', $payout_timestamp);
-        $this->replace('payout_card_id', $payout_card_id);
-        $this->replace('payout_amount', (float) $payout_amount);
-        $this->replace('payout_currency', $payout_currency);
-        $this->replace('payout_method', $payout_method);
-        $this->replace('payout_system', $payout_system);
-        $this->replace('payout_mid', $payout_mid);
-        $this->replace('payout_amount_converted', (float) $amount_converted);
-        $this->replace('payout_card_bin', $payout_card_bin);
-        $this->replace('payout_card_last4', $payout_card_last4);
-        $this->replace('payout_expiration_month', $payout_expiration_month);
-        $this->replace('payout_expiration_year', $payout_expiration_year);
+        $this->replace('payout_id', $payoutId);
+        $this->replace('payout_timestamp', $payoutTimestamp);
+        $this->replace('payout_card_id', $payoutCardId);
+        $this->replace('payout_amount', (float) $payoutAmount);
+        $this->replace('payout_currency', $payoutCurrency);
+        $this->replace('payout_method', $payoutMethod);
+        $this->replace('payout_system', $payoutSystem);
+        $this->replace('payout_mid', $payoutMid);
+        $this->replace('payout_amount_converted', (float) $amountConverted);
+        $this->replace('payout_card_bin', $payoutCardBin);
+        $this->replace('payout_card_last4', $payoutCardLast4);
+        $this->replace('payout_expiration_month', $payoutExpirationMonth);
+        $this->replace('payout_expiration_year', $payoutExpirationYear);
+
+        return $this;
+    }
+
+    /**
+     * Provides install information to envelope
+     *
+     * @param int $installTimestamp
+     *
+     * @return $this
+     */
+    public function addInstallData($installTimestamp)
+    {
+        if (!is_int($installTimestamp)) {
+            throw new \InvalidArgumentException('Install timestamp must be int');
+        }
+
+        $this->replace('install_timestamp', $installTimestamp);
+
+        return $this;
+    }
+
+    /**
+     * Provides refund information to envelope
+     *
+     * @param string $refundId
+     * @param int|float $refundAmount
+     * @param string $refundCurrency
+     * @param int|null $refundTimestamp
+     * @param int|float|null $refundAmountConverted
+     * @param string|null $refundSource
+     * @param string|null $refundType
+     * @param string|null $refundCode
+     * @param string|null $refundReason
+     * @param string|null $agentId
+     *
+     * @return $this
+     */
+    public function addRefundData(
+        $refundId,
+        $refundTimestamp,
+        $refundAmount,
+        $refundCurrency,
+        $refundAmountConverted = null,
+        $refundSource = null,
+        $refundType = null,
+        $refundCode = null,
+        $refundReason = null,
+        $agentId = null
+    ) {
+        if (!is_string($refundId)) {
+            throw new \InvalidArgumentException('Refund ID must be string');
+        }
+        if (!is_int($refundTimestamp)) {
+            throw new \InvalidArgumentException('Refund timestamp must be int');
+        }
+        if (!is_float($refundAmount) && !is_int($refundAmount)) {
+            throw new \InvalidArgumentException('Amount must be number');
+        }
+        if (!is_string($refundCurrency)) {
+            throw new \InvalidArgumentException('Refund currency must be string');
+        }
+        if ($refundAmountConverted !== null && !is_float($refundAmountConverted) && !is_int($refundAmountConverted)) {
+            throw new \InvalidArgumentException('Refund converted amount must be number');
+        }
+        if ($refundSource !== null && !is_string($refundSource)) {
+            throw new \InvalidArgumentException('Refund source must be string');
+        }
+        if ($refundType !== null && !is_string($refundType)) {
+            throw new \InvalidArgumentException('Refund type must be string');
+        }
+        if ($refundCode !== null && !is_string($refundCode)) {
+            throw new \InvalidArgumentException('Refund code must be string');
+        }
+        if ($refundReason !== null && !is_string($refundReason)) {
+            throw new \InvalidArgumentException('Refund reason must be string');
+        }
+        if ($agentId !== null && !is_string($agentId)) {
+            throw new \InvalidArgumentException('Agent id must be string');
+        }
+
+        $this->replace('refund_id', $refundId);
+        $this->replace('refund_timestamp', $refundTimestamp);
+        $this->replace('refund_amount', $refundAmount);
+        $this->replace('refund_currency', $refundCurrency);
+        $this->replace('refund_amount_converted', $refundAmountConverted);
+        $this->replace('refund_source', $refundSource);
+        $this->replace('refund_type', $refundType);
+        $this->replace('refund_code', $refundCode);
+        $this->replace('refund_reason', $refundReason);
+        $this->replace('agent_id', $agentId);
 
         return $this;
     }

@@ -33,7 +33,7 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('payout', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(33, $result);
+        self::assertCount(21, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame(5566, $result['payout_timestamp']);
         self::assertSame('payoutLargeId', $result['payout_id']);
