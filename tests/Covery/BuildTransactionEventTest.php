@@ -96,14 +96,22 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
 
         $validator->validate($result);
 
-//        // Minimal data
-//        $result = \Covery\Client\Envelopes\Builder::installEvent(
-//            'someSequenceId'
-//        )->build();
-//        self::assertSame('install', $result->getType());
-//        self::assertCount(0, $result->getIdentities());
-//        self::assertSame('someSequenceId', $result->getSequenceId());
-//        self::assertCount(1, $result);
-//        $validator->validate($result);
+        // Minimal data
+        $result = \Covery\Client\Envelopes\Builder::transactionEvent(
+            'someSequenceId',
+            'fooUserId',
+            'transactionId',
+            0.12,
+            'GBP'
+        )->build();
+        self::assertSame('transaction', $result->getType());
+        self::assertCount(0, $result->getIdentities());
+        self::assertSame('someSequenceId', $result->getSequenceId());
+        self::assertCount(5, $result);
+        self::assertSame('fooUserId', $result['user_merchant_id']);
+        self::assertSame('transactionId', $result['transaction_id']);
+        self::assertSame(0.12, $result['transaction_amount']);
+        self::assertSame('GBP', $result['transaction_currency']);
+        $validator->validate($result);
     }
 }
