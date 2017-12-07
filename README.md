@@ -136,6 +136,7 @@ You may provide the following as envelopes:
 
 <a name="changelog" />
 ## Changelog
+
 * `1.0.5`
   *  new `postback` event introduced
   *  added optional `gender` for login event
