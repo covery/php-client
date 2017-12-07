@@ -12,16 +12,18 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
             'someUserId',
             123456,
             'foo@bar.com',
-            true
+            true,
+            'male'
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('login', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(4, $result);
+        self::assertCount(5, $result);
         self::assertSame('someUserId', $result['user_merchant_id']);
         self::assertSame(123456, $result['login_timestamp']);
         self::assertSame('foo@bar.com', $result['email']);
+        self::assertSame('male', $result['gender']);
         self::assertTrue($result['login_failed']);
         $validator->validate($result);
 
@@ -39,6 +41,7 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($result['login_timestamp'] >= $current);
         self::assertArrayNotHasKey('email', $result);
         self::assertArrayNotHasKey('login_failed', $result);
+        self::assertArrayNotHasKey('gender', $result);
         $validator->validate($result);
     }
 }
