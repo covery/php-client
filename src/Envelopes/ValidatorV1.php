@@ -22,6 +22,7 @@ class ValidatorV1
         'country' => 'string',
         'cpu_class' => 'string',
         'device_fingerprint' => 'string',
+        'device_id' => 'string',
         'firstname' => 'string',
         'gender' => 'string',
         'language' => 'string',
@@ -78,6 +79,7 @@ class ValidatorV1
         'affiliate_id' => 'string',
         'payout_id' => 'string',
         'payout_timestamp' => 'int',
+        'payout_account_id' => 'string',
         'payout_card_id' => 'string',
         'payout_amount' => 'float',
         'payout_currency' => 'string',
@@ -99,7 +101,19 @@ class ValidatorV1
         'refund_type' => 'string',
         'refund_code' => 'string',
         'refund_reason' => 'string',
+        'refund_method' => 'string',
+        'refund_system' => 'string',
+        'refund_mid' => 'string',
         'agent_id' => 'string',
+        'transaction_status' => 'string',
+        'code' => 'string',
+        'reason' => 'string',
+        'secure3d' => 'string',
+        'avs_result' => 'string',
+        'cvv_result' => 'string',
+        'psp_code' => 'string',
+        'psp_reason' => 'string',
+        'arn' => 'string',
     );
 
     private static $sharedOptional = array(
@@ -107,6 +121,7 @@ class ValidatorV1
         'cookie_enabled',
         'cpu_class',
         'device_fingerprint',
+        'device_id',
         'do_not_track',
         'ip',
         'language',
@@ -129,7 +144,7 @@ class ValidatorV1
         ),
         'login' => array(
             'mandatory' => array('login_timestamp', 'user_merchant_id'),
-            'optional' => array('email', 'login_failed', 'phone')
+            'optional' => array('email', 'login_failed', 'phone', 'gender')
         ),
         'registration' => array(
             'mandatory' => array('registration_timestamp', 'user_merchant_id'),
@@ -191,6 +206,7 @@ class ValidatorV1
                 'product_quantity',
                 'website_url',
                 'merchant_ip',
+                'affiliate_id',
             )
         ),
         'payout' => array(
@@ -198,11 +214,12 @@ class ValidatorV1
                 'payout_timestamp',
                 'payout_id',
                 'user_merchant_id',
-                'payout_card_id',
                 'payout_amount',
                 'payout_currency',
             ),
             'optional' => array(
+                'payout_card_id',
+                'payout_account_id',
                 'payout_method',
                 'payout_system',
                 'payout_mid',
@@ -243,9 +260,27 @@ class ValidatorV1
                 'refund_type',
                 'refund_code',
                 'refund_reason',
+                'refund_method',
+                'refund_system',
+                'refund_mid',
                 'agent_id',
             )
         ),
+        'postback' => array(
+            'mandatory' => array(),
+            'optional' => array(
+                'transaction_status',
+                'code',
+                'reason',
+                'secure3d',
+                'avs_result',
+                'cvv_result',
+                'psp_code',
+                'psp_reason',
+                'arn',
+                'payment_account_id',
+            )
+        )
     );
 
     /**

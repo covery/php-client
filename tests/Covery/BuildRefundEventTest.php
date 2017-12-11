@@ -18,13 +18,16 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
             'type',
             '1234',
             'reason',
-            'someAgentId1234'
+            'someAgentId1234',
+            'someMethod',
+            'someSystem',
+            'someMid'
         )->addBrowserData('88889', 'Test curl')->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('refund', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(12, $result);
+        self::assertCount(15, $result);
         self::assertSame('refundLargeId', $result['refund_id']);
         self::assertSame(0.12, $result['refund_amount']);
         self::assertSame('GBP', $result['refund_currency']);
@@ -35,6 +38,9 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('1234', $result['refund_code']);
         self::assertSame('reason', $result['refund_reason']);
         self::assertSame('someAgentId1234', $result['agent_id']);
+        self::assertSame('someMethod', $result['refund_method']);
+        self::assertSame('someSystem', $result['refund_system']);
+        self::assertSame('someMid', $result['refund_mid']);
         $validator->validate($result);
 
         // Minimal data

@@ -79,6 +79,7 @@ class Builder
      * @param int|null $timestamp
      * @param string|null $email
      * @param bool|null $failed
+     * @param string|null $gender
      *
      * @return Builder
      */
@@ -87,7 +88,8 @@ class Builder
         $userId,
         $timestamp = null,
         $email = null,
-        $failed = null
+        $failed = null,
+        $gender = null
     ) {
         $builder = new self('login', $sequenceId);
         if ($timestamp === null) {
@@ -101,7 +103,7 @@ class Builder
             null,
             null,
             null,
-            null,
+            $gender,
             null,
             null,
             null,
@@ -187,14 +189,15 @@ class Builder
      * @param string $sequenceId
      * @param string $userId
      * @param string $payoutId
-     * @param string $cardId
      * @param string $currency
      * @param int|float $amount
-     * @param int|float $amountConverted
      * @param int|null $payoutTimestamp
+     * @param string|null $cardId
+     * @param string|null $accountId
      * @param string|null $method
      * @param string|null $system
      * @param string|null $mid
+     * @param int|float $amountConverted
      * @param string|null $firstName
      * @param string|null $lastName
      * @param string|null $country
@@ -211,14 +214,15 @@ class Builder
         $sequenceId,
         $userId,
         $payoutId,
-        $cardId,
         $currency,
         $amount,
-        $amountConverted,
         $payoutTimestamp = null,
+        $cardId = null,
+        $accountId = null,
         $method = null,
         $system = null,
         $mid = null,
+        $amountConverted = null,
         $firstName = null,
         $lastName = null,
         $country = null,
@@ -236,9 +240,10 @@ class Builder
         return $builder->addPayoutData(
             $payoutId,
             $payoutTimestamp,
-            $cardId,
             $amount,
             $currency,
+            $cardId,
+            $accountId,
             $method,
             $system,
             $mid,
@@ -293,6 +298,7 @@ class Builder
      * @param int|float|null $productQuantity
      * @param string|null $websiteUrl
      * @param string|null $merchantIp
+     * @param string|null $affiliateId
      *
      * @return Builder
      */
@@ -336,7 +342,8 @@ class Builder
         $productName = null,
         $productQuantity = null,
         $websiteUrl = null,
-        $merchantIp = null
+        $merchantIp = null,
+        $affiliateId = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -381,7 +388,7 @@ class Builder
                 $country
             )
             ->addProductData($productQuantity, $productName, $productDescription)
-            ->addWebsiteData($websiteUrl)
+            ->addWebsiteData($websiteUrl, null, $affiliateId)
             ->addIpData(null, null, $merchantIp);
 
     }
@@ -433,6 +440,9 @@ class Builder
      * @param string|null $refundCode
      * @param string|null $refundReason
      * @param string|null $agentId
+     * @param string|null $refundMethod
+     * @param string|null $refundSystem
+     * @param string|null $refundMid
      *
      * @return Builder
      */
@@ -447,7 +457,10 @@ class Builder
         $refundType = null,
         $refundCode = null,
         $refundReason = null,
-        $agentId = null
+        $agentId = null,
+        $refundMethod = null,
+        $refundSystem = null,
+        $refundMid = null
     ) {
         $builder = new self('refund', $sequenceId);
         if ($refundTimestamp === null) {
@@ -464,8 +477,55 @@ class Builder
             $refundType,
             $refundCode,
             $refundReason,
-            $agentId
+            $agentId,
+            $refundMethod,
+            $refundSystem,
+            $refundMid
         );
+    }
+
+    /**
+     * Returns builder for postback request
+     *
+     * @param $sequenceId
+     * @param string|null $transactionStatus
+     * @param string|null $code
+     * @param string|null $reason
+     * @param string|null $secure3d
+     * @param string|null $avsResult
+     * @param string|null $cvvResult
+     * @param string|null $pspCode
+     * @param string|null $pspReason
+     * @param string|null $arn
+     * @param string|null $paymentAccountId
+     * @return Builder
+     */
+    public static function postBackEvent(
+        $sequenceId,
+        $transactionStatus = null,
+        $code = null,
+        $reason = null,
+        $secure3d = null,
+        $avsResult = null,
+        $cvvResult = null,
+        $pspCode = null,
+        $pspReason = null,
+        $arn = null,
+        $paymentAccountId = null
+    ) {
+        $builder = new self('postback', $sequenceId);
+        return $builder->addPostBackData(
+            $transactionStatus,
+            $code,
+            $reason,
+            $secure3d,
+            $avsResult,
+            $cvvResult,
+            $pspCode,
+            $pspReason,
+            $arn,
+            $paymentAccountId
+       );
     }
 
     /**
@@ -603,6 +663,7 @@ class Builder
      * @param bool|null $cookieEnabled
      * @param bool|null $doNotTrack
      * @param bool|null $ajaxValidation
+     * @param string|null $deviceId
      *
      * @return $this
      */
@@ -621,7 +682,8 @@ class Builder
         $languageSystem = '',
         $cookieEnabled = null,
         $doNotTrack = null,
-        $ajaxValidation = null
+        $ajaxValidation = null,
+        $deviceId = ''
     ) {
         if ($deviceFingerprint !== null && !is_string($deviceFingerprint)) {
             throw new \InvalidArgumentException('Device fingerprint must be string');
@@ -668,6 +730,9 @@ class Builder
         if ($ajaxValidation !== null && !is_bool($ajaxValidation)) {
             throw new \InvalidArgumentException('AJAX validation flag must be boolean');
         }
+        if ($deviceId !== null && !is_string($deviceId)) {
+            throw new \InvalidArgumentException('Device id must be string');
+        }
 
         $this->replace('device_fingerprint', $deviceFingerprint);
         $this->replace('user_agent', $userAgent);
@@ -684,6 +749,7 @@ class Builder
         $this->replace('cookie_enabled', $cookieEnabled);
         $this->replace('do_not_track', $doNotTrack);
         $this->replace('ajax_validation', $ajaxValidation);
+        $this->replace('device_id', $deviceId);
 
         return $this;
     }
@@ -1052,9 +1118,10 @@ class Builder
      *
      * @param string $payoutId
      * @param int $payoutTimestamp
-     * @param string $payoutCardId
      * @param int|float $payoutAmount
      * @param string $payoutCurrency
+     * @param string|null $payoutCardId
+     * @param string|null $payoutAccountId
      * @param string|null $payoutMethod
      * @param string|null $payoutSystem
      * @param string|null $payoutMid
@@ -1069,9 +1136,10 @@ class Builder
     public function addPayoutData(
         $payoutId,
         $payoutTimestamp,
-        $payoutCardId,
         $payoutAmount,
         $payoutCurrency,
+        $payoutCardId =  null,
+        $payoutAccountId = null,
         $payoutMethod = null,
         $payoutSystem = null,
         $payoutMid = null,
@@ -1087,14 +1155,17 @@ class Builder
         if (!is_int($payoutTimestamp)) {
             throw new \InvalidArgumentException('Payout timestamp must be int');
         }
-        if (!is_string($payoutCardId)) {
-            throw new \InvalidArgumentException('Card ID must be string');
-        }
         if (!is_float($payoutAmount) && !is_int($payoutAmount)) {
             throw new \InvalidArgumentException('Amount must be number');
         }
         if (!is_string($payoutCurrency)) {
             throw new \InvalidArgumentException('Payout currency must be string');
+        }
+        if ($payoutAccountId !== null && !is_string($payoutAccountId)) {
+            throw new \InvalidArgumentException('Account ID must be string');
+        }
+        if ($payoutCardId !== null && !is_string($payoutCardId)) {
+            throw new \InvalidArgumentException('Card ID must be string');
         }
         if ($payoutMethod !== null && !is_string($payoutMethod)) {
             throw new \InvalidArgumentException('Payout method must be string');
@@ -1124,6 +1195,7 @@ class Builder
         $this->replace('payout_id', $payoutId);
         $this->replace('payout_timestamp', $payoutTimestamp);
         $this->replace('payout_card_id', $payoutCardId);
+        $this->replace('payout_account_id', $payoutAccountId);
         $this->replace('payout_amount', (float) $payoutAmount);
         $this->replace('payout_currency', $payoutCurrency);
         $this->replace('payout_method', $payoutMethod);
@@ -1169,6 +1241,9 @@ class Builder
      * @param string|null $refundCode
      * @param string|null $refundReason
      * @param string|null $agentId
+     * @param string|null $refundMethod
+     * @param string|null $refundSystem
+     * @param string|null $refundMid
      *
      * @return $this
      */
@@ -1182,7 +1257,10 @@ class Builder
         $refundType = null,
         $refundCode = null,
         $refundReason = null,
-        $agentId = null
+        $agentId = null,
+        $refundMethod = null,
+        $refundSystem = null,
+        $refundMid = null
     ) {
         if (!is_string($refundId)) {
             throw new \InvalidArgumentException('Refund ID must be string');
@@ -1214,6 +1292,15 @@ class Builder
         if ($agentId !== null && !is_string($agentId)) {
             throw new \InvalidArgumentException('Agent id must be string');
         }
+        if ($refundMethod !== null && !is_string($refundMethod)) {
+            throw new \InvalidArgumentException('Refund method must be string');
+        }
+        if ($refundSystem !== null && !is_string($refundSystem)) {
+            throw new \InvalidArgumentException('Refund system must be string');
+        }
+        if ($refundMid !== null && !is_string($refundMid)) {
+            throw new \InvalidArgumentException('Refund mid must be string');
+        }
 
         $this->replace('refund_id', $refundId);
         $this->replace('refund_timestamp', $refundTimestamp);
@@ -1225,6 +1312,82 @@ class Builder
         $this->replace('refund_code', $refundCode);
         $this->replace('refund_reason', $refundReason);
         $this->replace('agent_id', $agentId);
+        $this->replace('refund_method', $refundMethod);
+        $this->replace('refund_system', $refundSystem);
+        $this->replace('refund_mid', $refundMid);
+
+        return $this;
+    }
+
+    /**
+     * Provides postback information to envelope
+     *
+     * @param string|null $transactionStatus
+     * @param string|null $code
+     * @param string|null $reason
+     * @param string|null $secure3d
+     * @param string|null $avsResult
+     * @param string|null $cvvResult
+     * @param string|null $pspCode
+     * @param string|null $pspReason
+     * @param string|null $arn
+     * @param string|null $paymentAccountId
+     * @return $this
+     */
+    public function addPostbackData(
+        $transactionStatus = null,
+        $code = null,
+        $reason = null,
+        $secure3d = null,
+        $avsResult = null,
+        $cvvResult = null,
+        $pspCode = null,
+        $pspReason = null,
+        $arn = null,
+        $paymentAccountId = null
+    ) {
+        if ($transactionStatus !== null && !is_string($transactionStatus)) {
+            throw new \InvalidArgumentException('Transaction status must be string');
+        }
+        if ($code !== null && !is_string($code)) {
+            throw new \InvalidArgumentException('Code must be string');
+        }
+        if ($reason !== null && !is_string($reason)) {
+            throw new \InvalidArgumentException('Reason must be string');
+        }
+        if ($secure3d !== null && !is_string($secure3d)) {
+            throw new \InvalidArgumentException('Secure3d must be string');
+        }
+        if ($avsResult !== null && !is_string($avsResult)) {
+            throw new \InvalidArgumentException('AvsResult must be string');
+        }
+        if ($cvvResult !== null && !is_string($cvvResult)) {
+            throw new \InvalidArgumentException('CvvResult must be string');
+        }
+        if ($pspCode !== null && !is_string($pspCode)) {
+            throw new \InvalidArgumentException('PspCode must be string');
+        }
+        if ($pspReason !== null && !is_string($pspReason)) {
+            throw new \InvalidArgumentException('PspReason must be string');
+        }
+        if ($arn !== null && !is_string($arn)) {
+            throw new \InvalidArgumentException('Arn must be string');
+        }
+        if ($paymentAccountId !== null && !is_string($paymentAccountId)) {
+            throw new \InvalidArgumentException('PaymentAccoutId must be string');
+        }
+
+
+        $this->replace('transaction_status', $transactionStatus);
+        $this->replace('code', $code);
+        $this->replace('reason', $reason);
+        $this->replace('secure3d', $secure3d);
+        $this->replace('avs_result', $avsResult);
+        $this->replace('cvv_result', $cvvResult);
+        $this->replace('psp_code', $pspCode);
+        $this->replace('psp_reason', $pspReason);
+        $this->replace('arn', $arn);
+        $this->replace('payment_account_id', $paymentAccountId);
 
         return $this;
     }

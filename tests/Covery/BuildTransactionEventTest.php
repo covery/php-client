@@ -47,13 +47,14 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
             'Sword',
             1000,
             'http://example.com',
-            '127.0.0.1'
+            '127.0.0.1',
+            'affiliateId'
         )->addBrowserData('88889', 'Test curl')->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('transaction', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(41, $result);
+        self::assertCount(42, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame('transactionId', $result['transaction_id']);
         self::assertSame(0.12, $result['transaction_amount']);
@@ -93,6 +94,7 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame(2017, $result['expiration_year']);
         self::assertSame('mode', $result['transaction_mode']);
         self::assertSame('type', $result['transaction_type']);
+        self::assertSame('affiliateId', $result['affiliate_id']);
 
         $validator->validate($result);
 

@@ -11,14 +11,15 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
             'someSequenceId',
             'fooUserId',
             'payoutLargeId',
-            'someCard0001',
             'GBP',
             0.12,
-            23,
             5566,
+            'someCard0001',
+            'someAccountId',
             'mtd',
             'sts',
             'midnight',
+            23,
             'tony',
             'hawk',
             'zimbabwe',
@@ -33,12 +34,13 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('payout', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(21, $result);
+        self::assertCount(22, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame(5566, $result['payout_timestamp']);
         self::assertSame('payoutLargeId', $result['payout_id']);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame('someCard0001', $result['payout_card_id']);
+        self::assertSame('someAccountId', $result['payout_account_id']);
         self::assertSame(.12, $result['payout_amount']);
         self::assertSame('GBP', $result['payout_currency']);
         self::assertSame('mtd', $result['payout_method']);
@@ -63,19 +65,16 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
             'someSequenceId',
             'fooUserId',
             'payoutLargeId',
-            'someCard0001',
             'GBP',
-            0.12,
-            23
+            0.12
         )->build();
         self::assertSame('payout', $result->getType());
         self::assertCount(0, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(7, $result);
+        self::assertCount(5, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame('payoutLargeId', $result['payout_id']);
         self::assertSame('fooUserId', $result['user_merchant_id']);
-        self::assertSame('someCard0001', $result['payout_card_id']);
         self::assertSame(.12, $result['payout_amount']);
         self::assertSame('GBP', $result['payout_currency']);
         $validator->validate($result);
