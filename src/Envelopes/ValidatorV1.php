@@ -9,54 +9,52 @@ use Covery\Client\IdentityNodeInterface;
 class ValidatorV1
 {
     private static $dataTypes = array(
-        'billing_address' => 'string',
-        'billing_city' => 'string',
-        'billing_country' => 'string',
-        'billing_firstname' => 'string',
-        'billing_lastname' => 'string',
-        'billing_fullname' => 'string',
-        'billing_state' => 'string',
-        'billing_zip' => 'string',
-        'card_id' => 'string',
-        'card_last4' => 'string',
-        'country' => 'string',
-        'cpu_class' => 'string',
-        'device_fingerprint' => 'string',
-        'device_id' => 'string',
-        'firstname' => 'string',
-        'gender' => 'string',
-        'language' => 'string',
-        'language_browser' => 'string',
-        'language_system' => 'string',
-        'language_user' => 'string',
-        'languages' => 'string',
-        'lastname' => 'string',
-        'login_user_agent' => 'string',
-        'os' => 'string',
-        'payment_method' => 'string',
-        'payment_mid' => 'string',
-        'payment_system' => 'string',
-        'payment_account_id' => 'string',
-        'product_description' => 'string',
-        'product_name' => 'string',
-        'registration_useragent' => 'string',
-        'screen_orientation' => 'string',
-        'screen_resolution' => 'string',
-        'social_type' => 'string',
-        'transaction_currency' => 'string',
-        'transaction_id' => 'string',
-        'transaction_mode' => 'string',
-        'transaction_type' => 'string',
-        'user_agent' => 'string',
-        'user_merchant_id' => 'string',
-        'user_name' => 'string',
-        'website_url' => 'string',
-        'transaction_source' => 'string',
-        'ip' => 'string',
-        'merchant_ip' => 'string',
-        'real_ip' => 'string',
-        'email' => 'string',
-        'phone' => 'string',
+        'billing_address' => 'string(255)',
+        'billing_city' => 'string(50)',
+        'billing_country' => 'string(60)',
+        'billing_firstname' => 'string(50)',
+        'billing_lastname' => 'string(50)',
+        'billing_fullname' => 'string(100)',
+        'billing_state' => 'string(50)',
+        'billing_zip' => 'string(10)',
+        'card_id' => 'string(255)',
+        'card_last4' => 'string(4)',
+        'country' => 'string(60)',
+        'cpu_class' => 'string(255)',
+        'device_fingerprint' => 'string(255)',
+        'device_id' => 'string(255)',
+        'firstname' => 'string(50)',
+        'gender' => 'string(10)',
+        'language' => 'string(12)',
+        'language_browser' => 'string(12)',
+        'language_system' => 'string(12)',
+        'language_user' => 'string(12)',
+        'languages' => 'string(255)',
+        'lastname' => 'string(50)',
+        'os' => 'string(255)',
+        'payment_method' => 'string(255)',
+        'payment_mid' => 'string(255)',
+        'payment_system' => 'string(255)',
+        'payment_account_id' => 'string(255)',
+        'product_description' => 'string(1024)',
+        'product_name' => 'string(255)',
+        'screen_orientation' => 'string(45)',
+        'screen_resolution' => 'string(32)',
+        'social_type' => 'string(50)',
+        'transaction_currency' => 'string(10)',
+        'transaction_id' => 'string(255)',
+        'transaction_mode' => 'string(255)',
+        'transaction_type' => 'string(32)',
+        'user_agent' => 'string(1024)',
+        'user_merchant_id' => 'string(45)',
+        'user_name' => 'string(255)',
+        'website_url' => 'string(255)',
+        'transaction_source' => 'string(255)',
+        'ip' => 'string(45)',
+        'merchant_ip' => 'string(45)',
+        'real_ip' => 'string(45)',
+        'email' => 'string(255)',
+        'phone' => 'string(15)',
         'age' => 'int',
         'card_bin' => 'int',
         'confirmation_timestamp' => 'int',
@@ -75,45 +73,45 @@ class ValidatorV1
         'email_confirmed' => 'bool',
         'login_failed' => 'bool',
         'phone_confirmed' => 'bool',
-        'traffic_source' => 'string',
-        'affiliate_id' => 'string',
-        'payout_id' => 'string',
+        'traffic_source' => 'string(255)',
+        'affiliate_id' => 'string(255)',
+        'payout_id' => 'string(255)',
         'payout_timestamp' => 'int',
-        'payout_account_id' => 'string',
-        'payout_card_id' => 'string',
+        'payout_account_id' => 'string(255)',
+        'payout_card_id' => 'string(255)',
         'payout_amount' => 'float',
-        'payout_currency' => 'string',
-        'payout_method' => 'string',
-        'payout_system' => 'string',
-        'payout_mid' => 'string',
+        'payout_currency' => 'string(10)',
+        'payout_method' => 'string(255)',
+        'payout_system' => 'string(255)',
+        'payout_mid' => 'string(255)',
         'payout_amount_converted' => 'float',
         'payout_card_bin' => 'int',
-        'payout_card_last4' => 'string',
+        'payout_card_last4' => 'string(4)',
         'payout_expiration_month' => 'int',
         'payout_expiration_year' => 'int',
         'install_timestamp' => 'int',
         'refund_timestamp' => 'int',
-        'refund_id' => 'string',
+        'refund_id' => 'string(255)',
         'refund_amount' => 'float',
-        'refund_currency' => 'string',
+        'refund_currency' => 'string(10)',
         'refund_amount_converted' => 'float',
-        'refund_source' => 'string',
-        'refund_type' => 'string',
-        'refund_code' => 'string',
-        'refund_reason' => 'string',
-        'refund_method' => 'string',
-        'refund_system' => 'string',
-        'refund_mid' => 'string',
-        'agent_id' => 'string',
-        'transaction_status' => 'string',
-        'code' => 'string',
-        'reason' => 'string',
-        'secure3d' => 'string',
-        'avs_result' => 'string',
-        'cvv_result' => 'string',
-        'psp_code' => 'string',
-        'psp_reason' => 'string',
-        'arn' => 'string',
+        'refund_source' => 'string(255)',
+        'refund_type' => 'string(32)',
+        'refund_code' => 'string(32)',
+        'refund_reason' => 'string(255)',
+        'refund_method' => 'string(255)',
+        'refund_system' => 'string(255)',
+        'refund_mid' => 'string(255)',
+        'agent_id' => 'string(255)',
+        'transaction_status' => 'string(100)',
+        'code' => 'string(100)',
+        'reason' => 'string(100)',
+        'secure3d' => 'string(100)',
+        'avs_result' => 'string(100)',
+        'cvv_result' => 'string(100)',
+        'psp_code' => 'string(100)',
+        'psp_reason' => 'string(100)',
+        'arn' => 'string(255)',
     );
 
     private static $sharedOptional = array(
@@ -400,51 +398,53 @@ class ValidatorV1
                     }
                 } elseif (isset(self::$dataTypes[$key])) {
                     // Checking type
-                    switch (self::$dataTypes[$key]) {
-                        case 'string':
-                            if (!is_string($value)) {
-                                $details[] = sprintf(
-                                    'Field "%s" must be string, but %s provided',
-                                    $key,
-                                    $value === null ? 'null' : gettype($value)
-                                );
-                            } elseif (strlen($value) > 255) {
-                                $details[] = sprintf(
-                                    'Received %d bytes to string key "%s" - value is too long',
-                                    strlen($value),
-                                    $key
-                                );
-                            }
-                            break;
-                        case 'int':
-                            if (!is_int($value)) {
-                                $details[] = sprintf(
-                                    'Field "%s" must be int, but %s provided',
-                                    $key,
-                                    $value === null ? 'null' : gettype($value)
-                                );
-                            }
-                            break;
-                        case 'float':
-                            if (!is_float($value) && !is_int($value)) {
-                                $details[] = sprintf(
-                                    'Field "%s" must be float/double, but %s provided',
-                                    $key,
-                                    $value === null ? 'null' : gettype($value)
-                                );
-                            }
-                            break;
-                        case 'bool':
-                            if (!is_bool($value)) {
-                                $details[] = sprintf(
-                                    'Field "%s" must be boolean, but %s provided',
-                                    $key,
-                                    $value === null ? 'null' : gettype($value)
-                                );
-                            }
-                            break;
-                        default:
-                            $details[] = sprintf('Unknown type for "%s"', $key);
+                    if (preg_match('/string\((\d+)\)/', self::$dataTypes[$key], $matches)) {
+                        if (!is_string($value)) {
+                            $details[] = sprintf(
+                                'Field "%s" must be string, but %s provided',
+                                $key,
+                                $value === null ? 'null' : gettype($value)
+                            );
+                        } elseif (strlen($value) > (int)$matches[1]) {
+                            $details[] = sprintf(
+                                'Received %d bytes of %s allowed for string key "%s" - value is too long',
+                                strlen($value),
+                                $matches[1],
+                                $key
+                            );
+                        }
+                    } else {
+                        switch (self::$dataTypes[$key]) {
+                            case 'int':
+                                if (!is_int($value)) {
+                                    $details[] = sprintf(
+                                        'Field "%s" must be int, but %s provided',
+                                        $key,
+                                        $value === null ? 'null' : gettype($value)
+                                    );
+                                }
+                                break;
+                            case 'float':
+                                if (!is_float($value) && !is_int($value)) {
+                                    $details[] = sprintf(
+                                        'Field "%s" must be float/double, but %s provided',
+                                        $key,
+                                        $value === null ? 'null' : gettype($value)
+                                    );
+                                }
+                                break;
+                            case 'bool':
+                                if (!is_bool($value)) {
+                                    $details[] = sprintf(
+                                        'Field "%s" must be boolean, but %s provided',
+                                        $key,
+                                        $value === null ? 'null' : gettype($value)
+                                    );
+                                }
+                                break;
+                            default:
+                                $details[] = sprintf('Unknown type for "%s"', $key);
+                        }
                     }
                 } else {
                     $details[] = sprintf('Unknown type for "%s"', $key);
