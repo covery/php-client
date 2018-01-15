@@ -49,12 +49,16 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
             'http://example.com',
             '127.0.0.1',
             'affiliateId'
-        )->addBrowserData('88889', 'Test curl')->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )
+            ->addBrowserData('88889', 'Test curl')
+            ->addIdentity(new \Covery\Client\Identities\Stub())
+            ->addCustomField('test1', 'test1')
+            ->build();
 
         self::assertSame('transaction', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(42, $result);
+        self::assertCount(43, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame('transactionId', $result['transaction_id']);
         self::assertSame(0.12, $result['transaction_amount']);

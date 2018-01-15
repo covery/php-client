@@ -307,7 +307,7 @@ class ValidatorV1
      * Analyzes identities from envelope
      *
      * @param IdentityNodeInterface[] $identities
-     * @return string
+     * @return string[]
      */
     public function analyzeIdentities(array $identities)
     {
@@ -357,15 +357,14 @@ class ValidatorV1
             $fields = array_merge($typeInfo['mandatory'], $typeInfo['optional'], self::$sharedOptional);
             $customCount = 0;
             foreach ($envelope as $key => $value) {
-                if ($this->isCustom($type)) {
+                if ($this->isCustom($key)) {
                     $customCount++;
-                }
-                if (!in_array($key, $fields)) {
+                } elseif (!in_array($key, $fields)) {
                     $details[] = sprintf('Field "%s" not found in "%s"', $key, $envelope->getType());
                 }
             }
 
-            if ($customCount > 0) {
+            if ($customCount > 10) {
                 $details[] = sprintf('Expected 10 or less custom fields, but %d provided', $customCount);
             }
 
