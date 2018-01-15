@@ -99,6 +99,7 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('mode', $result['transaction_mode']);
         self::assertSame('type', $result['transaction_type']);
         self::assertSame('affiliateId', $result['affiliate_id']);
+        self::assertSame('test1', $result['custom_test1']);
 
         $validator->validate($result);
 
