@@ -137,6 +137,8 @@ You may provide the following as envelopes:
 <a name="changelog" />
 ## Changelog
 
+* `1.0.7`
+  * custom fields validation fixed
 * `1.0.6`
   * string validation actualized
 * `1.0.5`
