@@ -77,7 +77,7 @@ class ValidatorV1Test extends \PHPUnit_Framework_TestCase
         self::assertCount(4, $result);
         self::assertSame('Field "user_merchant_id" must be string, but integer provided', $result[0]);
         self::assertSame('Unknown type for "user_merchant_id2"', $result[1]);
-        self::assertSame('Received 256 bytes to string key "email" - value is too long', $result[2]);
+        self::assertSame('Received 256 bytes of 255 allowed for string key "email" - value is too long', $result[2]);
         self::assertSame('Field "login_failed" must be boolean, but null provided', $result[3]);
     }
 
