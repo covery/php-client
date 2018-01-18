@@ -136,6 +136,7 @@ You may provide the following as envelopes:
 
 <a name="changelog" />
 ## Changelog
+
 * `1.0.8`
   * added optional `traffic_source` and `affiliate_id` for login event
 * `1.0.7`
