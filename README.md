@@ -137,6 +137,22 @@ You may provide the following as envelopes:
 <a name="changelog" />
 ## Changelog
 
+* `1.0.5`
+  *  new `postback` event introduced
+  *  added optional `gender` for login event
+  *  added optional `payout_account_id` for payout event
+  * `payout_card_id`, `payout_ammount_converted` moved to optional for payout event
+  *  added optional `affiliate_id` for transaction event
+  *  added optional `refund_method`, `refund_system`, `refund_mid` for refund event
+  *  added `device_id` to all packets
+  *  tests for `postback` event added
+  *  old tests modified
+* `1.0.4`
+  *  new `install`, `refund` events introduced
+  * `transaction_mode` moved to optional for transaction event
+  *  added mandatory `user_merchant_id` for transaction event
+  *  tests for `install`, `refund`, `transaction` events added
+  *  payout test fixed
 * `1.0.3`
   * new `payout` event introduced
   * identity nodes are optional now
