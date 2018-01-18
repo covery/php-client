@@ -80,6 +80,8 @@ class Builder
      * @param string|null $email
      * @param bool|null $failed
      * @param string|null $gender
+     * @param string|null $trafficSource
+     * @param string|null $affiliateId
      *
      * @return Builder
      */
@@ -89,7 +91,9 @@ class Builder
         $timestamp = null,
         $email = null,
         $failed = null,
-        $gender = null
+        $gender = null,
+        $trafficSource = null,
+        $affiliateId = null
     ) {
         $builder = new self('login', $sequenceId);
         if ($timestamp === null) {
@@ -113,7 +117,7 @@ class Builder
             null,
             null,
             $failed
-        );
+        )->addWebsiteData(null, $trafficSource, $affiliateId);
     }
 
     /**
