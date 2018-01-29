@@ -142,7 +142,7 @@ class ValidatorV1
         ),
         'login' => array(
             'mandatory' => array('login_timestamp', 'user_merchant_id'),
-            'optional' => array('email', 'login_failed', 'phone', 'gender')
+            'optional' => array('email', 'login_failed', 'phone', 'gender', 'traffic_source', 'affiliate_id')
         ),
         'registration' => array(
             'mandatory' => array('registration_timestamp', 'user_merchant_id'),
