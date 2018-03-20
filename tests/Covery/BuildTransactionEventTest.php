@@ -48,7 +48,8 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
             1000,
             'http://example.com',
             '127.0.0.1',
-            'affiliateId'
+            'affiliateId',
+            'aaz42zaa42'
         )
             ->addBrowserData('88889', 'Test curl')
             ->addIdentity(new \Covery\Client\Identities\Stub())
@@ -58,7 +59,7 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('transaction', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(43, $result);
+        self::assertCount(44, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame('transactionId', $result['transaction_id']);
         self::assertSame(0.12, $result['transaction_amount']);
@@ -73,6 +74,7 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('380501234567', $result['phone']);
         self::assertSame('Lord of north', $result['user_name']);
         self::assertSame('z1234fcdfd23', $result['payment_account_id']);
+        self::assertSame('aaz42zaa42', $result['secondary_payment_account_id']);
         self::assertSame('method', $result['payment_method']);
         self::assertSame('mid', $result['payment_mid']);
         self::assertSame('system', $result['payment_system']);

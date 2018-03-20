@@ -303,6 +303,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $merchantIp
      * @param string|null $affiliateId
+     * @param string|null $secondaryPaymentAccountId
      *
      * @return Builder
      */
@@ -347,7 +348,8 @@ class Builder
         $productQuantity = null,
         $websiteUrl = null,
         $merchantIp = null,
-        $affiliateId = null
+        $affiliateId = null,
+        $secondaryPaymentAccountId = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -367,7 +369,8 @@ class Builder
                 $paymentMethod,
                 $paymentSystem,
                 $paymentMidName,
-                $paymentAccountId
+                $paymentAccountId,
+                $secondaryPaymentAccountId
             )
             ->addBillingData(
                 $billingFirstName,
@@ -912,6 +915,7 @@ class Builder
      * @param string|null $paymentSystem
      * @param string|null $paymentMidName
      * @param string|null $paymentAccountId
+     * @param string|null $secondaryPaymentAccountId
      *
      * @return $this
      */
@@ -927,7 +931,8 @@ class Builder
         $paymentMethod = null,
         $paymentSystem = null,
         $paymentMidName = null,
-        $paymentAccountId = null
+        $paymentAccountId = null,
+        $secondaryPaymentAccountId = null
     ) {
         if ($transactionId !== null && !is_string($transactionId)) {
             throw new \InvalidArgumentException('Transaction ID must be string');
@@ -962,6 +967,9 @@ class Builder
         if ($paymentAccountId !== null && !is_string($paymentAccountId)) {
             throw new \InvalidArgumentException('Payment account id must be string');
         }
+        if ($secondaryPaymentAccountId !== null && !is_string($secondaryPaymentAccountId)) {
+            throw new \InvalidArgumentException('Secondary payment account id must be string');
+        }
         if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
             throw new \InvalidArgumentException('Transaction amount converted must be float');
         }
@@ -978,6 +986,7 @@ class Builder
         $this->replace('payment_system', $paymentSystem);
         $this->replace('payment_mid', $paymentMidName);
         $this->replace('payment_account_id', $paymentAccountId);
+        $this->replace('secondary_payment_account_id', $secondaryPaymentAccountId);
 
         return $this;
     }
