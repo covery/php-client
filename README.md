@@ -137,8 +137,10 @@ You may provide the following as envelopes:
 <a name="changelog" />
 ## Changelog
 
-* `1.0.8`
+* `1.0.9`
   *  added optional `secondary_payment_account_id` for transaction event
+* `1.0.8`
+  * added optional `traffic_source` and `affiliate_id` for login event
 * `1.0.7`
   * custom fields validation fixed
 * `1.0.6`
