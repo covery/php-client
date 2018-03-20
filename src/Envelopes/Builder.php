@@ -915,6 +915,7 @@ class Builder
      * @param string|null $paymentSystem
      * @param string|null $paymentMidName
      * @param string|null $paymentAccountId
+     * @param string|null $secondaryPaymentAccountId
      *
      * @return $this
      */
