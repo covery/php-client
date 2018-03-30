@@ -489,6 +489,150 @@ class Builder
     }
 
     /**
+     * Returns builder for transfer request
+     *
+     * @param string $sequenceId
+     * @param string $eventId
+     * @param float $amount
+     * @param string $currency
+     * @param string $accountId
+     * @param string $secondAccountId
+     * @param string $accountSystem
+     * @param string $userId
+     * @param int|null $eventTimestamp
+     * @param float|null $amountConverted
+     * @param string|null $method
+     * @param string|null $email
+     * @param string|null $phone
+     * @param int|null $birthDate
+     * @param string|null $firstname
+     * @param string|null $lastname
+     * @param string|null $fullname
+     * @param string|null $state
+     * @param string|null $city
+     * @param string|null $address
+     * @param string|null $zip
+     * @param string|null $gender
+     * @param string|null $country
+     * @param string|null $operation
+     * @param string|null $secondEmail
+     * @param string|null $secondPhone
+     * @param int|null $secondBirthDate
+     * @param string|null $secondFirstname
+     * @param string|null $secondLastname
+     * @param string|null $secondFullname
+     * @param string|null $secondState
+     * @param string|null $secondCity
+     * @param string|null $secondAddress
+     * @param string|null $secondZip
+     * @param string|null $secondGender
+     * @param string|null $secondCountry
+     * @param string|null $productDescription
+     * @param string|null $productName
+     * @param int|float|null $productQuantity
+     *
+     * @return Builder
+     */
+    public static function transferEvent(
+        $sequenceId,
+        $eventId,
+        $amount,
+        $currency,
+        $accountId,
+        $secondAccountId,
+        $accountSystem,
+        $userId,
+        $method = null,
+        $eventTimestamp = null,
+        $amountConverted = null,
+        $email = null,
+        $phone = null,
+        $birthDate = null,
+        $firstname = null,
+        $lastname = null,
+        $fullname = null,
+        $state = null,
+        $city = null,
+        $address = null,
+        $zip = null,
+        $gender = null,
+        $country = null,
+        $operation = null,
+        $secondEmail = null,
+        $secondPhone = null,
+        $secondBirthDate = null,
+        $secondFirstname = null,
+        $secondLastname = null,
+        $secondFullname = null,
+        $secondState = null,
+        $secondCity = null,
+        $secondAddress = null,
+        $secondZip = null,
+        $secondGender = null,
+        $secondCountry = null,
+        $productDescription = null,
+        $productName = null,
+        $productQuantity = null
+
+    ) {
+        $builder = new self('transfer', $sequenceId);
+        if ($eventTimestamp === null) {
+            $eventTimestamp = time();
+        }
+
+        return $builder
+            ->addTransferData(
+               $eventId,
+               $eventTimestamp,
+               $amount,
+               $currency,
+               $accountId,
+               $secondAccountId,
+               $accountSystem,
+               $amountConverted,
+               $method,
+               $operation,
+               $secondEmail,
+               $secondPhone,
+               $secondBirthDate,
+               $secondFirstname,
+               $secondLastname,
+               $secondFullname,
+               $secondState,
+               $secondCity,
+               $secondAddress,
+               $secondZip,
+               $secondGender,
+               $secondCountry
+            )
+            ->addUserData(
+                $email,
+                $userId,
+                $phone,
+                null,
+                $firstname,
+                $lastname,
+                $gender,
+                null,
+                $country,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $birthDate,
+                $fullname,
+                $state,
+                $city,
+                $address,
+                $zip
+            )
+            ->addProductData($productQuantity, $productName, $productDescription);
+    }
+
+    /**
      * Returns builder for postback request
      *
      * @param $sequenceId
@@ -777,6 +921,12 @@ class Builder
      * @param bool|null $emailConfirmed
      * @param bool|null $phoneConfirmed
      * @param bool|null $loginFailed
+     * @param int|null $birthDate
+     * @param string|null $fullname
+     * @param string|null $state
+     * @param string|null $city
+     * @param string|null $address
+     * @param string|null $zip
      *
      * @return $this
      */
@@ -796,8 +946,15 @@ class Builder
         $confirmationTimeStamp = 0,
         $emailConfirmed = null,
         $phoneConfirmed = null,
-        $loginFailed = null
-    ) {
+        $loginFailed = null,
+        $birthDate = null,
+        $fullname = null,
+        $state = null,
+        $city = null,
+        $address = null,
+        $zip = null
+    )
+    {
         if ($userName !== null && !is_string($userName)) {
             throw new \InvalidArgumentException('User name must be string');
         }
@@ -819,6 +976,9 @@ class Builder
         if ($confirmationTimeStamp !== null && !is_int($confirmationTimeStamp)) {
             throw new \InvalidArgumentException('Confirmation timestamp must be integer');
         }
+        if ($birthDate !== null && !is_int($birthDate)) {
+            throw new \InvalidArgumentException('Birthdate timestamp must be integer');
+        }
         if ($emailConfirmed !== null && !is_bool($emailConfirmed)) {
             throw new \InvalidArgumentException('Email confirmed flag must be boolean');
         }
@@ -827,6 +987,21 @@ class Builder
         }
         if ($loginFailed !== null && !is_bool($loginFailed)) {
             throw new \InvalidArgumentException('Login failed flag must be boolean');
+        }
+        if ($fullname !== null && !is_string($fullname)) {
+            throw new \InvalidArgumentException('Fullname must be string');
+        }
+        if ($state !== null && !is_string($state)) {
+            throw new \InvalidArgumentException('State must be string');
+        }
+        if ($city !== null && !is_string($city)) {
+            throw new \InvalidArgumentException('City must be string');
+        }
+        if ($address !== null && !is_string($address)) {
+            throw new \InvalidArgumentException('Address must be string');
+        }
+        if ($zip !== null && !is_string($zip)) {
+            throw new \InvalidArgumentException('Zip must be string');
         }
 
         $this->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country);
@@ -841,6 +1016,12 @@ class Builder
         $this->replace('email_confirmed', $emailConfirmed);
         $this->replace('phone_confirmed', $phoneConfirmed);
         $this->replace('login_failed', $loginFailed);
+        $this->replace('birth_date', $birthDate);
+        $this->replace('fullname', $fullname);
+        $this->replace('state', $state);
+        $this->replace('city', $city);
+        $this->replace('address', $address);
+        $this->replace('zip', $zip);
 
         return $this;
     }
@@ -1320,6 +1501,151 @@ class Builder
         $this->replace('refund_system', $refundSystem);
         $this->replace('refund_mid', $refundMid);
 
+        return $this;
+    }
+
+    /**
+     * Provides transfer information to envelope
+     *
+     * @param string $eventId
+     * @param int $eventTimestamp
+     * @param float $amount
+     * @param string $currency
+     * @param string $accountId
+     * @param string $secondAccountId
+     * @param string $accountSystem
+     * @param float|null $amountConverted
+     * @param string|null $method
+     * @param string|null $operation
+     * @param string|null $secondEmail
+     * @param string|null $secondPhone
+     * @param string|int $secondBirthDate
+     * @param string|null $secondFirstname
+     * @param string|null $secondLastname
+     * @param string|null $secondFullname
+     * @param string|null $secondState
+     * @param string|null $secondCity
+     * @param string|null $secondAddress
+     * @param string|null $secondZip
+     * @param string|null $secondGender
+     * @param string|null $secondCountry
+     *
+     * @return $this
+     */
+    public function addTransferData(
+        $eventId,
+        $eventTimestamp,
+        $amount,
+        $currency,
+        $accountId,
+        $secondAccountId,
+        $accountSystem,
+        $amountConverted = null,
+        $method = null,
+        $operation = null,
+        $secondEmail = null,
+        $secondPhone = null,
+        $secondBirthDate = null,
+        $secondFirstname = null,
+        $secondLastname = null,
+        $secondFullname = null,
+        $secondState = null,
+        $secondCity = null,
+        $secondAddress = null,
+        $secondZip = null,
+        $secondGender = null,
+        $secondCountry = null
+    ) {
+        if (!is_string($eventId)) {
+            throw new \InvalidArgumentException('Event ID must be string');
+        }
+        if (!is_int($eventTimestamp)) {
+            throw new \InvalidArgumentException('Event timestamp must be int');
+        }
+        if (!is_int($amount) && !is_float($amount)) {
+            throw new \InvalidArgumentException('Amount must be number');
+        }
+        if (!is_string($currency)) {
+            throw new \InvalidArgumentException('Currency must be string');
+        }
+        if (!is_string($accountId)) {
+            throw new \InvalidArgumentException('Account id must be string');
+        }
+        if (!is_string($secondAccountId)) {
+            throw new \InvalidArgumentException('Second account id must be string');
+        }
+        if (!is_string($accountSystem)) {
+            throw new \InvalidArgumentException('Account system must be string');
+        }
+        if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
+            throw new \InvalidArgumentException('Amount converted must be number');
+        }
+        if ($method !== null && !is_string($method)) {
+            throw new \InvalidArgumentException('Method must be string');
+        }
+        if ($operation !== null && !is_string($operation)) {
+            throw new \InvalidArgumentException('Operation must be string');
+        }
+        if ($secondPhone !== null && !is_string($secondPhone)) {
+            throw new \InvalidArgumentException('Second phone must be string');
+        }
+        if ($secondEmail !== null && !is_string($secondEmail)) {
+            throw new \InvalidArgumentException('Second email must be string');
+        }
+        if ($secondBirthDate !== null && !is_int($secondBirthDate)) {
+            throw new \InvalidArgumentException('Second birth date must be int');
+        }
+        if ($secondFirstname !== null && !is_string($secondFirstname)) {
+            throw new \InvalidArgumentException('Second firstname must be string');
+        }
+        if ($secondLastname !== null && !is_string($secondLastname)) {
+            throw new \InvalidArgumentException('Second lastname must be string');
+        }
+        if ($secondFullname !== null && !is_string($secondFullname)) {
+            throw new \InvalidArgumentException('Second fullname must be string');
+        }
+        if ($secondState !== null && !is_string($secondState)) {
+            throw new \InvalidArgumentException('Second state must be string');
+        }
+        if ($secondCity !== null && !is_string($secondCity)) {
+            throw new \InvalidArgumentException('Second city must be string');
+        }
+        if ($secondAddress !== null && !is_string($secondAddress)) {
+            throw new \InvalidArgumentException('Second address must be string');
+        }
+        if ($secondZip !== null && !is_string($secondZip)) {
+            throw new \InvalidArgumentException('Second zip must be string');
+        }
+        if ($secondGender !== null && !is_string($secondGender)) {
+            throw new \InvalidArgumentException('Second gender must be string');
+        }
+        if ($secondCountry !== null && !is_string($secondCountry)) {
+            throw new \InvalidArgumentException('Second country must be string');
+        }
+
+
+        $this->replace('event_id', $eventId);
+        $this->replace('event_timestamp', $eventTimestamp);
+        $this->replace('amount', $amount);
+        $this->replace('currency', $currency);
+        $this->replace('account_id', $accountId);
+        $this->replace('second_account_id', $secondAccountId);
+        $this->replace('account_system', $accountSystem);
+        $this->replace('amount_converted', $amountConverted);
+        $this->replace('method', $method);
+        $this->replace('operation', $operation);
+        $this->replace('second_email', $secondEmail);
+        $this->replace('second_phone', $secondPhone);
+        $this->replace('second_birth_date', $secondBirthDate);
+        $this->replace('second_firstname', $secondFirstname);
+        $this->replace('second_lastname', $secondLastname);
+        $this->replace('second_fullname', $secondFullname);
+        $this->replace('second_state', $secondState);
+        $this->replace('second_city', $secondCity);
+        $this->replace('second_address', $secondAddress);
+        $this->replace('second_zip', $secondZip);
+        $this->replace('second_gender', $secondGender);
+        $this->replace('second_country', $secondCountry);
         return $this;
     }
 
