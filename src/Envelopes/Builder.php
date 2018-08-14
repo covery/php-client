@@ -464,7 +464,10 @@ class Builder
         $agentId = null,
         $refundMethod = null,
         $refundSystem = null,
-        $refundMid = null
+        $refundMid = null,
+        $email = null,
+        $phone = null,
+        $userId = null
     ) {
         $builder = new self('refund', $sequenceId);
         if ($refundTimestamp === null) {
@@ -485,7 +488,7 @@ class Builder
             $refundMethod,
             $refundSystem,
             $refundMid
-        );
+        )->addUserData($email, $userId, $phone);
     }
 
     /**
@@ -668,7 +671,11 @@ class Builder
      * @param bool|null $doNotTrack
      * @param bool|null $ajaxValidation
      * @param string|null $deviceId
-     *
+     * @param string|null $ipList
+     * @param string|null $plugins
+     * @param string|null $refererUrl
+     * @param string|null $originUrl
+     * @param string|null $clientResolution
      * @return $this
      */
     public function addBrowserData(
@@ -687,7 +694,12 @@ class Builder
         $cookieEnabled = null,
         $doNotTrack = null,
         $ajaxValidation = null,
-        $deviceId = ''
+        $deviceId = '',
+        $ipList = null,
+        $plugins = null,
+        $refererUrl = null,
+        $originUrl = null,
+        $clientResolution = null
     ) {
         if ($deviceFingerprint !== null && !is_string($deviceFingerprint)) {
             throw new \InvalidArgumentException('Device fingerprint must be string');
@@ -737,6 +749,21 @@ class Builder
         if ($deviceId !== null && !is_string($deviceId)) {
             throw new \InvalidArgumentException('Device id must be string');
         }
+        if ($ipList !== null && !is_string($ipList)) {
+            throw new \InvalidArgumentException('Ip list must be string');
+        }
+        if ($plugins !== null && !is_string($plugins)) {
+            throw new \InvalidArgumentException('Plugins must be string');
+        }
+        if ($refererUrl !== null && !is_string($refererUrl)) {
+            throw new \InvalidArgumentException('Referer url must be string');
+        }
+        if ($originUrl !== null && !is_string($originUrl)) {
+            throw new \InvalidArgumentException('Origin url must be string');
+        }
+        if ($clientResolution !== null && !is_string($clientResolution)) {
+            throw new \InvalidArgumentException('Client resolution must be string');
+        }
 
         $this->replace('device_fingerprint', $deviceFingerprint);
         $this->replace('user_agent', $userAgent);
@@ -754,6 +781,11 @@ class Builder
         $this->replace('do_not_track', $doNotTrack);
         $this->replace('ajax_validation', $ajaxValidation);
         $this->replace('device_id', $deviceId);
+        $this->replace('ip_list', $ipList);
+        $this->replace('plugins', $plugins);
+        $this->replace('refererUrl', $refererUrl);
+        $this->replace('originUrl', $originUrl);
+        $this->replace('clientResolution', $clientResolution);
 
         return $this;
     }
