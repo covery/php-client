@@ -84,7 +84,7 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('resolution', $result['screen_resolution']);
         self::assertSame(2, $result['timezone_offset']);
         self::assertSame('Test curl', $result['user_agent']);
-        self::assertSame('ipList', $result['ip_list']);
+        self::assertSame('ipList', $result['local_ip_list']);
         self::assertSame('plugins', $result['plugins']);
         self::assertSame('refUrl', $result['refererUrl']);
         self::assertSame('originUrl', $result['originUrl']);

@@ -781,7 +781,7 @@ class Builder
         $this->replace('do_not_track', $doNotTrack);
         $this->replace('ajax_validation', $ajaxValidation);
         $this->replace('device_id', $deviceId);
-        $this->replace('ip_list', $ipList);
+        $this->replace('local_ip_list', $ipList);
         $this->replace('plugins', $plugins);
         $this->replace('refererUrl', $refererUrl);
         $this->replace('originUrl', $originUrl);
