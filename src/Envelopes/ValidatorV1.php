@@ -46,6 +46,11 @@ class ValidatorV1
         'transaction_mode' => 'string(255)',
         'transaction_type' => 'string(32)',
         'user_agent' => 'string(1024)',
+        'local_ip_list' => 'string(1024)',
+        'plugins' => 'string(1024)',
+        'refererUrl' => 'string(255)',
+        'originUrl' => 'string(255)',
+        'clientResolution' => 'string(255)',
         'user_merchant_id' => 'string(45)',
         'user_name' => 'string(255)',
         'website_url' => 'string(255)',
@@ -133,6 +138,11 @@ class ValidatorV1
         'screen_resolution',
         'timezone_offset',
         'user_agent',
+        'local_ip_list',
+        'plugins',
+        'refererUrl',
+        'originUrl',
+        'clientResolution'
     );
 
     private static $types = array(
@@ -262,6 +272,9 @@ class ValidatorV1
                 'refund_system',
                 'refund_mid',
                 'agent_id',
+                'email',
+                'phone',
+                'user_merchant_id'
             )
         ),
         'postback' => array(

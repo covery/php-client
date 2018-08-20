@@ -21,13 +21,38 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
             'someAgentId1234',
             'someMethod',
             'someSystem',
-            'someMid'
-        )->addBrowserData('88889', 'Test curl')->addIdentity(new \Covery\Client\Identities\Stub())->build();
+            'someMid',
+            'someEmail',
+            'somePhone',
+            'someUid'
+        )->addBrowserData(
+            '88889',
+            'Test curl',
+            'cpu',
+            'screen',
+            'resolution',
+            'os',
+            2,
+            'languages',
+            'lang',
+            'langBrowser',
+            'langUser',
+            'langSystem',
+            true,
+            true,
+            true,
+            "id",
+            "ipList",
+            "plugins",
+            "refUrl",
+            "originUrl",
+            "clientResolution"
+        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('refund', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(15, $result);
+        self::assertCount(37, $result);
         self::assertSame('refundLargeId', $result['refund_id']);
         self::assertSame(0.12, $result['refund_amount']);
         self::assertSame('GBP', $result['refund_currency']);
@@ -41,6 +66,29 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('someMethod', $result['refund_method']);
         self::assertSame('someSystem', $result['refund_system']);
         self::assertSame('someMid', $result['refund_mid']);
+        self::assertSame('someEmail', $result['email']);
+        self::assertSame('somePhone', $result['phone']);
+        self::assertSame(true, $result['ajax_validation']);
+        self::assertSame(true, $result['cookie_enabled']);
+        self::assertSame('cpu', $result['cpu_class']);
+        self::assertSame('88889', $result['device_fingerprint']);
+        self::assertSame('id', $result['device_id']);
+        self::assertSame(true, $result['do_not_track']);
+        self::assertSame('lang', $result['language']);
+        self::assertSame('langBrowser', $result['language_browser']);
+        self::assertSame('langSystem', $result['language_system']);
+        self::assertSame('langUser', $result['language_user']);
+        self::assertSame('languages', $result['languages']);
+        self::assertSame('os', $result['os']);
+        self::assertSame('screen', $result['screen_orientation']);
+        self::assertSame('resolution', $result['screen_resolution']);
+        self::assertSame(2, $result['timezone_offset']);
+        self::assertSame('Test curl', $result['user_agent']);
+        self::assertSame('ipList', $result['local_ip_list']);
+        self::assertSame('plugins', $result['plugins']);
+        self::assertSame('refUrl', $result['refererUrl']);
+        self::assertSame('originUrl', $result['originUrl']);
+        self::assertSame('clientResolution', $result['clientResolution']);
         $validator->validate($result);
 
         // Minimal data
