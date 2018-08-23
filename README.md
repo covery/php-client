@@ -138,7 +138,7 @@ You may provide the following as envelopes:
 ## Changelog
 
 * `1.1.0`
-  * added optional `local_ip_list`, `plugins`, `referrer_url`, `origin_url`, `client_resolution` for browser data
+  * added optional `local_ip_list`, `plugins`, `referer_url`, `origin_url`, `client_resolution` for browser data
   * added optional `email`, `phone`, `user_merchant_id` for refund event
 * `1.0.9`
   * new `transfer` event introduced

@@ -54,7 +54,7 @@ class ValidatorV1
         'user_agent' => 'string(1024)',
         'local_ip_list' => 'string(1024)',
         'plugins' => 'string(1024)',
-        'referrer_url' => 'string(255)',
+        'referer_url' => 'string(255)',
         'origin_url' => 'string(255)',
         'client_resolution' => 'string(255)',
         'user_merchant_id' => 'string(45)',
@@ -168,7 +168,7 @@ class ValidatorV1
         'user_agent',
         'local_ip_list',
         'plugins',
-        'referrer_url',
+        'referer_url',
         'origin_url',
         'client_resolution'
     );
