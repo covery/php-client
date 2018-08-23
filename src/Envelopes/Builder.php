@@ -783,9 +783,9 @@ class Builder
         $this->replace('device_id', $deviceId);
         $this->replace('local_ip_list', $ipList);
         $this->replace('plugins', $plugins);
-        $this->replace('refererUrl', $refererUrl);
-        $this->replace('originUrl', $originUrl);
-        $this->replace('clientResolution', $clientResolution);
+        $this->replace('referrer_url', $refererUrl);
+        $this->replace('origin_url', $originUrl);
+        $this->replace('client_resolution', $clientResolution);
 
         return $this;
     }
