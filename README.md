@@ -137,9 +137,11 @@ You may provide the following as envelopes:
 <a name="changelog" />
 ## Changelog
 
-* `1.0.9`
+* `1.1.0`
   * added optional `local_ip_list`, `plugins`, `referrer_url`, `origin_url`, `client_resolution` for browser data
   * added optional `email`, `phone`, `user_merchant_id` for refund event
+* `1.0.9`
+  * new `transfer` event introduced
 * `1.0.8`
   * added optional `traffic_source` and `affiliate_id` for login event
 * `1.0.7`
