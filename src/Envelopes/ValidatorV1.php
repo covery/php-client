@@ -54,9 +54,9 @@ class ValidatorV1
         'user_agent' => 'string(1024)',
         'local_ip_list' => 'string(1024)',
         'plugins' => 'string(1024)',
-        'refererUrl' => 'string(255)',
-        'originUrl' => 'string(255)',
-        'clientResolution' => 'string(255)',
+        'referer_url' => 'string(255)',
+        'origin_url' => 'string(255)',
+        'client_resolution' => 'string(255)',
         'user_merchant_id' => 'string(45)',
         'user_name' => 'string(255)',
         'website_url' => 'string(255)',
@@ -168,9 +168,9 @@ class ValidatorV1
         'user_agent',
         'local_ip_list',
         'plugins',
-        'refererUrl',
-        'originUrl',
-        'clientResolution'
+        'referer_url',
+        'origin_url',
+        'client_resolution'
     );
 
     private static $types = array(
