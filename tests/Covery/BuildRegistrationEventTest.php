@@ -22,13 +22,14 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
             'facebook',
             'http://example.com',
             'adwords',
-            '8965asd-2'
+            '8965asd-2',
+            'somePassword',
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('registration', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someLongString', $result->getSequenceId());
-        self::assertCount(14, $result);
+        self::assertCount(15, $result);
         self::assertSame('thisisuser', $result['user_merchant_id']);
         self::assertSame(320746, $result['registration_timestamp']);
         self::assertSame('user@site.net', $result['email']);
@@ -43,6 +44,7 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('http://example.com', $result['website_url']);
         self::assertSame('adwords', $result['traffic_source']);
         self::assertSame('8965asd-2', $result['affiliate_id']);
+        self::assertSame('somePassword', $result['password']);
         $validator->validate($result);
 
         // Minimal data
@@ -66,6 +68,7 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
         self::assertArrayNotHasKey('gender', $result);
         self::assertArrayNotHasKey('phone', $result);
         self::assertArrayNotHasKey('country', $result);
+        self::assertArrayNotHasKey('password', $result);
         $validator->validate($result);
     }
 }
