@@ -3,7 +3,7 @@
 namespace Covery\Client\Envelopes;
 
 use Covery\Client\EnvelopeInterface;
-use Covery\Client\IdentityNodeInterface; 
+use Covery\Client\IdentityNodeInterface;
 
 class Builder
 {
