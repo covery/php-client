@@ -23,7 +23,7 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
             'http://example.com',
             'adwords',
             '8965asd-2',
-            'somePassword',
+            'somePassword'
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('registration', $result->getType());
