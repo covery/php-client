@@ -137,6 +137,9 @@ You may provide the following as envelopes:
 <a name="changelog" />
 ## Changelog
 
+* `1.1.1`
+  * added optional `password` for login, registration events
+  * added optional `iban`, `second_iban` for transfer event
 * `1.1.0`
   * added optional `local_ip_list`, `plugins`, `referer_url`, `origin_url`, `client_resolution` for browser data
   * added optional `email`, `phone`, `user_merchant_id` for refund event
