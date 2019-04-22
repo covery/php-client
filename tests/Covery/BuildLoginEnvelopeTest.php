@@ -15,19 +15,22 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
             true,
             'male',
             'someTrafficSource',
-            'someAffiliateId'
+            'someAffiliateId',
+            "somePassword"
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('login', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(7, $result);
+        self::assertCount(8, $result);
         self::assertSame('someUserId', $result['user_merchant_id']);
         self::assertSame(123456, $result['login_timestamp']);
         self::assertSame('foo@bar.com', $result['email']);
         self::assertSame('male', $result['gender']);
         self::assertSame('someTrafficSource', $result['traffic_source']);
         self::assertSame('someAffiliateId', $result['affiliate_id']);
+        self::assertSame('somePassword', $result['password']);
+
         self::assertTrue($result['login_failed']);
         $validator->validate($result);
 
@@ -48,6 +51,7 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertArrayNotHasKey('gender', $result);
         self::assertArrayNotHasKey('traffic_source', $result);
         self::assertArrayNotHasKey('affiliate_id', $result);
+        self::assertArrayNotHasKey('password', $result);
         $validator->validate($result);
     }
 }

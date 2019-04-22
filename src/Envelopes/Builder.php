@@ -82,6 +82,7 @@ class Builder
      * @param string|null $gender
      * @param string|null $trafficSource
      * @param string|null $affiliateId
+     * @param string|null $password
      *
      * @return Builder
      */
@@ -93,7 +94,8 @@ class Builder
         $failed = null,
         $gender = null,
         $trafficSource = null,
-        $affiliateId = null
+        $affiliateId = null,
+        $password = null
     ) {
         $builder = new self('login', $sequenceId);
         if ($timestamp === null) {
@@ -116,7 +118,14 @@ class Builder
             null,
             null,
             null,
-            $failed
+            $failed,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $password
         )->addWebsiteData(null, $trafficSource, $affiliateId);
     }
 
@@ -138,6 +147,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $trafficSource
      * @param string|null $affiliateId
+     * @param string|null $password
      *
      * @return Builder
      */
@@ -156,7 +166,8 @@ class Builder
         $socialType = null,
         $websiteUrl = null,
         $trafficSource = null,
-        $affiliateId = null
+        $affiliateId = null,
+        $password = null
     ) {
         $builder = new self('registration', $sequenceId);
         if ($timestamp === null) {
@@ -183,7 +194,15 @@ class Builder
             null,
             null,
             null,
-            null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $password
+
         );
     }
 
@@ -533,6 +552,8 @@ class Builder
      * @param string|null $productDescription
      * @param string|null $productName
      * @param int|float|null $productQuantity
+     * @param string|null $iban
+     * @param string|null $secondIban
      *
      * @return Builder
      */
@@ -575,7 +596,9 @@ class Builder
         $secondCountry = null,
         $productDescription = null,
         $productName = null,
-        $productQuantity = null
+        $productQuantity = null,
+        $iban = null,
+        $secondIban = null
 
     ) {
         $builder = new self('transfer', $sequenceId);
@@ -606,7 +629,9 @@ class Builder
                $secondAddress,
                $secondZip,
                $secondGender,
-               $secondCountry
+               $secondCountry,
+               $iban,
+               $secondIban
             )
             ->addUserData(
                 $email,
@@ -630,7 +655,8 @@ class Builder
                 $state,
                 $city,
                 $address,
-                $zip
+                $zip,
+                null
             )
             ->addProductData($productQuantity, $productName, $productDescription);
     }
@@ -959,6 +985,7 @@ class Builder
      * @param string|null $city
      * @param string|null $address
      * @param string|null $zip
+     * @param string|null $password
      *
      * @return $this
      */
@@ -984,11 +1011,15 @@ class Builder
         $state = null,
         $city = null,
         $address = null,
-        $zip = null
+        $zip = null,
+        $password = ''
     )
     {
         if ($userName !== null && !is_string($userName)) {
             throw new \InvalidArgumentException('User name must be string');
+        }
+        if ($password !== null && !is_string($password)) {
+            throw new \InvalidArgumentException('Password must be string');
         }
         if ($gender !== null && !is_string($gender)) {
             throw new \InvalidArgumentException('Gender must be string');
@@ -1054,6 +1085,7 @@ class Builder
         $this->replace('city', $city);
         $this->replace('address', $address);
         $this->replace('zip', $zip);
+        $this->replace('password', $password);
 
         return $this;
     }
@@ -1561,6 +1593,8 @@ class Builder
      * @param string|null $secondZip
      * @param string|null $secondGender
      * @param string|null $secondCountry
+     * @param string|null $iban
+     * @param string|null $secondIban
      *
      * @return $this
      */
@@ -1586,7 +1620,9 @@ class Builder
         $secondAddress = null,
         $secondZip = null,
         $secondGender = null,
-        $secondCountry = null
+        $secondCountry = null,
+        $iban = null,
+        $secondIban = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -1654,7 +1690,12 @@ class Builder
         if ($secondCountry !== null && !is_string($secondCountry)) {
             throw new \InvalidArgumentException('Second country must be string');
         }
-
+        if ($iban !== null && !is_string($iban)) {
+            throw new \InvalidArgumentException('Iban must be string');
+        }
+        if ($secondIban !== null && !is_string($secondIban)) {
+            throw new \InvalidArgumentException('Second iban must be string');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -1678,6 +1719,9 @@ class Builder
         $this->replace('second_zip', $secondZip);
         $this->replace('second_gender', $secondGender);
         $this->replace('second_country', $secondCountry);
+        $this->replace('iban', $iban);
+        $this->replace('second_iban', $secondIban);
+
         return $this;
     }
 
