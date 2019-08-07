@@ -111,6 +111,19 @@ class Facade
     }
 
     /**
+     * Sends postback envelope to Covery and returns it's ID on Covery side
+     * Before sending, validation is performed
+     *
+     * @param EnvelopeInterface $envelope
+     * @return int
+     * @throws Exception
+     */
+    public static function sendPostback(EnvelopeInterface $envelope)
+    {
+        return self::getClient()->sendPostback($envelope);
+    }
+
+    /**
      * Sends envelope to Covery for analysis
      *
      * @param EnvelopeInterface $envelope

@@ -6,6 +6,7 @@ use Covery\Client\Envelopes\ValidatorV1;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\Ping;
+use Covery\Client\Requests\Postback;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -200,6 +201,29 @@ class PublicAPIClient
 
         // Sending
         $data = $this->readJson($this->send(new Event($envelope)));
+
+        if (!is_array($data) || !isset($data['requestId']) || !is_int($data['requestId'])) {
+            throw new Exception("Malformed response");
+        }
+
+        return $data['requestId'];
+    }
+
+    /**
+     * Sends postback envelope to Covery and returns it's ID on Covery side
+     * Before sending, validation is performed
+     *
+     * @param EnvelopeInterface $envelope
+     * @return int
+     * @throws Exception
+     */
+    public function sendPostback(EnvelopeInterface $envelope)
+    {
+        // Validating
+        $this->validator->validate($envelope);
+
+        // Sending
+        $data = $this->readJson($this->send(new Postback($envelope)));
 
         if (!is_array($data) || !isset($data['requestId']) || !is_int($data['requestId'])) {
             throw new Exception("Malformed response");
