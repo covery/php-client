@@ -146,6 +146,10 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.1.4`
+  * Malformed error for empty postback response
+* `1.1.3`
+  * Postback request with request_id or transaction_id 
 * `1.1.2`
   * added sendPostback method to send posback events
 * `1.1.1`
