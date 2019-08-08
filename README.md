@@ -19,13 +19,13 @@ Official PHP Covery Client
   * [Exceptions](#exceptions)
 * [Changelog](#changelog)
 
-<a name="howto" />
+<a name="howto"></a>
 # How to Start
 
 1. You need to acquire an access token and a secret
 2. Install a client using composer: `composer require "covery/client=^1.0.0"`
 
-<a name="basic" />
+<a name="basic"></a>
 # Basic Integration
 
 The first thing you need is to initialize `Facade` with credentials and transport. 
@@ -41,7 +41,7 @@ Facade::setCredentials('<token>', '<secret>');
 
 That's all!
 
-Having completed this procedure, you can now query Covery using `Facade::sendEvent` or `Facade::makeDecision`.
+Having completed this procedure, you can now query Covery using `Facade::sendEvent`, `Facade::sendPostback`, `Facade::makeDecision`.
 You can test connectivity problems and token/secret validity using `Facade::ping` request.
 
 Login event example:
@@ -60,23 +60,33 @@ if ($result->isReject()) {
     // ...
 }
 ```
+Postback event example:
+
+```php
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::postbackEvent($requestId, null, 'code', 'reason')->build(); //postbcak for event with id $requestId
+$postbackRequestId = Facade::sendPostback($event);
+```
+
 
 # Tech Details
 
-<a name="facade" />
+<a name="facade"></a>
 ## Facade
 
 `Covery\Client\Facade` is a static wrapper over `Covery\Client\PublicAPIClient`. If you use dependency injection
 or other application assembly mechanism, you may prefer not to use `Facade`, and rather use the client directly.
 
-<a name="psr" />
+<a name="psr"></a>
 ## PSR-3, PSR-4 and PSR7
 
 1. Covery client supports PSR-3 loggers. You may assign them to `Facade` calling `Facade::setLogger` or to `PublicAPIClient` passing a logger as a constructor argument.
 2. Covery client code uses PSR-4 autoloader. Just require `/vendor/autoload.php`.
 3. HTTP communication uses PSR-7 HTTP message, so you may extend the client's capabilities as you see fit.
 
-<a name="transports" />
+<a id="transports"></a>
 ## Transports
 
 Covery client may use any class that satisfies `Covery\Client\TransportInterface` to send requests. Covery client ships with two major implementations:
@@ -84,14 +94,14 @@ Covery client may use any class that satisfies `Covery\Client\TransportInterface
 1. `Covery\Client\Transport\Curl` - simple PHP curl implementation
 2. `Covery\Client\Transport\OverGuzzle` - adapter over [Guzzle](https://github.com/guzzle/guzzle) HTTP client
 
-<a name="ping" />
+<a name="ping"></a>
 ## Health Check
 
 To perform network accessibility and token validity tests, run `ping()` method inside `Facade`
 or `PublicAPIClient`. It will throw an exception on any problems or return your token access level on success. 
 In most cases it will return `"DECISION"` as your token level.
 
-<a name="envelopes" />
+<a name="envelopes"></a>
 ## Envelopes
 
 Methods `sendEvent` and `makeDecision` require envelope as argument. Envelope is a pack of following data:
@@ -113,7 +123,7 @@ You may provide the following as envelopes:
 2. Custom-built `Covery\Client\Envelopes\Envelope`
 3. Envelopes built using `Covery\Client\Envelopes\Builder` (don't forget to invoke `build()`!)
 
-<a name="results" />
+<a name="results"></a>
 ## Results
 
 1. `ping` will return `string` containing current token access level on success.
@@ -123,7 +133,7 @@ You may provide the following as envelopes:
    * Method `isAccept()` will return `true` if Covery did not found fraud in incoming envelope data
    * Method `isReject()` will return `true` if Covery found fraud in incoming envelope data
 
-<a name="exceptions" />
+<a name="exceptions"></a>
 ## Exception Tree
 
 * `Covery\Client\Exception` - base exception
@@ -134,9 +144,10 @@ You may provide the following as envelopes:
     * `Covery\Client\TimeoutException` - timeout
 
 
-<a name="changelog" />
+<a name="changelog"></a>
 ## Changelog
-
+* `1.1.2`
+  * added sendPostback method to send posback events
 * `1.1.1`
   * added optional `password` for login, registration events
   * added optional `iban`, `second_iban` for transfer event
