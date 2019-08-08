@@ -41,7 +41,7 @@ Facade::setCredentials('<token>', '<secret>');
 
 That's all!
 
-Having completed this procedure, you can now query Covery using `Facade::sendEvent` or `Facade::makeDecision`.
+Having completed this procedure, you can now query Covery using `Facade::sendEvent`, `Facade::sendPostback`, `Facade::makeDecision`.
 You can test connectivity problems and token/secret validity using `Facade::ping` request.
 
 Login event example:
@@ -60,6 +60,16 @@ if ($result->isReject()) {
     // ...
 }
 ```
+Postback event example:
+
+```php
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::postbackEvent($requestId, null, 'code', 'reason')->build(); //postbcak for event with id $requestId
+$postbackRequestId = Facade::sendPostback($event);
+```
+
 
 # Tech Details
 
@@ -136,7 +146,11 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
-
+* `1.1.2`
+  * added sendPostback method to send posback events
+* `1.1.1`
+  * added optional `password` for login, registration events
+  * added optional `iban`, `second_iban` for transfer event
 * `1.1.0`
   * added optional `local_ip_list`, `plugins`, `referer_url`, `origin_url`, `client_resolution` for browser data
   * added optional `email`, `phone`, `user_merchant_id` for refund event
