@@ -8,8 +8,8 @@ php:
   - 5.6
   - 7.0
   - 7.1
-  - hhvm
-  - nightly
+  - 7.2
+  - 7.3
 
 sudo: false
 
