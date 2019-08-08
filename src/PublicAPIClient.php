@@ -225,7 +225,7 @@ class PublicAPIClient
         // Sending
         $data = $this->readJson($this->send(new Postback($envelope)));
 
-        if (!is_array($data) || !isset($data['requestId']) || !is_int($data['requestId'])) {
+        if (!is_array($data) || !isset($data['requestId']) || empty($data['requestId']) || !is_int($data['requestId'])) {
             throw new Exception("Malformed response");
         }
 
