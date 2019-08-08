@@ -148,6 +148,7 @@ class ValidatorV1
         'password' => 'string(255)',
         'iban' => 'string(255)',
         'second_iban' => 'string(255)',
+        'request_id' =>  'string(255)'
     );
 
     private static $sharedOptional = array(
@@ -358,6 +359,8 @@ class ValidatorV1
         'postback' => array(
             'mandatory' => array(),
             'optional' => array(
+                'request_id',
+                'transaction_id',
                 'transaction_status',
                 'code',
                 'reason',
@@ -555,13 +558,19 @@ class ValidatorV1
      */
     public function validate(EnvelopeInterface $envelope)
     {
-        $details = array_merge(
-            $this->analyzeSequenceId($envelope->getSequenceId()),
-            $this->analyzeIdentities($envelope->getIdentities()),
-            $this->analyzeTypeAndMandatoryFields($envelope),
-            $this->analyzeFieldTypes($envelope)
-        );
-
+        if ($envelope->getType() === 'postback') {
+            $details = array_merge(
+                $this->analyzeTypeAndMandatoryFields($envelope),
+                $this->analyzeFieldTypes($envelope)
+            );
+        } else {
+            $details = array_merge(
+                $this->analyzeSequenceId($envelope->getSequenceId()),
+                $this->analyzeIdentities($envelope->getIdentities()),
+                $this->analyzeTypeAndMandatoryFields($envelope),
+                $this->analyzeFieldTypes($envelope)
+            );
+        }
         if (count($details) > 0) {
             throw new EnvelopeValidationException($details);
         }

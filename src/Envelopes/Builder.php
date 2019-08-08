@@ -664,7 +664,8 @@ class Builder
     /**
      * Returns builder for postback request
      *
-     * @param $sequenceId
+     * @param $requestId
+     * @param $transactionId
      * @param string|null $transactionStatus
      * @param string|null $code
      * @param string|null $reason
@@ -678,7 +679,8 @@ class Builder
      * @return Builder
      */
     public static function postBackEvent(
-        $sequenceId,
+        $requestId =  null,
+        $transactionId = null,
         $transactionStatus = null,
         $code = null,
         $reason = null,
@@ -690,8 +692,10 @@ class Builder
         $arn = null,
         $paymentAccountId = null
     ) {
-        $builder = new self('postback', $sequenceId);
+        $builder = new self('postback', '');
         return $builder->addPostBackData(
+            $requestId,
+            $transactionId,
             $transactionStatus,
             $code,
             $reason,
@@ -1728,6 +1732,8 @@ class Builder
     /**
      * Provides postback information to envelope
      *
+     * @param string|null $requestId
+     * @param string|null $transactionId
      * @param string|null $transactionStatus
      * @param string|null $code
      * @param string|null $reason
@@ -1741,6 +1747,8 @@ class Builder
      * @return $this
      */
     public function addPostbackData(
+        $requestId = null,
+        $transactionId = null,
         $transactionStatus = null,
         $code = null,
         $reason = null,
@@ -1752,6 +1760,9 @@ class Builder
         $arn = null,
         $paymentAccountId = null
     ) {
+        if ($requestId === null && $transactionId === null) {
+            throw new \InvalidArgumentException('request_id or transaction_id should be provided');
+        }
         if ($transactionStatus !== null && !is_string($transactionStatus)) {
             throw new \InvalidArgumentException('Transaction status must be string');
         }
@@ -1783,7 +1794,8 @@ class Builder
             throw new \InvalidArgumentException('PaymentAccoutId must be string');
         }
 
-
+        $this->replace('request_id', $requestId);
+        $this->replace('transaction_id', $transactionId);
         $this->replace('transaction_status', $transactionStatus);
         $this->replace('code', $code);
         $this->replace('reason', $reason);

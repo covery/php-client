@@ -8,7 +8,8 @@ class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
 
         // Full data
         $result = \Covery\Client\Envelopes\Builder::postBackEvent(
-            "someSequenceId",
+            "someRequestId",
+            "someTransactionId",
             "someTransactionStatus",
             "someCode",
             "someReason",
@@ -22,17 +23,26 @@ class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame('postback', $result->getType());
         self::assertCount(1, $result->getIdentities());
-        self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(9, $result);
+        self::assertSame('', $result->getSequenceId());
+        self::assertCount(11, $result);
         $validator->validate($result);
 
 
-        // Minimal data
-        $result = \Covery\Client\Envelopes\Builder::postBackEvent("someSequenceId")->build();
+        // Minimal data with request id
+        $result = \Covery\Client\Envelopes\Builder::postBackEvent("someRequestId")->build();
         self::assertSame('postback', $result->getType());
         self::assertCount(0, $result->getIdentities());
-        self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(0, $result);
+        self::assertSame('', $result->getSequenceId());
+        self::assertCount(1, $result);
         $validator->validate($result);
+
+        // Minimal data with transaction id
+        $result = \Covery\Client\Envelopes\Builder::postBackEvent(null, "transactionId")->build();
+        self::assertSame('postback', $result->getType());
+        self::assertCount(0, $result->getIdentities());
+        self::assertSame('', $result->getSequenceId());
+        self::assertCount(1, $result);
+        $validator->validate($result);
+
     }
 }
