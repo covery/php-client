@@ -148,7 +148,7 @@ class ValidatorV1
         'password' => 'string(255)',
         'iban' => 'string(255)',
         'second_iban' => 'string(255)',
-        'request_id' =>  'string(255)'
+        'request_id' =>  'int'
     );
 
     private static $sharedOptional = array(
