@@ -8,7 +8,7 @@ class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
 
         // Full data
         $result = \Covery\Client\Envelopes\Builder::postBackEvent(
-            "someRequestId",
+            123456,
             "someTransactionId",
             "someTransactionStatus",
             "someCode",
@@ -29,7 +29,7 @@ class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
 
 
         // Minimal data with request id
-        $result = \Covery\Client\Envelopes\Builder::postBackEvent("someRequestId")->build();
+        $result = \Covery\Client\Envelopes\Builder::postBackEvent(22222)->build();
         self::assertSame('postback', $result->getType());
         self::assertCount(0, $result->getIdentities());
         self::assertSame('', $result->getSequenceId());

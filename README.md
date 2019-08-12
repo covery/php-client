@@ -146,6 +146,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.1.5`
+  * Postback request_id change type to `int`
 * `1.1.4`
   * Malformed error for empty postback response
 * `1.1.3`

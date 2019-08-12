@@ -664,8 +664,8 @@ class Builder
     /**
      * Returns builder for postback request
      *
-     * @param $requestId
-     * @param $transactionId
+     * @param int|null $requestId
+     * @param string|null $transactionId
      * @param string|null $transactionStatus
      * @param string|null $code
      * @param string|null $reason
@@ -1732,7 +1732,7 @@ class Builder
     /**
      * Provides postback information to envelope
      *
-     * @param string|null $requestId
+     * @param int|null $requestId
      * @param string|null $transactionId
      * @param string|null $transactionStatus
      * @param string|null $code
@@ -1762,6 +1762,12 @@ class Builder
     ) {
         if ($requestId === null && $transactionId === null) {
             throw new \InvalidArgumentException('request_id or transaction_id should be provided');
+        }
+        if ($transactionId !== null && !is_string($transactionId)) {
+            throw new \InvalidArgumentException('TransactionId must be string');
+        }
+        if ($requestId !== null && !is_int($requestId)) {
+            throw new \InvalidArgumentException('RequestId must be int');
         }
         if ($transactionStatus !== null && !is_string($transactionStatus)) {
             throw new \InvalidArgumentException('Transaction status must be string');
