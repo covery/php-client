@@ -253,11 +253,20 @@ class PublicAPIClient
 
         try {
             return new Result(
-                $data['requestId'],
-                $data['score'],
-                $data['accept'],
-                $data['reject'],
-                $data['manual']
+                $data[ResultBaseField::REQUEST_ID],
+                $data[ResultBaseField::TYPE],
+                $data[ResultBaseField::CREATED_AT],
+                $data[ResultBaseField::SEQUENCE_ID],
+                $data[ResultBaseField::MERCHANT_USER_ID],
+                $data[ResultBaseField::SCORE],
+                $data[ResultBaseField::ACCEPT],
+                $data[ResultBaseField::REJECT],
+                $data[ResultBaseField::MANUAL],
+                isset($data[ResultBaseField::REASON]) ? $data[ResultBaseField::REASON] : null,
+                isset($data[ResultBaseField::ACTION]) ? $data[ResultBaseField::ACTION] : null,
+                array_filter($data, function ($field) {
+                    return !in_array($field, ResultBaseField::getAll());
+                }, ARRAY_FILTER_USE_KEY)
             );
         } catch (\Exception $error) {
             throw new Exception('Malformed response', 0, $error);
