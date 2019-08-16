@@ -146,6 +146,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.1.6`
+  * Added decision response fields: `type`, `createdAt`, `sequenceId`, `merchantUserId`, `reason`, `action` and custom response
 * `1.1.5`
   * Postback request_id change type to `int`
 * `1.1.4`
