@@ -110,10 +110,16 @@ Methods `sendEvent` and `makeDecision` require envelope as argument. Envelope is
    userID as a sequence ID. However, Covery requires a long string (6-40 characters) in this field, so you may use `md5($userId)` as `SequenceID` for better results.
 * `Identities` - List of identities this event belongs to. For most cases a single `Identities\Stub` is enough.
 * `Type` - Event type, one of:
+  * `install` - install event
   * `registration` - registration event
   * `confirmation` - registration confirmation event, must have the same `SequenceID` with registration event
   * `login` - login event, must have the same `SequenceID` with registration event
   * `transaction` - payment event, must have the same `SequenceID` with registration and login events
+  * `refund` - refund event
+  * `payout` - payout event
+  * `transfer` - transfer event
+  * `kyc_profile` - kyc profile event
+  * `kyc_submit` - kyc submit event
   
 Envelope specifications are bundled in `Covery\Client\EnvelopeInterface`.
 
@@ -146,6 +152,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.1.7`
+  * Added `kyc_profile`, `kyc_submit` events
 * `1.1.6`
   * Added decision response fields: `type`, `createdAt`, `sequenceId`, `merchantUserId`, `reason`, `action` and custom response
 * `1.1.5`

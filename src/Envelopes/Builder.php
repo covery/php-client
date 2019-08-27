@@ -662,6 +662,202 @@ class Builder
     }
 
     /**
+     * Returns builder for kyc_profile request
+     *
+     * @param string $sequenceId
+     * @param string $eventId
+     * @param string $userId
+     * @param int|null $eventTimestamp
+     * @param string|null $groupId
+     * @param string|null $status
+     * @param string|null $code
+     * @param string|null $reason
+     * @param string|null $providerResult
+     * @param string|null $providerCode
+     * @param string|null $providerReason
+     * @param string|null $profileId
+     * @param string|null $profileType
+     * @param string|null $profileSubType
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $fullName
+     * @param string|null $industry
+     * @param string|null $websiteUrl
+     * @param string|null $description
+     * @param int|null $birthDate
+     * @param int|null $regDate
+     * @param string|null $regNumber
+     * @param string|null $vatNumber
+     * @param string|null $email
+     * @param bool|null $emailConfirmed
+     * @param string|null $phone
+     * @param bool|null $phoneConfirmed
+     * @param string|null $country
+     * @param string|null $state
+     * @param string|null $city
+     * @param string|null $address
+     * @param string|null $zip
+     * @param string|null $secondCountry
+     * @param string|null $secondState
+     * @param string|null $secondCity
+     * @param string|null $secondAddress
+     * @param string|null $secondZip
+     * @param string|null $relatedProfiles
+     *
+     * @return Builder
+     */
+    public static function kycProfileEvent(
+        $sequenceId,
+        $eventId,
+        $userId,
+        $eventTimestamp = null,
+        $groupId = null,
+        $status = null,
+        $code = null,
+        $reason = null,
+        $providerResult = null,
+        $providerCode = null,
+        $providerReason = null,
+        $profileId = null,
+        $profileType = null,
+        $profileSubType = null,
+        $firstName = null,
+        $lastName = null,
+        $fullName = null,
+        $industry = null,
+        $websiteUrl = null,
+        $description = null,
+        $birthDate = null,
+        $regDate = null,
+        $regNumber = null,
+        $vatNumber = null,
+        $email = null,
+        $emailConfirmed = null,
+        $phone = null,
+        $phoneConfirmed = null,
+        $country = null,
+        $state = null,
+        $city = null,
+        $address = null,
+        $zip = null,
+        $secondCountry = null,
+        $secondState = null,
+        $secondCity = null,
+        $secondAddress = null,
+        $secondZip = null,
+        $relatedProfiles = null
+    ) {
+        $builder = new self('kyc_profile', $sequenceId);
+        if ($eventTimestamp === null) {
+            $eventTimestamp = time();
+        }
+        return $builder
+            ->addKycData(
+                $eventId,
+                $eventTimestamp,
+                $groupId,
+                $status,
+                $code,
+                $reason,
+                $providerResult,
+                $providerCode,
+                $providerReason,
+                $profileId,
+                $profileType,
+                $profileSubType,
+                $industry,
+                $description,
+                $regDate,
+                $regNumber,
+                $vatNumber,
+                $secondCountry,
+                $secondState,
+                $secondCity,
+                $secondAddress,
+                $secondZip,
+                $relatedProfiles
+            )
+            ->addUserData(
+                $email,
+                $userId,
+                $phone,
+                null,
+                $firstName,
+                $lastName,
+                null,
+                null,
+                $country,
+                null,
+                null,
+                null,
+                null,
+                $emailConfirmed,
+                $phoneConfirmed,
+                null,
+                $birthDate,
+                $fullName,
+                $state,
+                $city,
+                $address,
+                $zip,
+                null
+            )
+            ->addWebsiteData($websiteUrl);
+    }
+
+    /**
+     * Returns builder for kyc_submit request
+     *
+     * @param string $sequenceId
+     * @param string $eventId
+     * @param string $userId
+     * @param int|null $eventTimestamp
+     * @param string|null $groupId
+     * @param string|null $status
+     * @param string|null $code
+     * @param string|null $reason
+     * @param string|null $providerResult
+     * @param string|null $providerCode
+     * @param string|null $providerReason
+     *
+     * @return Builder
+     */
+    public static function kycSubmitEvent(
+        $sequenceId,
+        $eventId,
+        $userId,
+        $eventTimestamp = null,
+        $groupId = null,
+        $status = null,
+        $code = null,
+        $reason = null,
+        $providerResult = null,
+        $providerCode = null,
+        $providerReason = null
+    ) {
+        $builder = new self('kyc_submit', $sequenceId);
+        if ($eventTimestamp === null) {
+            $eventTimestamp = time();
+        }
+        return $builder
+            ->addKycData(
+                $eventId,
+                $eventTimestamp,
+                $groupId,
+                $status,
+                $code,
+                $reason,
+                $providerResult,
+                $providerCode,
+                $providerReason
+            )
+            ->addUserData(
+                null,
+                $userId
+            );
+    }
+
+    /**
      * Returns builder for postback request
      *
      * @param int|null $requestId
@@ -1725,6 +1921,157 @@ class Builder
         $this->replace('second_country', $secondCountry);
         $this->replace('iban', $iban);
         $this->replace('second_iban', $secondIban);
+
+        return $this;
+    }
+
+    /**
+     * Provides kyc information to envelope
+     *
+     * @param string $eventId
+     * @param int $eventTimestamp
+     * @param string|null $groupId
+     * @param string|null $status
+     * @param string|null $code
+     * @param string|null $reason
+     * @param string|null $providerResult
+     * @param string|null $providerCode
+     * @param string|null $providerReason
+     * @param string|null $profileId
+     * @param string|null $profileType
+     * @param string|null $profileSubType
+     * @param string|null $industry
+     * @param string|null $description
+     * @param int|null $regDate
+     * @param string|null $regNumber
+     * @param string|null $vatNumber
+     * @param string|null $secondCountry
+     * @param string|null $secondState
+     * @param string|null $secondCity
+     * @param string|null $secondAddress
+     * @param string|null $secondZip
+     * @param string|null $relatedProfiles
+     *
+     * @return $this
+     */
+    public function addKycData(
+        $eventId,
+        $eventTimestamp,
+        $groupId = null,
+        $status = null,
+        $code = null,
+        $reason = null,
+        $providerResult = null,
+        $providerCode = null,
+        $providerReason = null,
+        $profileId = null,
+        $profileType = null,
+        $profileSubType = null,
+        $industry = null,
+        $description = null,
+        $regDate = null,
+        $regNumber = null,
+        $vatNumber = null,
+        $secondCountry = null,
+        $secondState = null,
+        $secondCity = null,
+        $secondAddress = null,
+        $secondZip = null,
+        $relatedProfiles = null
+    ) {
+        if (!is_string($eventId)) {
+            throw new \InvalidArgumentException('Event ID must be string');
+        }
+        if (!is_int($eventTimestamp)) {
+            throw new \InvalidArgumentException('Event timestamp must be int');
+        }
+        if ($groupId !== null && !is_string($groupId)) {
+            throw new \InvalidArgumentException('Group id must be string');
+        }
+        if ($status !== null && !is_string($status)) {
+            throw new \InvalidArgumentException('Status must be string');
+        }
+        if ($code !== null && !is_string($code)) {
+            throw new \InvalidArgumentException('Code must be string');
+        }
+        if ($reason !== null && !is_string($reason)) {
+            throw new \InvalidArgumentException('Reason must be string');
+        }
+        if ($providerResult !== null && !is_string($providerResult)) {
+            throw new \InvalidArgumentException('Provider result must be string');
+        }
+        if ($providerCode !== null && !is_string($providerCode)) {
+            throw new \InvalidArgumentException('Provider code must be string');
+        }
+        if ($providerReason !== null && !is_string($providerReason)) {
+            throw new \InvalidArgumentException('Provider reason must be string');
+        }
+        if ($profileId !== null && !is_string($profileId)) {
+            throw new \InvalidArgumentException('Profile id must be string');
+        }
+        if ($profileType !== null && !is_string($profileType)) {
+            throw new \InvalidArgumentException('Profile type must be string');
+        }
+        if ($profileSubType !== null && !is_string($profileSubType)) {
+            throw new \InvalidArgumentException('Profile sub type must be string');
+        }
+        if ($industry !== null && !is_string($industry)) {
+            throw new \InvalidArgumentException('Industry must be string');
+        }
+        if ($description !== null && !is_string($description)) {
+            throw new \InvalidArgumentException('Description must be string');
+        }
+        if ($regDate !== null && !is_int($regDate)) {
+            throw new \InvalidArgumentException('Reg date must be integer');
+        }
+        if ($regNumber !== null && !is_string($regNumber)) {
+            throw new \InvalidArgumentException('Reg number must be string');
+        }
+        if ($vatNumber !== null && !is_string($vatNumber)) {
+            throw new \InvalidArgumentException('Vat number must be string');
+        }
+        if ($secondCountry !== null && !is_string($secondCountry)) {
+            throw new \InvalidArgumentException('Secondary country must be string');
+        }
+        if ($secondState !== null && !is_string($secondState)) {
+            throw new \InvalidArgumentException('Second state must be string');
+        }
+        if ($secondCity !== null && !is_string($secondCity)) {
+            throw new \InvalidArgumentException('Second city must be string');
+        }
+        if ($secondAddress !== null && !is_string($secondAddress)) {
+            throw new \InvalidArgumentException('Second address must be string');
+        }
+        if ($secondZip !== null && !is_string($secondZip)) {
+            throw new \InvalidArgumentException('Second zip must be string');
+        }
+        if ($relatedProfiles !== null && !is_string($relatedProfiles)) {
+            throw new \InvalidArgumentException('Related profiles must be string');
+        }
+
+        $this->replace('event_id', $eventId);
+        $this->replace('event_timestamp', $eventTimestamp);
+        $this->replace('group_id', $groupId);
+        $this->replace('status', $status);
+        $this->replace('code', $code);
+        $this->replace('reason', $reason);
+        $this->replace('provider_result', $providerResult);
+        $this->replace('provider_code', $providerCode);
+        $this->replace('provider_reason', $providerReason);
+        $this->replace('profile_id', $profileId);
+        $this->replace('profile_type', $profileType);
+        $this->replace('profile_sub_type', $profileSubType);
+        $this->replace('industry', $industry);
+        $this->replace('description', $description);
+        $this->replace('reg_date', $regDate);
+        $this->replace('reg_number', $regNumber);
+        $this->replace('vat_number', $vatNumber);
+        $this->replace('second_country', $secondCountry);
+        $this->replace('second_state', $secondState);
+        $this->replace('second_city', $secondCity);
+        $this->replace('second_address', $secondAddress);
+        $this->replace('second_zip', $secondZip);
+        $this->replace('related_profiles', $relatedProfiles);
 
         return $this;
     }
