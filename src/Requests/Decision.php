@@ -15,6 +15,6 @@ class Decision extends AbstractEnvelopeRequest
 {
     public function __construct(EnvelopeInterface $envelope)
     {
-        parent::__construct('api/makeDecision', $envelope);
+        parent::__construct('/api/makeDecision', $envelope);
     }
 }

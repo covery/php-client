@@ -16,6 +16,6 @@ class Event extends AbstractEnvelopeRequest
 {
     public function __construct(EnvelopeInterface $envelope)
     {
-        parent::__construct('api/sendEvent', $envelope);
+        parent::__construct('/api/sendEvent', $envelope);
     }
 }
