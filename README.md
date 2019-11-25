@@ -51,7 +51,7 @@ use Covery\Client\Envelopes\Builder;
 use Covery\Client\Facade;
 use Covery\Client\Identities\Stub;
 
-$event = Builder::loginEvent(md5($userId), string($userId), time(), 'foo@bar.com', false) // Using builder
+$event = Builder::loginEvent(md5($userId), (string)$userId, time(), 'foo@bar.com', false) // Using builder
     ->addIdentity(new Stub())                                                             // stub identity
     ->build();                                                                            // building envelope
 
