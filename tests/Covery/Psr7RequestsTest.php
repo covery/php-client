@@ -1,11 +1,22 @@
 <?php
 
-class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Identities\Stub;
+use Covery\Client\Requests\Decision;
+use Covery\Client\Requests\Event;
+use Covery\Client\Requests\Ping;
+use Covery\Client\Requests\Postback;
+use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
+
+class Psr7RequestsTest extends TestCase
 {
     public function testPing()
     {
-        $req = new \Covery\Client\Requests\Ping();
-        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        $req = new Ping();
+        self::assertInstanceOf(RequestInterface::class, $req);
         self::assertSame('', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
         self::assertSame('api/ping', strval($req->getUri()));
@@ -13,14 +24,14 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
 
     public function testEvent()
     {
-        $noIdentities = new \Covery\Client\Envelopes\Builder('foo', 'bar');
+        $noIdentities = new Builder('foo', 'bar');
         $noIdentities = $noIdentities->build();
-        $withStub = new \Covery\Client\Envelopes\Builder('baz', 'yolo');
-        $stub = new \Covery\Client\Identities\Stub();
+        $withStub = new Builder('baz', 'yolo');
+        $stub = new Stub();
         $withStub = $withStub->addIdentity($stub)->addWebsiteData('google.com')->build();
 
-        $req = new \Covery\Client\Requests\Event($noIdentities);
-        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        $req = new Event($noIdentities);
+        self::assertInstanceOf(RequestInterface::class, $req);
         self::assertSame('{"type":"foo","sequence_id":"bar"}', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
         self::assertSame('', $req->getHeaderLine('X-Identities'));
@@ -29,8 +40,8 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
         self::assertSame('api/sendEvent', strval($req->getUri()));
 
-        $req = new \Covery\Client\Requests\Event($withStub);
-        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        $req = new Event($withStub);
+        self::assertInstanceOf(RequestInterface::class, $req);
         self::assertSame('{"type":"baz","sequence_id":"yolo","website_url":"google.com"}', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
         self::assertSame($stub->getType() . '=' . $stub->getId(), $req->getHeaderLine('X-Identities'));
@@ -42,14 +53,14 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
 
     public function testPostback()
     {
-        $noIdentities = new \Covery\Client\Envelopes\Builder('foo', 'bar');
+        $noIdentities = new Builder('foo', 'bar');
         $noIdentities = $noIdentities->build();
-        $withStub = new \Covery\Client\Envelopes\Builder('baz', 'yolo');
-        $stub = new \Covery\Client\Identities\Stub();
+        $withStub = new Builder('baz', 'yolo');
+        $stub = new Stub();
         $withStub = $withStub->addIdentity($stub)->addWebsiteData('google.com')->build();
 
-        $req = new \Covery\Client\Requests\Postback($noIdentities);
-        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        $req = new Postback($noIdentities);
+        self::assertInstanceOf(RequestInterface::class, $req);
         self::assertSame('{"type":"foo","sequence_id":"bar"}', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
         self::assertSame('', $req->getHeaderLine('X-Identities'));
@@ -58,8 +69,8 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
         self::assertSame('api/postback', strval($req->getUri()));
 
-        $req = new \Covery\Client\Requests\Postback($withStub);
-        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        $req = new Postback($withStub);
+        self::assertInstanceOf(RequestInterface::class, $req);
         self::assertSame('{"type":"baz","sequence_id":"yolo","website_url":"google.com"}', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
         self::assertSame($stub->getType() . '=' . $stub->getId(), $req->getHeaderLine('X-Identities'));
@@ -71,14 +82,14 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
 
     public function testDecision()
     {
-        $noIdentities = new \Covery\Client\Envelopes\Builder('foo', 'bar');
+        $noIdentities = new Builder('foo', 'bar');
         $noIdentities = $noIdentities->build();
-        $withStub = new \Covery\Client\Envelopes\Builder('baz', 'yolo');
-        $stub = new \Covery\Client\Identities\Stub();
+        $withStub = new Builder('baz', 'yolo');
+        $stub = new Stub();
         $withStub = $withStub->addIdentity($stub)->addWebsiteData('google.com')->build();
 
-        $req = new \Covery\Client\Requests\Decision($noIdentities);
-        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        $req = new Decision($noIdentities);
+        self::assertInstanceOf(RequestInterface::class, $req);
         self::assertSame('{"type":"foo","sequence_id":"bar"}', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
         self::assertSame('', $req->getHeaderLine('X-Identities'));
@@ -87,8 +98,8 @@ class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
         self::assertSame('api/makeDecision', strval($req->getUri()));
 
-        $req = new \Covery\Client\Requests\Decision($withStub);
-        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        $req = new Decision($withStub);
+        self::assertInstanceOf(RequestInterface::class, $req);
         self::assertSame('{"type":"baz","sequence_id":"yolo","website_url":"google.com"}', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
         self::assertSame($stub->getType() . '=' . $stub->getId(), $req->getHeaderLine('X-Identities'));

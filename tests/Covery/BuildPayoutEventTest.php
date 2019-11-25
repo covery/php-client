@@ -1,13 +1,20 @@
 <?php
 
-class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Identities\Stub;
+use PHPUnit\Framework\TestCase;
+
+class BuildPayoutEventTest extends TestCase
 {
     public function testBuild()
     {
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::payoutEvent(
+        $result = Builder::payoutEvent(
             'someSequenceId',
             'fooUserId',
             'payoutLargeId',
@@ -29,7 +36,7 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
             '4445',
             11,
             22
-        )->addBrowserData('88889', 'Test curl')->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addBrowserData('88889', 'Test curl')->addIdentity(new Stub())->build();
 
         self::assertSame('payout', $result->getType());
         self::assertCount(1, $result->getIdentities());
@@ -61,7 +68,7 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
         $validator->validate($result);
 
         // Minimal data
-        $result = \Covery\Client\Envelopes\Builder::payoutEvent(
+        $result = Builder::payoutEvent(
             'someSequenceId',
             'fooUserId',
             'payoutLargeId',

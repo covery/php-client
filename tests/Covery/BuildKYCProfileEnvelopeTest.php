@@ -1,13 +1,20 @@
 <?php
 
-class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Identities\Stub;
+use PHPUnit\Framework\TestCase;
+
+class BuildKYCProfileEnvelopeTest extends TestCase
 {
     public function testBuild()
     {
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::kycProfileEvent(
+        $result = Builder::kycProfileEvent(
             'kycProfileSequenceIdSome',
             'kycProfileEventId',
             "kycProfileUserMerchantId",
@@ -47,7 +54,7 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
             "kycProfileSecondAddress",
             "kycProfileSecondZip",
             "profile1,profile2,profile3"
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
 
         self::assertSame('kyc_profile', $result->getType());
         self::assertSame('kycProfileSequenceIdSome', $result->getSequenceId());
@@ -95,12 +102,12 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
 
         // Minimal data
         $current = time();
-        $result = \Covery\Client\Envelopes\Builder::kycProfileEvent(
+        $result = Builder::kycProfileEvent(
             'seqIdValue',
             'eventId',
             "userId",
             $current
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
 
         self::assertSame('kyc_profile', $result->getType());
         self::assertSame('seqIdValue', $result->getSequenceId());
@@ -113,7 +120,7 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
         $validator->validate($result);
 
         // With device fingerprint fields
-        $result = \Covery\Client\Envelopes\Builder::kycProfileEvent(
+        $result = Builder::kycProfileEvent(
             'seqIdValue',
             'eventId',
             "userId",

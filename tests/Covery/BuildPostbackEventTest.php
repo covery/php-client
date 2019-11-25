@@ -1,13 +1,20 @@
 <?php
 
-class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Identities\Stub;
+use PHPUnit\Framework\TestCase;
+
+class BuildPostbackEventTest extends TestCase
 {
     public function testBuild()
     {
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::postBackEvent(
+        $result = Builder::postBackEvent(
             123456,
             "someTransactionId",
             "someTransactionStatus",
@@ -19,7 +26,7 @@ class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
             "somePspCode",
             "somePspReason",
             "someArn"
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
 
         self::assertSame('postback', $result->getType());
         self::assertCount(1, $result->getIdentities());
@@ -29,7 +36,7 @@ class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
 
 
         // Minimal data with request id
-        $result = \Covery\Client\Envelopes\Builder::postBackEvent(22222)->build();
+        $result = Builder::postBackEvent(22222)->build();
         self::assertSame('postback', $result->getType());
         self::assertCount(0, $result->getIdentities());
         self::assertSame('', $result->getSequenceId());
@@ -37,7 +44,7 @@ class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
         $validator->validate($result);
 
         // Minimal data with transaction id
-        $result = \Covery\Client\Envelopes\Builder::postBackEvent(null, "transactionId")->build();
+        $result = Builder::postBackEvent(null, "transactionId")->build();
         self::assertSame('postback', $result->getType());
         self::assertCount(0, $result->getIdentities());
         self::assertSame('', $result->getSequenceId());

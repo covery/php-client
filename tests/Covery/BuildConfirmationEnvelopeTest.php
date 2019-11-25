@@ -1,19 +1,26 @@
 <?php
 
-class BuildConfirmationEnvelopeTest extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Identities\Stub;
+use PHPUnit\Framework\TestCase;
+
+class BuildConfirmationEnvelopeTest extends TestCase
 {
     public function testBuild()
     {
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::confirmationEvent(
+        $result = Builder::confirmationEvent(
             'sequenceIdSome',
             'ababagalamaga',
             42342352,
             true,
             false
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
 
         self::assertSame('confirmation', $result->getType());
         self::assertCount(1, $result->getIdentities());
@@ -29,10 +36,10 @@ class BuildConfirmationEnvelopeTest extends \PHPUnit_Framework_TestCase
 
         // Minimal data
         $current = time();
-        $result = \Covery\Client\Envelopes\Builder::confirmationEvent(
+        $result = Builder::confirmationEvent(
             'sequenceIdSome2',
             'suchwowmuchcovery'
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
         self::assertSame('confirmation', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('sequenceIdSome2', $result->getSequenceId());
@@ -47,7 +54,7 @@ class BuildConfirmationEnvelopeTest extends \PHPUnit_Framework_TestCase
 
         // Optional email and phone
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::confirmationEvent(
+        $result = Builder::confirmationEvent(
             'sequenceIdSome',
             'ababagalamaga',
             42342352,
@@ -55,7 +62,7 @@ class BuildConfirmationEnvelopeTest extends \PHPUnit_Framework_TestCase
             true,
             'foo@bar.com',
             '+1234567890'
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
 
         self::assertSame('confirmation', $result->getType());
         self::assertCount(1, $result->getIdentities());
@@ -68,6 +75,5 @@ class BuildConfirmationEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('foo@bar.com', $result['email']);
         self::assertSame('+1234567890', $result['phone']);
         $validator->validate($result);
-
     }
 }

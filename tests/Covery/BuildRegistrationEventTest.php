@@ -1,13 +1,20 @@
 <?php
 
-class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Identities\Stub;
+use PHPUnit\Framework\TestCase;
+
+class BuildRegistrationEventTest extends TestCase
 {
     public function testBuild()
     {
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::registrationEvent(
+        $result = Builder::registrationEvent(
             'someLongString',
             'thisisuser',
             320746,
@@ -24,7 +31,7 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
             'adwords',
             '8965asd-2',
             'somePassword'
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
 
         self::assertSame('registration', $result->getType());
         self::assertCount(1, $result->getIdentities());
@@ -49,7 +56,7 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
 
         // Minimal data
         $current = time();
-        $result = \Covery\Client\Envelopes\Builder::registrationEvent(
+        $result = Builder::registrationEvent(
             'someLongStringX',
             'thisisuser15'
         )->build();

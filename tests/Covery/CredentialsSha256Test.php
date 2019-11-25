@@ -1,6 +1,12 @@
 <?php
 
-class CredentialsSha256Test extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Credentials\Sha256;
+use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
+
+class CredentialsSha256Test extends TestCase
 {
     public function invalidTokens() {
         return array(
@@ -15,20 +21,23 @@ class CredentialsSha256Test extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider invalidTokens
      * @expectedException \InvalidArgumentException
+     * @param string $token
+     * @param string $secret
+     * @throws \Exception
      */
     public function testInvalidCredentials($token, $secret)
     {
-        new \Covery\Client\Credentials\Sha256($token, $secret);
+        new Sha256($token, $secret);
     }
 
     public function testSign()
     {
-        $maker = new \Covery\Client\Credentials\Sha256(
+        $maker = new Sha256(
             '12345678901234567890123456789012',
             'asjdh283ysfjhbkjKHGV^7ra/adf2145'
         );
 
-        $req = new \GuzzleHttp\Psr7\Request('POST', 'http://localhost/foo', [], "Hello, world");
+        $req = new Request('POST', 'http://localhost/foo', [], "Hello, world");
         $signed = $maker->signRequest($req);
 
         self::assertNotSame($req, $signed);
@@ -49,13 +58,13 @@ class CredentialsSha256Test extends \PHPUnit_Framework_TestCase
 
     public function testBodyPresence()
     {
-        $maker = new \Covery\Client\Credentials\Sha256(
+        $maker = new Sha256(
             '12345678901234567890123456789012',
             'asjdh283ysfjhbkjKHGV^7ra/adf2145'
         );
 
         $body = "Hello, world";
-        $req = new \GuzzleHttp\Psr7\Request('POST', 'http://localhost/foo', [], $body);
+        $req = new Request('POST', 'http://localhost/foo', [], $body);
         $signed = $maker->signRequest($req);
         self::assertSame($body, $signed->getBody()->getContents());
     }

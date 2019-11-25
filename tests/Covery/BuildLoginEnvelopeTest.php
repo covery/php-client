@@ -1,13 +1,20 @@
 <?php
 
-class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Identities\Stub;
+use PHPUnit\Framework\TestCase;
+
+class BuildLoginEnvelopeTest extends TestCase
 {
     public function testBuild()
     {
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::loginEvent(
+        $result = Builder::loginEvent(
             'someSequenceId',
             'someUserId',
             123456,
@@ -17,7 +24,7 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
             'someTrafficSource',
             'someAffiliateId',
             "somePassword"
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
 
         self::assertSame('login', $result->getType());
         self::assertCount(1, $result->getIdentities());
@@ -36,10 +43,10 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
 
         // Minimal data
         $current = time();
-        $result = \Covery\Client\Envelopes\Builder::loginEvent(
+        $result = Builder::loginEvent(
             'someSequenceId2',
             'someUserId5'
-        )->addIdentity(new \Covery\Client\Identities\Stub())->build();
+        )->addIdentity(new Stub())->build();
         self::assertSame('login', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId2', $result->getSequenceId());

@@ -1,13 +1,20 @@
 <?php
 
-class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
+namespace Tests\Covery;
+
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Identities\Stub;
+use PHPUnit\Framework\TestCase;
+
+class BuildTransferEventTest extends TestCase
 {
     public function testBuild()
     {
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::transferEvent(
+        $result = Builder::transferEvent(
             'someSequenceId',
             'someEventId',
             0.42,
@@ -51,7 +58,7 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
             'second_iban'
         )
             ->addBrowserData('88889', 'Test curl')
-            ->addIdentity(new \Covery\Client\Identities\Stub())
+            ->addIdentity(new Stub())
             ->addCustomField('test1', 'test1')
             ->build();
 
@@ -105,7 +112,7 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
         $validator->validate($result);
 
         // Minimal data
-        $result = \Covery\Client\Envelopes\Builder::transferEvent(
+        $result = Builder::transferEvent(
             'someSequenceId',
             'someEventId',
             0.42,
