@@ -66,7 +66,7 @@ Postback event example:
 use Covery\Client\Envelopes\Builder;
 use Covery\Client\Facade;
 
-$event = Builder::postbackEvent($requestId, null, 'code', 'reason')->build(); //postbcak for event with id $requestId
+$event = Builder::postbackEvent($requestId, null, 'code', 'reason')->build(); // postback for event with id $requestId
 $postbackRequestId = Facade::sendPostback($event);
 ```
 
