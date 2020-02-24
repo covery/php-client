@@ -162,7 +162,8 @@ class ValidatorV1
         'reg_date' => 'int',
         'reg_number' => 'string(255)',
         'vat_number' => 'string(255)',
-        'related_profiles' => 'string(1024)'
+        'related_profiles' => 'string(1024)',
+        'bic' => 'string(255)',
     );
 
     private static $sharedOptional = array(
@@ -368,6 +369,7 @@ class ValidatorV1
                 'product_quantity',
                 'iban',
                 'second_iban',
+                'bic'
             )
         ),
         'postback' => array(

@@ -48,7 +48,8 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
             'productName',
             42,
             'iban',
-            'second_iban'
+            'second_iban',
+            'bic value'
         )
             ->addBrowserData('88889', 'Test curl')
             ->addIdentity(new \Covery\Client\Identities\Stub())
@@ -58,7 +59,7 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('transfer', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(43, $result);
+        self::assertCount(44, $result);
 
         self::assertSame('someEventId', $result['event_id']);
         self::assertSame(0.42, $result['amount']);
@@ -100,6 +101,7 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame(42, $result['product_quantity']);
         self::assertSame('iban', $result['iban']);
         self::assertSame('second_iban', $result['second_iban']);
+        self::assertSame('bic value', $result['bic']);
 
 
         $validator->validate($result);

@@ -554,6 +554,7 @@ class Builder
      * @param int|float|null $productQuantity
      * @param string|null $iban
      * @param string|null $secondIban
+     * @param string|null $bic
      *
      * @return Builder
      */
@@ -598,7 +599,8 @@ class Builder
         $productName = null,
         $productQuantity = null,
         $iban = null,
-        $secondIban = null
+        $secondIban = null,
+        $bic = null
 
     ) {
         $builder = new self('transfer', $sequenceId);
@@ -631,7 +633,8 @@ class Builder
                $secondGender,
                $secondCountry,
                $iban,
-               $secondIban
+               $secondIban,
+               $bic
             )
             ->addUserData(
                 $email,
@@ -1795,6 +1798,7 @@ class Builder
      * @param string|null $secondCountry
      * @param string|null $iban
      * @param string|null $secondIban
+     * @param string|null $bic
      *
      * @return $this
      */
@@ -1822,7 +1826,8 @@ class Builder
         $secondGender = null,
         $secondCountry = null,
         $iban = null,
-        $secondIban = null
+        $secondIban = null,
+        $bic = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -1896,6 +1901,9 @@ class Builder
         if ($secondIban !== null && !is_string($secondIban)) {
             throw new \InvalidArgumentException('Second iban must be string');
         }
+        if ($bic !== null && !is_string($bic)) {
+            throw new \InvalidArgumentException('Second bic must be string');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -1921,6 +1929,7 @@ class Builder
         $this->replace('second_country', $secondCountry);
         $this->replace('iban', $iban);
         $this->replace('second_iban', $secondIban);
+        $this->replace('bic', $bic);
 
         return $this;
     }
