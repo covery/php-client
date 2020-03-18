@@ -1902,7 +1902,7 @@ class Builder
             throw new \InvalidArgumentException('Second iban must be string');
         }
         if ($bic !== null && !is_string($bic)) {
-            throw new \InvalidArgumentException('Second bic must be string');
+            throw new \InvalidArgumentException('Bic must be string');
         }
 
         $this->replace('event_id', $eventId);
