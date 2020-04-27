@@ -35,7 +35,9 @@ To do this, place the following code somewhere close to your application initial
 use Covery\Client\Facade;
 use Covery\Client\Transport\Curl;
 
-Facade::setTransport(new Curl(5.0 /* Timeout */));
+$connectTimeoutSeconds = 5.0;
+$requestTimeoutSeconds = 2.0;
+Facade::setTransport(new Curl($connectTimeoutSeconds, $requestTimeoutSeconds));
 Facade::setCredentials('<token>', '<secret>');
 ```
 
@@ -152,6 +154,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.2.0`
+  * Added support for request timeouts
 * `1.1.9`
   * Added optional `bic` field for transfer event  
 * `1.1.8`
