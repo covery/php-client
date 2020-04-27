@@ -19,25 +19,32 @@ use Psr\Http\Message\RequestInterface;
  */
 class PersistentCurl implements TransportInterface
 {
-    private $timeoutMillis;
+    private $connectTimeoutMillis;
+    private $requestTimeoutMillis;
     private $curl;
 
     /**
      * Curl constructor.
      *
-     * @param int|float $timeout Timeout in seconds
+     * @param int|float $connectTimeout Connection timeout in seconds
+     * @param int|float $requestTimeout Request timeout in seconds.
+     *   Default is 0, which means it never times out during transfer.
      * @throws \Exception
      */
-    public function __construct($timeout)
+    public function __construct($connectTimeout, $requestTimeout = 0)
     {
-        if (!is_int($timeout) && !is_float($timeout)) {
-            throw new \InvalidArgumentException('Timeout must be integer or float');
+        if (!is_int($connectTimeout) && !is_float($connectTimeout)) {
+            throw new \InvalidArgumentException('Connect timeout must be integer or float');
+        }
+        if (!is_int($requestTimeout) && !is_float($requestTimeout)) {
+            throw new \InvalidArgumentException('Request timeout must be integer or float');
         }
         if (!function_exists('curl_init')) {
             throw new \Exception('cURL extension not installed/enabled');
         }
 
-        $this->timeoutMillis = floor($timeout * 1000);
+        $this->connectTimeoutMillis = floor($connectTimeout * 1000);
+        $this->requestTimeoutMillis = floor($requestTimeout * 1000);
         $this->curl = null;
     }
 
@@ -56,7 +63,8 @@ class PersistentCurl implements TransportInterface
             $this->curl = curl_init();
         }
         curl_setopt($this->curl, CURLOPT_URL, strval($request->getUri()));
-        curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT_MS, $this->timeoutMillis);
+        curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT_MS, $this->connectTimeoutMillis);
+        curl_setopt($this->curl, CURLOPT_TIMEOUT_MS, $this->requestTimeoutMillis);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->curl, CURLOPT_POST, true);
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
