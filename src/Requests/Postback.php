@@ -17,6 +17,6 @@ class Postback extends AbstractEnvelopeRequest
 {
     public function __construct(EnvelopeInterface $envelope)
     {
-        parent::__construct('api/postback', $envelope);
+        parent::__construct('/api/postback', $envelope);
     }
 }

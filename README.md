@@ -152,6 +152,10 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.1.9`
+  * Added optional `bic` field for transfer event  
+* `1.1.8`
+  * Added slash before request path (guzzle deprecation since version 1.4) 
 * `1.1.7`
   * Added `kyc_profile`, `kyc_submit` events
 * `1.1.6`

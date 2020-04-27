@@ -19,7 +19,7 @@ class Psr7RequestsTest extends TestCase
         self::assertInstanceOf(RequestInterface::class, $req);
         self::assertSame('', $req->getBody()->getContents());
         self::assertSame('POST', $req->getMethod());
-        self::assertSame('api/ping', strval($req->getUri()));
+        self::assertSame('/api/ping', strval($req->getUri()));
     }
 
     public function testEvent()
@@ -38,7 +38,7 @@ class Psr7RequestsTest extends TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame('api/sendEvent', strval($req->getUri()));
+        self::assertSame('/api/sendEvent', strval($req->getUri()));
 
         $req = new Event($withStub);
         self::assertInstanceOf(RequestInterface::class, $req);
@@ -48,7 +48,7 @@ class Psr7RequestsTest extends TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame('api/sendEvent', strval($req->getUri()));
+        self::assertSame('/api/sendEvent', strval($req->getUri()));
     }
 
     public function testPostback()
@@ -67,7 +67,7 @@ class Psr7RequestsTest extends TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame('api/postback', strval($req->getUri()));
+        self::assertSame('/api/postback', strval($req->getUri()));
 
         $req = new Postback($withStub);
         self::assertInstanceOf(RequestInterface::class, $req);
@@ -77,7 +77,7 @@ class Psr7RequestsTest extends TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame('api/postback', strval($req->getUri()));
+        self::assertSame('/api/postback', strval($req->getUri()));
     }
 
     public function testDecision()
@@ -96,7 +96,7 @@ class Psr7RequestsTest extends TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame('api/makeDecision', strval($req->getUri()));
+        self::assertSame('/api/makeDecision', strval($req->getUri()));
 
         $req = new Decision($withStub);
         self::assertInstanceOf(RequestInterface::class, $req);
@@ -106,6 +106,6 @@ class Psr7RequestsTest extends TestCase
         self::assertFalse($req->hasHeader('X-Auth-Token'));
         self::assertFalse($req->hasHeader('X-Auth-Signature'));
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
-        self::assertSame('api/makeDecision', strval($req->getUri()));
+        self::assertSame('/api/makeDecision', strval($req->getUri()));
     }
 }

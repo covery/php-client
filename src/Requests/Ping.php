@@ -15,6 +15,6 @@ class Ping extends Request
 {
     public function __construct()
     {
-        parent::__construct('POST', 'api/ping');
+        parent::__construct('POST', '/api/ping');
     }
 }
