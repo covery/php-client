@@ -29,7 +29,7 @@ class ValidatorV1Test extends \PHPUnit_Framework_TestCase
         self::assertCount(0, $this->validator->analyzeIdentities(array(new \Covery\Client\Identities\Stub())));
         self::assertCount(0, $this->validator->analyzeIdentities(array(
             new \Covery\Client\Identities\Stub(),
-            $this->getMock('Covery\\Client\\IdentityNodeInterface')
+            $this->getMockBuilder('Covery\\Client\\IdentityNodeInterface')->getMock()
         )));
     }
 
@@ -84,12 +84,14 @@ class ValidatorV1Test extends \PHPUnit_Framework_TestCase
     public function testComposition()
     {
         /** @var PHPUnit_Framework_MockObject_MockObject|\Covery\Client\Envelopes\ValidatorV1 $mock */
-        $mock = self::getMock('Covery\\Client\\Envelopes\\ValidatorV1', [
-            'analyzeSequenceId',
-            'analyzeIdentities',
-            'analyzeTypeAndMandatoryFields',
-            'analyzeFieldTypes',
-        ]);
+        $mock = self::getMockBuilder('Covery\\Client\\Envelopes\\ValidatorV1')
+            ->setMethods([
+                'analyzeSequenceId',
+                'analyzeIdentities',
+                'analyzeTypeAndMandatoryFields',
+                'analyzeFieldTypes',
+            ])
+            ->getMock();
 
         $mock->expects(self::once())->method('analyzeSequenceId')->willReturn(array());
         $mock->expects(self::once())->method('analyzeIdentities')->willReturn(array());
@@ -99,19 +101,19 @@ class ValidatorV1Test extends \PHPUnit_Framework_TestCase
         $mock->validate(\Covery\Client\Envelopes\Builder::loginEvent("", "")->build());
     }
 
-    /**
-     * @expectedException \Covery\Client\EnvelopeValidationException
-     * @expectedExceptionMessage Envelope validation failed
-     */
     public function testCompositionWithError()
     {
+        $this->expectException('Covery\\Client\\EnvelopeValidationException');
+        $this->expectExceptionMessage('Envelope validation failed');
         /** @var PHPUnit_Framework_MockObject_MockObject|\Covery\Client\Envelopes\ValidatorV1 $mock */
-        $mock = self::getMock('Covery\\Client\\Envelopes\\ValidatorV1', [
-            'analyzeSequenceId',
-            'analyzeIdentities',
-            'analyzeTypeAndMandatoryFields',
-            'analyzeFieldTypes',
-        ]);
+        $mock = self::getMockBuilder('Covery\\Client\\Envelopes\\ValidatorV1')
+            ->setMethods([
+                'analyzeSequenceId',
+                'analyzeIdentities',
+                'analyzeTypeAndMandatoryFields',
+                'analyzeFieldTypes',
+            ])
+            ->getMock();
 
         $mock->expects(self::once())->method('analyzeSequenceId')->willReturn(array('foo'));
         $mock->expects(self::once())->method('analyzeIdentities')->willReturn(array());
