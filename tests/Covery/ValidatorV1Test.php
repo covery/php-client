@@ -101,10 +101,12 @@ class ValidatorV1Test extends \PHPUnit_Framework_TestCase
         $mock->validate(\Covery\Client\Envelopes\Builder::loginEvent("", "")->build());
     }
 
+    /**
+     * @expectedException Covery\Client\EnvelopeValidationException
+     * @expectedExceptionMessage Envelope validation failed
+     */
     public function testCompositionWithError()
     {
-        $this->expectException('Covery\\Client\\EnvelopeValidationException');
-        $this->expectExceptionMessage('Envelope validation failed');
         /** @var PHPUnit_Framework_MockObject_MockObject|\Covery\Client\Envelopes\ValidatorV1 $mock */
         $mock = self::getMockBuilder('Covery\\Client\\Envelopes\\ValidatorV1')
             ->setMethods([
