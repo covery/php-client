@@ -154,6 +154,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.0`
+  * Added optional `campaign` field for login, registration, install and transaction events
 * `1.2.0`
   * Added support for request timeouts
 * `1.1.9`

@@ -83,6 +83,7 @@ class Builder
      * @param string|null $trafficSource
      * @param string|null $affiliateId
      * @param string|null $password
+     * @param string|null $campaign
      *
      * @return Builder
      */
@@ -95,7 +96,8 @@ class Builder
         $gender = null,
         $trafficSource = null,
         $affiliateId = null,
-        $password = null
+        $password = null,
+        $campaign = null
     ) {
         $builder = new self('login', $sequenceId);
         if ($timestamp === null) {
@@ -126,7 +128,7 @@ class Builder
             null,
             null,
             $password
-        )->addWebsiteData(null, $trafficSource, $affiliateId);
+        )->addWebsiteData(null, $trafficSource, $affiliateId, $campaign);
     }
 
     /**
@@ -148,6 +150,7 @@ class Builder
      * @param string|null $trafficSource
      * @param string|null $affiliateId
      * @param string|null $password
+     * @param string|null $campaign
      *
      * @return Builder
      */
@@ -167,7 +170,8 @@ class Builder
         $websiteUrl = null,
         $trafficSource = null,
         $affiliateId = null,
-        $password = null
+        $password = null,
+        $campaign = null
     ) {
         $builder = new self('registration', $sequenceId);
         if ($timestamp === null) {
@@ -177,7 +181,8 @@ class Builder
         return $builder->addWebsiteData(
             $websiteUrl,
             $trafficSource,
-            $affiliateId
+            $affiliateId,
+            $campaign
         )->addUserData(
             $email,
             $userId,
@@ -322,6 +327,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $merchantIp
      * @param string|null $affiliateId
+     * @param string|null $campaign
      *
      * @return Builder
      */
@@ -366,7 +372,8 @@ class Builder
         $productQuantity = null,
         $websiteUrl = null,
         $merchantIp = null,
-        $affiliateId = null
+        $affiliateId = null,
+        $campaign = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -411,7 +418,7 @@ class Builder
                 $country
             )
             ->addProductData($productQuantity, $productName, $productDescription)
-            ->addWebsiteData($websiteUrl, null, $affiliateId)
+            ->addWebsiteData($websiteUrl, null, $affiliateId, $campaign)
             ->addIpData(null, null, $merchantIp);
 
     }
@@ -426,6 +433,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $trafficSource
      * @param string|null $affiliateId
+     * @param string|null $campaign
      *
      * @return Builder
      */
@@ -436,7 +444,8 @@ class Builder
         $country = null,
         $websiteUrl = null,
         $trafficSource = null,
-        $affiliateId = null
+        $affiliateId = null,
+        $campaign = null
     ) {
         $builder = new self('install', $sequenceId);
         if ($installTimestamp === null) {
@@ -445,7 +454,7 @@ class Builder
 
         return $builder->addInstallData(
             $installTimestamp
-        )->addWebsiteData($websiteUrl, $trafficSource, $affiliateId)
+        )->addWebsiteData($websiteUrl, $trafficSource, $affiliateId, $campaign)
         ->addShortUserData(null, $userId, null, null, null, $country);
     }
 
@@ -976,10 +985,11 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $traffic_source
      * @param string|null $affiliate_id
+     * @param string|null $campaign
      *
      * @return $this
      */
-    public function addWebsiteData($websiteUrl = null, $traffic_source = null, $affiliate_id = null)
+    public function addWebsiteData($websiteUrl = null, $traffic_source = null, $affiliate_id = null, $campaign = null)
     {
         if ($websiteUrl !== null && !is_string($websiteUrl)) {
             throw new \InvalidArgumentException('Website URL must be string');
@@ -990,10 +1000,14 @@ class Builder
         if ($affiliate_id !== null && !is_string($affiliate_id)) {
             throw new \InvalidArgumentException('Affiliate ID must be string');
         }
+        if ($campaign !== null && !is_string($campaign)) {
+            throw new \InvalidArgumentException('Campaign must be string');
+        }
 
         $this->replace('website_url', $websiteUrl);
         $this->replace('traffic_source', $traffic_source);
         $this->replace('affiliate_id', $affiliate_id);
+        $this->replace('campaign', $campaign);
         return $this;
     }
 

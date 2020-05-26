@@ -164,6 +164,7 @@ class ValidatorV1
         'vat_number' => 'string(255)',
         'related_profiles' => 'string(1024)',
         'bic' => 'string(255)',
+        'campaign' => 'string(255)',
     );
 
     private static $sharedOptional = array(
@@ -199,7 +200,16 @@ class ValidatorV1
         ),
         'login' => array(
             'mandatory' => array('login_timestamp', 'user_merchant_id'),
-            'optional' => array('email', 'login_failed', 'phone', 'gender', 'traffic_source', 'affiliate_id', 'password')
+            'optional' => array(
+                'email',
+                'login_failed',
+                'phone',
+                'gender',
+                'traffic_source',
+                'affiliate_id',
+                'password',
+                'campaign',
+            )
         ),
         'registration' => array(
             'mandatory' => array('registration_timestamp', 'user_merchant_id'),
@@ -217,6 +227,7 @@ class ValidatorV1
                 'traffic_source',
                 'affiliate_id',
                 'password',
+                'campaign',
             ),
         ),
         'transaction' => array(
@@ -263,6 +274,7 @@ class ValidatorV1
                 'website_url',
                 'merchant_ip',
                 'affiliate_id',
+                'campaign',
             )
         ),
         'payout' => array(
@@ -301,6 +313,7 @@ class ValidatorV1
                 'website_url',
                 'traffic_source',
                 'affiliate_id',
+                'campaign',
             )
         ),
         'refund' => array(
