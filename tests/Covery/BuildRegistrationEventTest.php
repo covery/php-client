@@ -23,13 +23,14 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
             'http://example.com',
             'adwords',
             '8965asd-2',
-            'somePassword'
+            'somePassword',
+            'email campaign'
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('registration', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someLongString', $result->getSequenceId());
-        self::assertCount(15, $result);
+        self::assertCount(16, $result);
         self::assertSame('thisisuser', $result['user_merchant_id']);
         self::assertSame(320746, $result['registration_timestamp']);
         self::assertSame('user@site.net', $result['email']);
@@ -45,6 +46,7 @@ class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('adwords', $result['traffic_source']);
         self::assertSame('8965asd-2', $result['affiliate_id']);
         self::assertSame('somePassword', $result['password']);
+        self::assertSame('email campaign', $result['campaign']);
         $validator->validate($result);
 
         // Minimal data
