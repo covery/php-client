@@ -122,6 +122,8 @@ Methods `sendEvent` and `makeDecision` require envelope as argument. Envelope is
   * `transfer` - transfer event
   * `kyc_profile` - kyc profile event
   * `kyc_submit` - kyc submit event
+  * `order_item` - order item event
+  * `order_submit` - order submit event
   
 Envelope specifications are bundled in `Covery\Client\EnvelopeInterface`.
 
