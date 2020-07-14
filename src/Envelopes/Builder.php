@@ -530,9 +530,9 @@ class Builder
      * @param string $secondAccountId
      * @param string $accountSystem
      * @param string $userId
+     * @param string|null $method
      * @param int|null $eventTimestamp
      * @param float|null $amountConverted
-     * @param string|null $method
      * @param string|null $email
      * @param string|null $phone
      * @param int|null $birthDate
@@ -564,6 +564,7 @@ class Builder
      * @param string|null $iban
      * @param string|null $secondIban
      * @param string|null $bic
+     * @param string|null $source
      *
      * @return Builder
      */
@@ -609,8 +610,8 @@ class Builder
         $productQuantity = null,
         $iban = null,
         $secondIban = null,
-        $bic = null
-
+        $bic = null,
+        $source = null
     ) {
         $builder = new self('transfer', $sequenceId);
         if ($eventTimestamp === null) {
@@ -643,7 +644,8 @@ class Builder
                $secondCountry,
                $iban,
                $secondIban,
-               $bic
+               $bic,
+               $source
             )
             ->addUserData(
                 $email,
@@ -866,6 +868,341 @@ class Builder
             ->addUserData(
                 null,
                 $userId
+            );
+    }
+
+    /**
+     * Returns builder for order_item request
+     *
+     * @param string $sequenceId
+     * @param float $amount
+     * @param string $currency
+     * @param string $eventId
+     * @param int $eventTimestamp
+     * @param string $orderType
+     * @param string|null $transactionId
+     * @param string|null $groupId
+     * @param string|null $affiliateId
+     * @param float|null $amountConverted
+     * @param string|null $campaign
+     * @param string|null $carrier
+     * @param string|null $carrierShippingId
+     * @param string|null $carrierUrl
+     * @param string|null $carrierPhone
+     * @param int|null $couponStartDate
+     * @param int|null $couponEndDate
+     * @param string|null $couponId
+     * @param string|null $couponName
+     * @param string|null $customerComment
+     * @param int|null $deliveryEstimate
+     * @param string|null $email
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $phone
+     * @param string|null $productDescription
+     * @param string|null $productName
+     * @param int|null $productQuantity
+     * @param string|null $shippingAddress
+     * @param string|null $shippingCity
+     * @param string|null $shippingCountry
+     * @param string|null $shippingCurrency
+     * @param float|null $shippingFee
+     * @param float|null $shippingFeeConverted
+     * @param string|null $shippingState
+     * @param string|null $shippingZip
+     * @param string|null $socialType
+     * @param string|null $source
+     * @param string|null $sourceFeeCurrency
+     * @param float|null $sourceFee
+     * @param float|null $sourceFeeConverted
+     * @param string|null $taxCurrency
+     * @param float|null $taxFee
+     * @param float|null $taxFeeConverted
+     * @param string|null $userMerchantId
+     * @param string|null $websiteUrl
+     * @param string|null $productUrl
+     * @param string|null $productImageUrl
+     * @return Builder
+     */
+    public static function orderItemEvent(
+        $sequenceId,
+        $amount,
+        $currency,
+        $eventId,
+        $eventTimestamp,
+        $orderType,
+        $transactionId = null,
+        $groupId = null,
+        $affiliateId = null,
+        $amountConverted = null,
+        $campaign = null,
+        $carrier = null,
+        $carrierShippingId = null,
+        $carrierUrl = null,
+        $carrierPhone = null,
+        $couponStartDate = null,
+        $couponEndDate = null,
+        $couponId = null,
+        $couponName = null,
+        $customerComment = null,
+        $deliveryEstimate = null,
+        $email = null,
+        $firstName = null,
+        $lastName = null,
+        $phone = null,
+        $productDescription = null,
+        $productName = null,
+        $productQuantity = null,
+        $shippingAddress = null,
+        $shippingCity = null,
+        $shippingCountry = null,
+        $shippingCurrency = null,
+        $shippingFee = null,
+        $shippingFeeConverted = null,
+        $shippingState = null,
+        $shippingZip = null,
+        $socialType = null,
+        $source = null,
+        $sourceFeeCurrency = null,
+        $sourceFee = null,
+        $sourceFeeConverted = null,
+        $taxCurrency = null,
+        $taxFee = null,
+        $taxFeeConverted = null,
+        $userMerchantId = null,
+        $websiteUrl = null,
+        $productUrl = null,
+        $productImageUrl = null
+    ) {
+        $envelopeType = 'order_item';
+        $builder = new self($envelopeType, $sequenceId);
+        if ($eventTimestamp === null) {
+            $eventTimestamp = time();
+        }
+        return $builder
+            ->addOrderData(
+                $envelopeType,
+                $amount,
+                $currency,
+                $eventId,
+                $eventTimestamp,
+                $transactionId,
+                $groupId,
+                null,
+                $orderType,
+                $amountConverted,
+                $campaign,
+                $carrier,
+                $carrierShippingId,
+                $carrierUrl,
+                $carrierPhone,
+                $couponStartDate,
+                $couponEndDate,
+                $couponId,
+                $couponName,
+                $customerComment,
+                $deliveryEstimate,
+                $shippingAddress,
+                $shippingCity,
+                $shippingCountry,
+                $shippingCurrency,
+                $shippingFee,
+                $shippingFeeConverted,
+                $shippingState,
+                $shippingZip,
+                $source,
+                $sourceFee,
+                $sourceFeeCurrency,
+                $sourceFeeConverted,
+                $taxCurrency,
+                $taxFee,
+                $taxFeeConverted,
+                $productUrl,
+                $productImageUrl
+            )
+            ->addUserData(
+                $email,
+                $userMerchantId,
+                $phone,
+                '',
+                $firstName,
+                $lastName,
+                '',
+                0,
+                '',
+                $socialType
+            )
+            -> addProductData(
+                $productQuantity,
+                $productName,
+                $productDescription
+            )
+            ->addWebsiteData(
+                $websiteUrl,
+                null,
+                $affiliateId
+            );
+    }
+
+    /**
+     * Returns builder for order_submit request
+     *
+     * @param string $sequenceId
+     * @param float $amount
+     * @param string $currency
+     * @param string $eventId
+     * @param int $eventTimestamp
+     * @param int $itemsQuantity
+     * @param string|null $transactionId
+     * @param string|null $groupId
+     * @param string|null $affiliateId
+     * @param float|null $amountConverted
+     * @param string|null $campaign
+     * @param string|null $carrier
+     * @param string|null $carrierShippingId
+     * @param string|null $carrierUrl
+     * @param string|null $carrierPhone
+     * @param int|null $couponStartDate
+     * @param int|null $couponEndDate
+     * @param string|null $couponId
+     * @param string|null $couponName
+     * @param string|null $customerComment
+     * @param int|null $deliveryEstimate
+     * @param string|null $email
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $phone
+     * @param string|null $shippingAddress
+     * @param string|null $shippingCity
+     * @param string|null $shippingCountry
+     * @param string|null $shippingCurrency
+     * @param float|null $shippingFee
+     * @param float|null $shippingFeeConverted
+     * @param string|null $shippingState
+     * @param string|null $shippingZip
+     * @param string|null $socialType
+     * @param string|null $source
+     * @param string|null $sourceFeeCurrency
+     * @param float|null $sourceFee
+     * @param float|null $sourceFeeConverted
+     * @param string|null $taxCurrency
+     * @param float|null $taxFee
+     * @param float|null $taxFeeConverted
+     * @param string|null $userMerchantId
+     * @param string|null $websiteUrl
+     * @param string|null $productUrl
+     * @param string|null $productImageUrl
+     * @return Builder
+     */
+    public static function orderSubmitEvent(
+        $sequenceId,
+        $amount,
+        $currency,
+        $eventId,
+        $eventTimestamp,
+        $itemsQuantity,
+        $transactionId = null,
+        $groupId = null,
+        $affiliateId = null,
+        $amountConverted = null,
+        $campaign = null,
+        $carrier = null,
+        $carrierShippingId = null,
+        $carrierUrl = null,
+        $carrierPhone = null,
+        $couponStartDate = null,
+        $couponEndDate = null,
+        $couponId = null,
+        $couponName = null,
+        $customerComment = null,
+        $deliveryEstimate = null,
+        $email = null,
+        $firstName = null,
+        $lastName = null,
+        $phone = null,
+        $shippingAddress = null,
+        $shippingCity = null,
+        $shippingCountry = null,
+        $shippingCurrency = null,
+        $shippingFee = null,
+        $shippingFeeConverted = null,
+        $shippingState = null,
+        $shippingZip = null,
+        $socialType = null,
+        $source = null,
+        $sourceFeeCurrency = null,
+        $sourceFee = null,
+        $sourceFeeConverted = null,
+        $taxCurrency = null,
+        $taxFee = null,
+        $taxFeeConverted = null,
+        $userMerchantId = null,
+        $websiteUrl = null,
+        $productUrl = null,
+        $productImageUrl = null
+    ) {
+        $envelopeType = 'order_submit';
+        $builder = new self($envelopeType, $sequenceId);
+        if ($eventTimestamp === null) {
+            $eventTimestamp = time();
+        }
+        return $builder
+            ->addOrderData(
+                $envelopeType,
+                $amount,
+                $currency,
+                $eventId,
+                $eventTimestamp,
+                $transactionId,
+                $groupId,
+                $itemsQuantity,
+                null,
+                $amountConverted,
+                $campaign,
+                $carrier,
+                $carrierShippingId,
+                $carrierUrl,
+                $carrierPhone,
+                $couponStartDate,
+                $couponEndDate,
+                $couponId,
+                $couponName,
+                $customerComment,
+                $deliveryEstimate,
+                $shippingAddress,
+                $shippingCity,
+                $shippingCountry,
+                $shippingCurrency,
+                $shippingFee,
+                $shippingFeeConverted,
+                $shippingState,
+                $shippingZip,
+                $source,
+                $sourceFee,
+                $sourceFeeCurrency,
+                $sourceFeeConverted,
+                $taxCurrency,
+                $taxFee,
+                $taxFeeConverted,
+                $productUrl,
+                $productImageUrl
+            )
+            ->addUserData(
+                $email,
+                $userMerchantId,
+                $phone,
+                '',
+                $firstName,
+                $lastName,
+                '',
+                0,
+                '',
+                $socialType
+            )
+            ->addWebsiteData(
+                $websiteUrl,
+                null,
+                $affiliateId
             );
     }
 
@@ -1813,6 +2150,7 @@ class Builder
      * @param string|null $iban
      * @param string|null $secondIban
      * @param string|null $bic
+     * @param string|null $source
      *
      * @return $this
      */
@@ -1841,7 +2179,8 @@ class Builder
         $secondCountry = null,
         $iban = null,
         $secondIban = null,
-        $bic = null
+        $bic = null,
+        $source = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -1918,6 +2257,9 @@ class Builder
         if ($bic !== null && !is_string($bic)) {
             throw new \InvalidArgumentException('Bic must be string');
         }
+        if ($source !== null && !is_string($source)) {
+            throw new \InvalidArgumentException('Transfer source must be string');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -1944,6 +2286,7 @@ class Builder
         $this->replace('iban', $iban);
         $this->replace('second_iban', $secondIban);
         $this->replace('bic', $bic);
+        $this->replace('transfer_source', $source);
 
         return $this;
     }
@@ -2095,6 +2438,247 @@ class Builder
         $this->replace('second_address', $secondAddress);
         $this->replace('second_zip', $secondZip);
         $this->replace('related_profiles', $relatedProfiles);
+
+        return $this;
+    }
+
+    /**
+     * Provides order information to envelope
+     *
+     * @param string $envelopeType
+     * @param float $amount
+     * @param string $currency
+     * @param string $eventId
+     * @param int $eventTimestamp
+     * @param string|null $transactionId
+     * @param string|null $groupId
+     * @param int|null $itemsQuantity
+     * @param string|null $orderType
+     * @param float|null $amountConverted
+     * @param string|null $campaign
+     * @param string|null $carrier
+     * @param string|null $carrierShippingId
+     * @param string|null $carrierUrl
+     * @param string|null $carrierPhone
+     * @param int|null $couponStartDate
+     * @param int|null $couponEndDate
+     * @param string|null $couponId
+     * @param string|null $couponName
+     * @param string|null $customerComment
+     * @param int|null $deliveryEstimate
+     * @param string|null $shippingAddress
+     * @param string|null $shippingCity
+     * @param string|null $shippingCountry
+     * @param string|null $shippingCurrency
+     * @param float|null $shippingFee
+     * @param float|null $shippingFeeConverted
+     * @param string|null $shippingState
+     * @param string|null $shippingZip
+     * @param string|null $source
+     * @param float|null $sourceFee
+     * @param string|null $sourceFeeCurrency
+     * @param float|null $sourceFeeConverted
+     * @param string|null $taxCurrency
+     * @param float|null $taxFee
+     * @param float|null $taxFeeConverted
+     * @param string|null $productUrl
+     * @param string|null $productImageUrl
+     * @return Builder
+     */
+    public function addOrderData(
+        $envelopeType,
+        $amount,
+        $currency,
+        $eventId,
+        $eventTimestamp,
+        $transactionId = null,
+        $groupId = null,
+        $itemsQuantity = null,
+        $orderType = null,
+        $amountConverted = null,
+        $campaign = null,
+        $carrier = null,
+        $carrierShippingId = null,
+        $carrierUrl = null,
+        $carrierPhone = null,
+        $couponStartDate = null,
+        $couponEndDate = null,
+        $couponId = null,
+        $couponName = null,
+        $customerComment = null,
+        $deliveryEstimate = null,
+        $shippingAddress = null,
+        $shippingCity = null,
+        $shippingCountry = null,
+        $shippingCurrency = null,
+        $shippingFee = null,
+        $shippingFeeConverted = null,
+        $shippingState = null,
+        $shippingZip = null,
+        $source = null,
+        $sourceFee = null,
+        $sourceFeeCurrency = null,
+        $sourceFeeConverted = null,
+        $taxCurrency = null,
+        $taxFee = null,
+        $taxFeeConverted = null,
+        $productUrl = null,
+        $productImageUrl = null
+    ) {
+        if (!is_string($envelopeType)) {
+            throw new \InvalidArgumentException('Envelope type must be string');
+        }
+        if (!is_int($amount) && !is_float($amount)) {
+            throw new \InvalidArgumentException('Amount must be number');
+        }
+        if (!is_string($currency)) {
+            throw new \InvalidArgumentException('Currency must be string');
+        }
+        if (!is_string($eventId)) {
+            throw new \InvalidArgumentException('Event ID must be string');
+        }
+        if (!is_int($eventTimestamp)) {
+            throw new \InvalidArgumentException('Event timestamp must be int');
+        }
+        if ($envelopeType === 'order_submit' && !is_int($itemsQuantity)) {
+            throw new \InvalidArgumentException('Items quantity must be int');
+        }
+        if ($envelopeType === 'order_item' && !is_string($orderType)) {
+            throw new \InvalidArgumentException('Order type must be string');
+        }
+        if ($transactionId !== null && !is_string($transactionId)) {
+            throw new \InvalidArgumentException('Transaction id must be string');
+        }
+        if ($groupId !== null && !is_string($groupId)) {
+            throw new \InvalidArgumentException('Group id must be string');
+        }
+        if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
+            throw new \InvalidArgumentException('Amount converted must be number');
+        }
+        if ($campaign !== null && !is_string($campaign)) {
+            throw new \InvalidArgumentException('Campaign must be string');
+        }
+        if ($carrier !== null && !is_string($carrier)) {
+            throw new \InvalidArgumentException('Carrier must be string');
+        }
+        if ($carrierShippingId !== null && !is_string($carrierShippingId)) {
+            throw new \InvalidArgumentException('Carrier shipping id must be string');
+        }
+        if ($carrierUrl !== null && !is_string($carrierUrl)) {
+            throw new \InvalidArgumentException('Carrier url must be string');
+        }
+        if ($carrierPhone !== null && !is_string($carrierPhone)) {
+            throw new \InvalidArgumentException('Carrier phone must be string');
+        }
+        if ($couponStartDate !== null && !is_int($couponStartDate)) {
+            throw new \InvalidArgumentException('Coupon start date must be int');
+        }
+        if ($couponEndDate !== null && !is_int($couponEndDate)) {
+            throw new \InvalidArgumentException('Coupon end date must be int');
+        }
+        if ($couponId !== null && !is_string($couponId)) {
+            throw new \InvalidArgumentException('Coupon id must be string');
+        }
+        if ($couponName !== null && !is_string($couponName)) {
+            throw new \InvalidArgumentException('Coupon name must be string');
+        }
+        if ($customerComment !== null && !is_string($customerComment)) {
+            throw new \InvalidArgumentException('Customer comment must be string');
+        }
+        if ($deliveryEstimate !== null && !is_int($deliveryEstimate)) {
+            throw new \InvalidArgumentException('Delivery estimate must be int');
+        }
+        if ($shippingAddress !== null && !is_string($shippingAddress)) {
+            throw new \InvalidArgumentException('Shipping address must be string');
+        }
+        if ($shippingCity !== null && !is_string($shippingCity)) {
+            throw new \InvalidArgumentException('Shipping city must be string');
+        }
+        if ($shippingCountry !== null && !is_string($shippingCountry)) {
+            throw new \InvalidArgumentException('Shipping country must be string');
+        }
+        if ($shippingCurrency !== null && !is_string($shippingCurrency)) {
+            throw new \InvalidArgumentException('Shipping currency must be string');
+        }
+        if ($shippingFee !== null && !is_int($shippingFee) && !is_float($shippingFee)) {
+            throw new \InvalidArgumentException('Shipping fee must be number');
+        }
+        if ($shippingFeeConverted !== null && !is_int($shippingFeeConverted) && !is_float($shippingFeeConverted)) {
+            throw new \InvalidArgumentException('Shipping fee converted must be number');
+        }
+        if ($shippingState !== null && !is_string($shippingState)) {
+            throw new \InvalidArgumentException('Shipping state must be string');
+        }
+        if ($shippingZip !== null && !is_string($shippingZip)) {
+            throw new \InvalidArgumentException('Shipping zip must be string');
+        }
+        if ($source !== null && !is_string($source)) {
+            throw new \InvalidArgumentException('Order source must be string');
+        }
+        if ($sourceFee !== null && !is_int($sourceFee) && !is_float($sourceFee)) {
+            throw new \InvalidArgumentException('Source fee must be number');
+        }
+        if ($sourceFeeConverted !== null && !is_int($sourceFeeConverted) && !is_float($sourceFeeConverted)) {
+            throw new \InvalidArgumentException('Source fee converted must be number');
+        }
+        if ($sourceFeeCurrency !== null && !is_string($sourceFeeCurrency)) {
+            throw new \InvalidArgumentException('Source fee currency must be string');
+        }
+        if ($taxCurrency !== null && !is_string($taxCurrency)) {
+            throw new \InvalidArgumentException('Tax currency must be string');
+        }
+        if ($taxFee !== null && !is_int($taxFee) && !is_float($taxFee)) {
+            throw new \InvalidArgumentException('Tax fee must be number');
+        }
+        if ($taxFeeConverted !== null && !is_int($taxFeeConverted) && !is_float($taxFeeConverted)) {
+            throw new \InvalidArgumentException('Tax fee converted must be number');
+        }
+        if ($productUrl !== null && !is_string($productUrl)) {
+            throw new \InvalidArgumentException('Product url must be string');
+        }
+        if ($productImageUrl !== null && !is_string($productImageUrl)) {
+            throw new \InvalidArgumentException('Product image url must be string');
+        }
+        if ($productImageUrl !== null && !is_string($productImageUrl)) {
+            throw new \InvalidArgumentException('Product image url must be string');
+        }
+        $this->replace('amount', $amount);
+        $this->replace('currency', $currency);
+        $this->replace('event_id', $eventId);
+        $this->replace('event_timestamp', $eventTimestamp);
+        $this->replace('items_quantity', $itemsQuantity);
+        $this->replace('order_type', $orderType);
+        $this->replace('transaction_id', $transactionId);
+        $this->replace('group_id', $groupId);
+        $this->replace('amount_converted', $amountConverted);
+        $this->replace('campaign', $campaign);
+        $this->replace('carrier', $carrier);
+        $this->replace('carrier_shipping_id', $carrierShippingId);
+        $this->replace('carrier_url', $carrierUrl);
+        $this->replace('carrier_phone', $carrierPhone);
+        $this->replace('coupon_start_date', $couponStartDate);
+        $this->replace('coupon_end_date', $couponEndDate);
+        $this->replace('coupon_id', $couponId);
+        $this->replace('coupon_name', $couponName);
+        $this->replace('customer_comment', $customerComment);
+        $this->replace('delivery_estimate', $deliveryEstimate);
+        $this->replace('shipping_address', $shippingAddress);
+        $this->replace('shipping_city', $shippingCity);
+        $this->replace('shipping_country', $shippingCountry);
+        $this->replace('shipping_currency', $shippingCurrency);
+        $this->replace('shipping_fee', $shippingFee);
+        $this->replace('shipping_fee_converted', $shippingFeeConverted);
+        $this->replace('shipping_state', $shippingState);
+        $this->replace('shipping_zip', $shippingZip);
+        $this->replace('order_source', $source);
+        $this->replace('source_fee', $sourceFee);
+        $this->replace('source_fee_currency', $sourceFeeCurrency);
+        $this->replace('source_fee_converted', $sourceFeeConverted);
+        $this->replace('tax_currency', $taxCurrency);
+        $this->replace('tax_fee', $taxFee);
+        $this->replace('tax_fee_converted', $taxFeeConverted);
+        $this->replace('product_url', $productUrl);
+        $this->replace('product_image_url', $productImageUrl);
 
         return $this;
     }
