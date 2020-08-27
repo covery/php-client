@@ -195,6 +195,9 @@ class ValidatorV1
         "product_image_url" => 'string(255)',
         "carrier_url" => 'string(255)',
         "carrier_phone" => 'string(255)',
+        'merchant_country' => 'string(255)',
+        'mcc' => 'string(255)',
+        'acquirer_merchant_id' => 'string(255)',
     );
 
     private static $sharedOptional = array(
@@ -226,7 +229,7 @@ class ValidatorV1
     private static $types = array(
         'confirmation' => array(
             'mandatory' => array('confirmation_timestamp', 'user_merchant_id'),
-            'optional' => array('email_confirmed', 'phone_confirmed', 'email', 'phone'),
+            'optional' => array('email_confirmed', 'phone_confirmed', 'email', 'phone', "group_id"),
         ),
         'login' => array(
             'mandatory' => array('login_timestamp', 'user_merchant_id'),
@@ -239,6 +242,7 @@ class ValidatorV1
                 'affiliate_id',
                 'password',
                 'campaign',
+                "group_id"
             )
         ),
         'registration' => array(
@@ -258,6 +262,7 @@ class ValidatorV1
                 'affiliate_id',
                 'password',
                 'campaign',
+                "group_id"
             ),
         ),
         'transaction' => array(
@@ -305,6 +310,10 @@ class ValidatorV1
                 'merchant_ip',
                 'affiliate_id',
                 'campaign',
+                'merchant_country',
+                'mcc',
+                'acquirer_merchant_id',
+                "group_id"
             )
         ),
         'payout' => array(
@@ -330,7 +339,8 @@ class ValidatorV1
                 'payout_card_bin',
                 'payout_card_last4',
                 'payout_expiration_month',
-                'payout_expiration_year'
+                'payout_expiration_year',
+                "group_id"
             )
         ),
         'install' => array(
@@ -344,6 +354,7 @@ class ValidatorV1
                 'traffic_source',
                 'affiliate_id',
                 'campaign',
+                "group_id"
             )
         ),
         'refund' => array(
@@ -365,7 +376,8 @@ class ValidatorV1
                 'agent_id',
                 'email',
                 'phone',
-                'user_merchant_id'
+                'user_merchant_id',
+                "group_id"
             )
         ),
         'transfer' => array(
@@ -413,7 +425,8 @@ class ValidatorV1
                 'iban',
                 'second_iban',
                 'bic',
-                'transfer_source'
+                'transfer_source',
+                "group_id"
             )
         ),
         'postback' => array(

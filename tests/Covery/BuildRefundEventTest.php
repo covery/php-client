@@ -24,7 +24,8 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
             'someMid',
             'someEmail',
             'somePhone',
-            'someUid'
+            'someUid',
+            "group id value"
         )->addBrowserData(
             '88889',
             'Test curl',
@@ -52,7 +53,7 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('refund', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(37, $result);
+        self::assertCount(38, $result);
         self::assertSame('refundLargeId', $result['refund_id']);
         self::assertSame(0.12, $result['refund_amount']);
         self::assertSame('GBP', $result['refund_currency']);
@@ -89,6 +90,7 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('refUrl', $result['referer_url']);
         self::assertSame('originUrl', $result['origin_url']);
         self::assertSame('clientResolution', $result['client_resolution']);
+        self::assertSame('group id value', $result['group_id']);
         $validator->validate($result);
 
         // Minimal data

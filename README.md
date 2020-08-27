@@ -156,6 +156,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.2`
+  * Added optional `merchant_country`, `mcc`, `acquirer_merchant_id` fields for transaction event. Added optional `group_id` field for install, registration, confirmation, login, transaction, refund, payout and transfer events
 * `1.3.1`
   * Added `order_item`, `order_submit` events. Added optional `transfer_source` field for transfer event
 * `1.3.0`
