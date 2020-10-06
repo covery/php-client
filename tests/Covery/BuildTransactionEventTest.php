@@ -49,7 +49,11 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
             'http://example.com',
             '127.0.0.1',
             'affiliateId',
-            'email campaign'
+            'email campaign',
+            "merchant country value",
+            "mcc value",
+            "acquirer merchant id value",
+            "group id value"
         )
             ->addBrowserData('88889', 'Test curl')
             ->addIdentity(new \Covery\Client\Identities\Stub())
@@ -59,7 +63,7 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('transaction', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(44, $result);
+        self::assertCount(48, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame('transactionId', $result['transaction_id']);
         self::assertSame(0.12, $result['transaction_amount']);
@@ -102,6 +106,10 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('affiliateId', $result['affiliate_id']);
         self::assertSame('test1', $result['custom_test1']);
         self::assertSame('email campaign', $result['campaign']);
+        self::assertSame('merchant country value', $result['merchant_country']);
+        self::assertSame('mcc value', $result['mcc']);
+        self::assertSame('acquirer merchant id value', $result['acquirer_merchant_id']);
+        self::assertSame('group id value', $result['group_id']);
 
         $validator->validate($result);
 

@@ -15,13 +15,14 @@ class BuildInstallEventTest extends \PHPUnit_Framework_TestCase
             'http://example.com',
             'source',
             'affId12345',
-            'email campaign'
+            'email campaign',
+            "group id value"
         )->addBrowserData('88889', 'Test curl')->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('install', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(9, $result);
+        self::assertCount(10, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame(123456, $result['install_timestamp']);
         self::assertSame('ukr', $result['country']);
@@ -29,6 +30,7 @@ class BuildInstallEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('source', $result['traffic_source']);
         self::assertSame('affId12345', $result['affiliate_id']);
         self::assertSame('email campaign', $result['campaign']);
+        self::assertSame('group id value', $result['group_id']);
         $validator->validate($result);
 
         // Minimal data

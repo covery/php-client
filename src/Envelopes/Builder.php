@@ -34,6 +34,7 @@ class Builder
      * @param bool|null $idPhoneConfirmed
      * @param string|null $email
      * @param string|null $phone
+     * @param string|null $groupId
      *
      * @return Builder
      */
@@ -44,7 +45,8 @@ class Builder
         $isEmailConfirmed = null,
         $idPhoneConfirmed = null,
         $email = null,
-        $phone = null
+        $phone = null,
+        $groupId = null
     ) {
         $builder = new self('confirmation', $sequenceId);
         if ($timestamp === null) {
@@ -68,7 +70,7 @@ class Builder
             $isEmailConfirmed,
             $idPhoneConfirmed,
             null
-        );
+        )->addGroupId($groupId);
     }
 
     /**
@@ -84,6 +86,7 @@ class Builder
      * @param string|null $affiliateId
      * @param string|null $password
      * @param string|null $campaign
+     * @param string|null $groupId
      *
      * @return Builder
      */
@@ -97,7 +100,8 @@ class Builder
         $trafficSource = null,
         $affiliateId = null,
         $password = null,
-        $campaign = null
+        $campaign = null,
+        $groupId = null
     ) {
         $builder = new self('login', $sequenceId);
         if ($timestamp === null) {
@@ -128,7 +132,7 @@ class Builder
             null,
             null,
             $password
-        )->addWebsiteData(null, $trafficSource, $affiliateId, $campaign);
+        )->addWebsiteData(null, $trafficSource, $affiliateId, $campaign)->addGroupId($groupId);
     }
 
     /**
@@ -151,6 +155,7 @@ class Builder
      * @param string|null $affiliateId
      * @param string|null $password
      * @param string|null $campaign
+     * @param string|null $groupId
      *
      * @return Builder
      */
@@ -171,7 +176,8 @@ class Builder
         $trafficSource = null,
         $affiliateId = null,
         $password = null,
-        $campaign = null
+        $campaign = null,
+        $groupId = null
     ) {
         $builder = new self('registration', $sequenceId);
         if ($timestamp === null) {
@@ -207,8 +213,7 @@ class Builder
             null,
             null,
             $password
-
-        );
+        )-> addGroupId($groupId);
     }
 
     /**
@@ -235,6 +240,7 @@ class Builder
      * @param string|null $cardLast4
      * @param int|null $cardExpirationMonth
      * @param int|null $cardExpirationYear
+     * @param string|null $groupId
      *
      * @return Builder
      */
@@ -259,7 +265,8 @@ class Builder
         $cardBin = null,
         $cardLast4 = null,
         $cardExpirationMonth = null,
-        $cardExpirationYear = null
+        $cardExpirationYear = null,
+        $groupId = null
     ) {
         $builder = new self('payout', $sequenceId);
         if ($payoutTimestamp === null) {
@@ -280,7 +287,7 @@ class Builder
             $cardLast4,
             $cardExpirationMonth,
             $cardExpirationYear
-        )->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country);
+        )->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country)->addGroupId($groupId);
     }
 
     /**
@@ -328,6 +335,10 @@ class Builder
      * @param string|null $merchantIp
      * @param string|null $affiliateId
      * @param string|null $campaign
+     * @param string|null $merchantCountry
+     * @param string|null $mcc
+     * @param string|null $acquirerMerchantId
+     * @param string|null $groupId
      *
      * @return Builder
      */
@@ -373,7 +384,11 @@ class Builder
         $websiteUrl = null,
         $merchantIp = null,
         $affiliateId = null,
-        $campaign = null
+        $campaign = null,
+        $merchantCountry = null,
+        $mcc = null,
+        $acquirerMerchantId = null,
+        $groupId = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -393,7 +408,10 @@ class Builder
                 $paymentMethod,
                 $paymentSystem,
                 $paymentMidName,
-                $paymentAccountId
+                $paymentAccountId,
+                $merchantCountry,
+                $mcc,
+                $acquirerMerchantId
             )
             ->addBillingData(
                 $billingFirstName,
@@ -419,7 +437,8 @@ class Builder
             )
             ->addProductData($productQuantity, $productName, $productDescription)
             ->addWebsiteData($websiteUrl, null, $affiliateId, $campaign)
-            ->addIpData(null, null, $merchantIp);
+            ->addIpData(null, null, $merchantIp)
+            ->addGroupId($groupId);
 
     }
 
@@ -434,7 +453,7 @@ class Builder
      * @param string|null $trafficSource
      * @param string|null $affiliateId
      * @param string|null $campaign
-     *
+     * @param string|null $groupId
      * @return Builder
      */
     public static function installEvent(
@@ -445,7 +464,8 @@ class Builder
         $websiteUrl = null,
         $trafficSource = null,
         $affiliateId = null,
-        $campaign = null
+        $campaign = null,
+        $groupId = null
     ) {
         $builder = new self('install', $sequenceId);
         if ($installTimestamp === null) {
@@ -455,7 +475,8 @@ class Builder
         return $builder->addInstallData(
             $installTimestamp
         )->addWebsiteData($websiteUrl, $trafficSource, $affiliateId, $campaign)
-        ->addShortUserData(null, $userId, null, null, null, $country);
+        ->addShortUserData(null, $userId, null, null, null, $country)
+        ->addGroupId($groupId);
     }
 
     /**
@@ -475,6 +496,10 @@ class Builder
      * @param string|null $refundMethod
      * @param string|null $refundSystem
      * @param string|null $refundMid
+     * @param string|null $email
+     * @param string|null $phone
+     * @param string|null $userId
+     * @param string|null $groupId
      *
      * @return Builder
      */
@@ -495,7 +520,8 @@ class Builder
         $refundMid = null,
         $email = null,
         $phone = null,
-        $userId = null
+        $userId = null,
+        $groupId = null
     ) {
         $builder = new self('refund', $sequenceId);
         if ($refundTimestamp === null) {
@@ -516,7 +542,7 @@ class Builder
             $refundMethod,
             $refundSystem,
             $refundMid
-        )->addUserData($email, $userId, $phone);
+        )->addUserData($email, $userId, $phone)->addGroupId($groupId);
     }
 
     /**
@@ -565,6 +591,7 @@ class Builder
      * @param string|null $secondIban
      * @param string|null $bic
      * @param string|null $source
+     * @param string|null $groupId
      *
      * @return Builder
      */
@@ -611,7 +638,8 @@ class Builder
         $iban = null,
         $secondIban = null,
         $bic = null,
-        $source = null
+        $source = null,
+        $groupId = null
     ) {
         $builder = new self('transfer', $sequenceId);
         if ($eventTimestamp === null) {
@@ -672,7 +700,7 @@ class Builder
                 $zip,
                 null
             )
-            ->addProductData($productQuantity, $productName, $productDescription);
+            ->addProductData($productQuantity, $productName, $productDescription)->addGroupId($groupId);
     }
 
     /**
@@ -1711,7 +1739,9 @@ class Builder
      * @param string|null $paymentSystem
      * @param string|null $paymentMidName
      * @param string|null $paymentAccountId
-     *
+     * @param string|null $merchantCountry
+     * @param string|null $mcc
+     * @param string|null $acquirerMerchantId
      * @return $this
      */
     public function addCCTransactionData(
@@ -1726,7 +1756,10 @@ class Builder
         $paymentMethod = null,
         $paymentSystem = null,
         $paymentMidName = null,
-        $paymentAccountId = null
+        $paymentAccountId = null,
+        $merchantCountry = null,
+        $mcc = null,
+        $acquirerMerchantId = null
     ) {
         if ($transactionId !== null && !is_string($transactionId)) {
             throw new \InvalidArgumentException('Transaction ID must be string');
@@ -1765,6 +1798,15 @@ class Builder
             throw new \InvalidArgumentException('Transaction amount converted must be float');
         }
 
+        if ($merchantCountry !== null && !is_string($merchantCountry)) {
+            throw new \InvalidArgumentException('Merchant country must be string');
+        }
+        if ($mcc !== null && !is_string($mcc)) {
+            throw new \InvalidArgumentException('MCC must be string');
+        }
+        if ($acquirerMerchantId !== null && !is_string($acquirerMerchantId)) {
+            throw new \InvalidArgumentException('Acquirer merchant id be string');
+        }
         $this->replace('transaction_id', $transactionId);
         $this->replace('transaction_source', $transactionSource);
         $this->replace('transaction_type', $transactionType);
@@ -1777,6 +1819,9 @@ class Builder
         $this->replace('payment_system', $paymentSystem);
         $this->replace('payment_mid', $paymentMidName);
         $this->replace('payment_account_id', $paymentAccountId);
+        $this->replace('merchant_country', $merchantCountry);
+        $this->replace('mcc', $mcc);
+        $this->replace('acquirer_merchant_id', $acquirerMerchantId);
 
         return $this;
     }
@@ -2794,4 +2839,21 @@ class Builder
         $this->replace($name, $value);
         return $this;
     }
+
+    /**
+     * Provides group id value to envelope
+     *
+     * @param string|null $groupId
+     * @return $this
+     */
+    public function addGroupId($groupId = null)
+    {
+        if ($groupId !== null && !is_string($groupId)) {
+            throw new \InvalidArgumentException('Group id must be string');
+        }
+        $this->replace('group_id', $groupId);
+
+        return $this;
+    }
+
 }
