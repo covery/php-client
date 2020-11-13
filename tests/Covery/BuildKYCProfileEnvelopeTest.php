@@ -46,12 +46,22 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
             "kycProfileSecondCity",
             "kycProfileSecondAddress",
             "kycProfileSecondZip",
-            "profile1,profile2,profile3"
+            "kycProfileProviderId",
+            "kycProfileContactEmail",
+            "kycProfileContactPhone",
+            "kycProfileWalletType",
+            "kycProfileNationality",
+            true,
+            "kycProfileEmploymentStatus",
+            "kycProfileSourceOfFunds",
+            999,
+            888,
+            "male"
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('kyc_profile', $result->getType());
         self::assertSame('kycProfileSequenceIdSome', $result->getSequenceId());
-        self::assertCount(38, $result);
+        self::assertCount(48, $result);
         self::assertSame('kycProfileEventId', $result['event_id']);
         self::assertSame(123456, $result['event_timestamp']);
         self::assertSame('kycProfileUserMerchantId', $result['user_merchant_id']);
@@ -89,7 +99,17 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('kycProfileSecondCity', $result['second_city']);
         self::assertSame('kycProfileSecondAddress', $result['second_address']);
         self::assertSame('kycProfileSecondZip', $result['second_zip']);
-        self::assertSame('profile1,profile2,profile3', $result['related_profiles']);
+        self::assertSame('kycProfileProviderId', $result['provider_id']);
+        self::assertSame('kycProfileContactEmail', $result['contact_email']);
+        self::assertSame('kycProfileContactPhone', $result['contact_phone']);
+        self::assertSame('kycProfileWalletType', $result['wallet_type']);
+        self::assertSame('kycProfileNationality', $result['nationality']);
+        self::assertSame(true, $result['final_beneficiary']);
+        self::assertSame('kycProfileEmploymentStatus', $result['employment_status']);
+        self::assertSame('kycProfileSourceOfFunds', $result['source_of_funds']);
+        self::assertSame(999, $result['issue_date']);
+        self::assertSame(888, $result['expiry_date']);
+        self::assertSame('male', $result['gender']);
 
         $validator->validate($result);
 

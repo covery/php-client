@@ -744,8 +744,17 @@ class Builder
      * @param string|null $secondCity
      * @param string|null $secondAddress
      * @param string|null $secondZip
-     * @param string|null $relatedProfiles
-     *
+     * @param string|null $providerId
+     * @param string|null $contactEmail
+     * @param string|null $contactPhone
+     * @param string|null $walletType
+     * @param string|null $nationality
+     * @param bool|null $finalBeneficiary
+     * @param string|null $employmentStatus
+     * @param string|null $sourceOfFunds
+     * @param int|null $issueDate
+     * @param int|null $expiryDate
+     * @param string|null $gender
      * @return Builder
      */
     public static function kycProfileEvent(
@@ -787,7 +796,17 @@ class Builder
         $secondCity = null,
         $secondAddress = null,
         $secondZip = null,
-        $relatedProfiles = null
+        $providerId = null,
+        $contactEmail = null,
+        $contactPhone = null,
+        $walletType = null,
+        $nationality = null,
+        $finalBeneficiary = null,
+        $employmentStatus = null,
+        $sourceOfFunds = null,
+        $issueDate = null,
+        $expiryDate = null,
+        $gender = null
     ) {
         $builder = new self('kyc_profile', $sequenceId);
         if ($eventTimestamp === null) {
@@ -817,7 +836,16 @@ class Builder
                 $secondCity,
                 $secondAddress,
                 $secondZip,
-                $relatedProfiles
+                $providerId,
+                $contactEmail,
+                $contactPhone,
+                $walletType,
+                $nationality,
+                $finalBeneficiary,
+                $employmentStatus,
+                $sourceOfFunds,
+                $issueDate,
+                $expiryDate
             )
             ->addUserData(
                 $email,
@@ -826,7 +854,7 @@ class Builder
                 null,
                 $firstName,
                 $lastName,
-                null,
+                $gender,
                 null,
                 $country,
                 null,
@@ -896,6 +924,134 @@ class Builder
             ->addUserData(
                 null,
                 $userId
+            );
+    }
+
+    /**
+     * Returns builder for kyc_start request
+     *
+     * @param string $sequenceId
+     * @param string $eventId
+     * @param string $userMerchantId
+     * @param string $verificationMode
+     * @param string $verificationSource
+     * @param bool $consent
+     * @param null|int $eventTimestamp
+     * @param bool|null $allowNaOcrInputs
+     * @param bool|null $declineOnSingleStep
+     * @param bool|null $backsideProof
+     * @param string|null $groupId
+     * @param string|null $country
+     * @param string|null $kycLanguage
+     * @param string|null $redirectUrl
+     * @param string|null $email
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $profileId
+     * @param string|null $phone
+     * @param string|null $birthDate
+     * @param string|null $regNumber
+     * @param int|null $issueDate
+     * @param int|null $expiryDate
+     * @return Builder
+     */
+    public static function kycStartEvent(
+        $sequenceId,
+        $eventId,
+        $userMerchantId,
+        $verificationMode,
+        $verificationSource,
+        $consent,
+        $eventTimestamp = null,
+        $allowNaOcrInputs = null,
+        $declineOnSingleStep = null,
+        $backsideProof = null,
+        $groupId = null,
+        $country = null,
+        $kycLanguage = null,
+        $redirectUrl = null,
+        $email = null,
+        $firstName = null,
+        $lastName = null,
+        $profileId = null,
+        $phone = null,
+        $birthDate = null,
+        $regNumber = null,
+        $issueDate = null,
+        $expiryDate = null
+    ) {
+        $envelopeType = 'kyc_start';
+        $builder = new self($envelopeType, $sequenceId);
+        if ($eventTimestamp === null) {
+            $eventTimestamp = time();
+        }
+        return $builder
+            ->addKycData(
+                $eventId,
+                $eventTimestamp,
+                $groupId,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $profileId,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $regNumber,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $issueDate,
+                $expiryDate,
+                $verificationMode,
+                $verificationSource,
+                $consent,
+                $allowNaOcrInputs,
+                $declineOnSingleStep,
+                $backsideProof,
+                $kycLanguage,
+                $redirectUrl
+            )
+            ->addUserData(
+                $email,
+                $userMerchantId,
+                $phone,
+                null,
+                $firstName,
+                $lastName,
+                null,
+                null,
+                $country,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $birthDate,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
             );
     }
 
@@ -2361,8 +2517,24 @@ class Builder
      * @param string|null $secondCity
      * @param string|null $secondAddress
      * @param string|null $secondZip
-     * @param string|null $relatedProfiles
-     *
+     * @param string|null $providerId
+     * @param string|null $contactEmail
+     * @param string|null $contactPhone
+     * @param string|null $walletType
+     * @param string|null $nationality
+     * @param bool|null $finalBeneficiary
+     * @param string|null $employmentStatus
+     * @param string|null $sourceOfFunds
+     * @param int|null $issueDate
+     * @param int|null $expiryDate
+     * @param string|null $verificationMode
+     * @param string|null $verificationSource
+     * @param bool|null $consent
+     * @param bool|null $allowNaOcrInputs
+     * @param bool|null $declineOnSingleStep
+     * @param bool|null $backsideProof
+     * @param string|null $kycLanguage
+     * @param string|null $redirectUrl
      * @return $this
      */
     public function addKycData(
@@ -2388,7 +2560,24 @@ class Builder
         $secondCity = null,
         $secondAddress = null,
         $secondZip = null,
-        $relatedProfiles = null
+        $providerId = null,
+        $contactEmail = null,
+        $contactPhone = null,
+        $walletType = null,
+        $nationality = null,
+        $finalBeneficiary = null,
+        $employmentStatus = null,
+        $sourceOfFunds = null,
+        $issueDate = null,
+        $expiryDate = null,
+        $verificationMode = null,
+        $verificationSource = null,
+        $consent = null,
+        $allowNaOcrInputs = null,
+        $declineOnSingleStep = null,
+        $backsideProof = null,
+        $kycLanguage = null,
+        $redirectUrl = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -2456,10 +2645,60 @@ class Builder
         if ($secondZip !== null && !is_string($secondZip)) {
             throw new \InvalidArgumentException('Second zip must be string');
         }
-        if ($relatedProfiles !== null && !is_string($relatedProfiles)) {
-            throw new \InvalidArgumentException('Related profiles must be string');
+        if ($providerId !== null && !is_string($providerId)) {
+            throw new \InvalidArgumentException('Provider id must be string');
         }
-
+        if ($contactEmail !== null && !is_string($contactEmail)) {
+            throw new \InvalidArgumentException('Contact email must be string');
+        }
+        if ($contactPhone !== null && !is_string($contactPhone)) {
+            throw new \InvalidArgumentException('Contact phone must be string');
+        }
+        if ($walletType !== null && !is_string($walletType)) {
+            throw new \InvalidArgumentException('Wallet type must be string');
+        }
+        if ($nationality !== null && !is_string($nationality)) {
+            throw new \InvalidArgumentException('Nationality must be string');
+        }
+        if ($finalBeneficiary !== null && !is_bool($finalBeneficiary)) {
+            throw new \InvalidArgumentException('Final beneficiary must be boolean');
+        }
+        if ($employmentStatus !== null && !is_string($employmentStatus)) {
+            throw new \InvalidArgumentException('Employment status must be string');
+        }
+        if ($sourceOfFunds !== null && !is_string($sourceOfFunds)) {
+            throw new \InvalidArgumentException('Source of funds must be string');
+        }
+        if ($issueDate !== null && !is_int($issueDate)) {
+            throw new \InvalidArgumentException('Issue date must be integer');
+        }
+        if ($expiryDate !== null && !is_int($expiryDate)) {
+            throw new \InvalidArgumentException('Expiry date must be integer');
+        }
+        if ($verificationMode !== null && !is_string($verificationMode)) {
+            throw new \InvalidArgumentException('Verification mode must be string');
+        }
+        if ($verificationSource !== null && !is_string($verificationSource)) {
+            throw new \InvalidArgumentException('Verification source must be string');
+        }
+        if ($consent !== null && !is_bool($consent)) {
+            throw new \InvalidArgumentException('Consent must be boolean');
+        }
+        if ($allowNaOcrInputs !== null && !is_bool($allowNaOcrInputs)) {
+            throw new \InvalidArgumentException('Allow na ocr inputs must be boolean');
+        }
+        if ($declineOnSingleStep !== null && !is_bool($declineOnSingleStep)) {
+            throw new \InvalidArgumentException('Decline on single step must be boolean');
+        }
+        if ($backsideProof !== null && !is_bool($backsideProof)) {
+            throw new \InvalidArgumentException('Backside proof must be boolean');
+        }
+        if ($kycLanguage !== null && !is_string($kycLanguage)) {
+            throw new \InvalidArgumentException('Kyc language must be string');
+        }
+        if ($redirectUrl !== null && !is_string($redirectUrl)) {
+            throw new \InvalidArgumentException('Redirect url must be string');
+        }
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
         $this->replace('group_id', $groupId);
@@ -2482,7 +2721,24 @@ class Builder
         $this->replace('second_city', $secondCity);
         $this->replace('second_address', $secondAddress);
         $this->replace('second_zip', $secondZip);
-        $this->replace('related_profiles', $relatedProfiles);
+        $this->replace('provider_id', $providerId);
+        $this->replace('contact_email', $contactEmail);
+        $this->replace('contact_phone', $contactPhone);
+        $this->replace('wallet_type', $walletType);
+        $this->replace('nationality', $nationality);
+        $this->replace('final_beneficiary', $finalBeneficiary);
+        $this->replace('employment_status', $employmentStatus);
+        $this->replace('source_of_funds', $sourceOfFunds);
+        $this->replace('issue_date', $issueDate);
+        $this->replace('expiry_date', $expiryDate);
+        $this->replace('verification_mode', $verificationMode);
+        $this->replace('verification_source', $verificationSource);
+        $this->replace('consent', $consent);
+        $this->replace('allow_na_ocr_inputs', $allowNaOcrInputs);
+        $this->replace('decline_on_single_step', $declineOnSingleStep);
+        $this->replace('backside_proof', $backsideProof);
+        $this->replace('kyc_language', $kycLanguage);
+        $this->replace('redirect_url', $redirectUrl);
 
         return $this;
     }
