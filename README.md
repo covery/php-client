@@ -72,6 +72,16 @@ $event = Builder::postbackEvent($requestId, null, 'code', 'reason')->build(); //
 $postbackRequestId = Facade::sendPostback($event);
 ```
 
+KycProof event example:
+
+```php
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::kycProofEvent($kycStartId)->build();
+$kycProofData = Facade::sendKycProof($event);
+```
+
 
 # Tech Details
 

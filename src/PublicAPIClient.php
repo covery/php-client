@@ -5,6 +5,7 @@ namespace Covery\Client;
 use Covery\Client\Envelopes\ValidatorV1;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
+use Covery\Client\Requests\KycProof;
 use Covery\Client\Requests\Ping;
 use Covery\Client\Requests\Postback;
 use Psr\Http\Message\RequestInterface;
@@ -271,5 +272,20 @@ class PublicAPIClient
         } catch (\Exception $error) {
             throw new Exception('Malformed response', 0, $error);
         }
+    }
+
+    public function sendKycProof(EnvelopeInterface $envelope)
+    {
+        // Validating
+        $this->validator->validate($envelope);
+
+        // Sending
+        $data = $this->readJson($this->send(new KycProof($envelope)));
+
+        if (!is_array($data) || empty($data['requestId']) || empty($data['type']) || empty($data['createdAt'])) {
+            throw new Exception("Malformed response");
+        }
+
+        return $data;
     }
 }

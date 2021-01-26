@@ -134,4 +134,16 @@ class Facade
     {
         return self::getClient()->makeDecision($envelope);
     }
+
+    /**
+     * Sends Kyc Proof envelope to Covery and returns data on Covery side
+     *
+     * @param EnvelopeInterface $envelope
+     * @return mixed|null
+     * @throws Exception
+     */
+    public static function sendKycProof(EnvelopeInterface $envelope)
+    {
+        return self::getClient()->sendKycProof($envelope);
+    }
 }
