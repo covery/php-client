@@ -2598,7 +2598,7 @@ class Builder
         $backsideProof = null,
         $kycLanguage = null,
         $redirectUrl = null,
-        $numberOfDocuments = 1
+        $numberOfDocuments = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -2720,7 +2720,7 @@ class Builder
         if ($redirectUrl !== null && !is_string($redirectUrl)) {
             throw new \InvalidArgumentException('Redirect url must be string');
         }
-        if (!in_array($numberOfDocuments, [0, 1, 2])) {
+        if ($numberOfDocuments !== null && !in_array($numberOfDocuments, [0, 1, 2])) {
             $numberOfDocuments = 1; //Default value
             //throw new \InvalidArgumentException('Incorrect value. Number Of Documents must contain 0, 1 or 2');
         }
