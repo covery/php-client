@@ -136,10 +136,10 @@ class Facade
     }
 
     /**
-     * Sends Kyc Proof envelope to Covery and returns data on Covery side
+     * Sends KycProof envelope to Covery and returns data on Covery side
      *
      * @param EnvelopeInterface $envelope
-     * @return mixed|null
+     * @return KycProofResult
      * @throws Exception
      */
     public static function sendKycProof(EnvelopeInterface $envelope)

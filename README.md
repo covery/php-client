@@ -166,6 +166,9 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.4`
+  * Added optional `number_of_docyments` field for kyc_start event.
+  * Added `kyc_proof` event
 * `1.3.3`
   * Added optional `provider_id`, `contact_email`, `contact_phone`, `wallet_type`, `nationality`, `final_beneficiary`, `employment_status`, `source_of_funds`, `issue_date`, `expiry_date`, `gender` fields for kyc_profile event.
   * Added `kyc_start` event.

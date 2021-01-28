@@ -1061,9 +1061,9 @@ class Builder
     /**
      * Returns builder for kyc_proof request
      *
-     * @param int|null $kycStartId
+     * @param int $kycStartId
      */
-    public static function kycProofEvent($kycStartId = null)
+    public static function kycProofEvent($kycStartId)
     {
         $envelopeType = 'kyc_proof';
         $sequenceId = '';
@@ -2721,8 +2721,7 @@ class Builder
             throw new \InvalidArgumentException('Redirect url must be string');
         }
         if ($numberOfDocuments !== null && !in_array($numberOfDocuments, [0, 1, 2])) {
-            $numberOfDocuments = 1; //Default value
-            //throw new \InvalidArgumentException('Incorrect value. Number Of Documents must contain 0, 1 or 2');
+            throw new \InvalidArgumentException('Incorrect value. Number Of Documents must contain 0, 1 or 2');
         }
 
         $this->replace('event_id', $eventId);
@@ -3140,14 +3139,14 @@ class Builder
     }
 
     /**
-     * Provides kuc proof value to envelope
+     * Provides kycProof value to envelope
      *
-     * @param int|null $kycStartId
+     * @param int $kycStartId
      * @return $this
      */
-    public function addKycProofData($kycStartId = null)
+    public function addKycProofData($kycStartId)
     {
-        if ($kycStartId !== null && !is_int($kycStartId)) {
+        if (!is_int($kycStartId)) {
             throw new \InvalidArgumentException('KycStartId must be integer');
         }
 

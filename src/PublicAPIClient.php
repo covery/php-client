@@ -274,6 +274,15 @@ class PublicAPIClient
         }
     }
 
+    /**
+     * Sends kycProof envelope to Covery and returns KycProofResult on Covery side
+     *
+     * @param EnvelopeInterface $envelope
+     * @return KycProofResult
+     * @throws EnvelopeValidationException
+     * @throws Exception
+     * @throws IoException
+     */
     public function sendKycProof(EnvelopeInterface $envelope)
     {
         // Validating
@@ -282,10 +291,26 @@ class PublicAPIClient
         // Sending
         $data = $this->readJson($this->send(new KycProof($envelope)));
 
-        if (!is_array($data) || empty($data['requestId']) || empty($data['type']) || empty($data['createdAt'])) {
+        if (!is_array($data)) {
             throw new Exception("Malformed response");
         }
 
-        return $data;
+        try {
+            return new KycProofResult(
+                $data[KycProofResultBaseField::REQUEST_ID],
+                $data[KycProofResultBaseField::TYPE],
+                $data[KycProofResultBaseField::CREATED_AT],
+                isset($data[KycProofResultBaseField::VERIFICATION_VIDEO]) ? $data[KycProofResultBaseField::VERIFICATION_VIDEO] : null,
+                isset($data[KycProofResultBaseField::FACE_PROOF]) ? $data[KycProofResultBaseField::FACE_PROOF] : null,
+                isset($data[KycProofResultBaseField::DOCUMENT_PROOF]) ? $data[KycProofResultBaseField::DOCUMENT_PROOF] : null,
+                isset($data[KycProofResultBaseField::DOCUMENT_TWO_PROOF]) ? $data[KycProofResultBaseField::DOCUMENT_TWO_PROOF] : null,
+                isset($data[KycProofResultBaseField::CONSENT_PROOF]) ? $data[KycProofResultBaseField::CONSENT_PROOF] : null,
+                array_filter($data, function ($field) {
+                    return !in_array($field, KycProofResultBaseField::getAll());
+                }, ARRAY_FILTER_USE_KEY)
+            );
+        } catch (\Exception $error) {
+            throw new Exception('Malformed response', 0, $error);
+        }
     }
 }
