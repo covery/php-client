@@ -2721,7 +2721,7 @@ class Builder
             throw new \InvalidArgumentException('Redirect url must be string');
         }
         if ($numberOfDocuments !== null && !in_array($numberOfDocuments, [0, 1, 2])) {
-            throw new \InvalidArgumentException('Incorrect value. Number Of Documents must contain 0, 1 or 2');
+            throw new \InvalidArgumentException('Incorrect value. Number Of Documents must contains 0, 1 or 2');
         }
 
         $this->replace('event_id', $eventId);
