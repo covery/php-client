@@ -953,6 +953,7 @@ class Builder
      * @param string|null $regNumber
      * @param int|null $issueDate
      * @param int|null $expiryDate
+     * @param int|null $numberOfDocuments
      * @return Builder
      */
     public static function kycStartEvent(
@@ -978,7 +979,8 @@ class Builder
         $birthDate = null,
         $regNumber = null,
         $issueDate = null,
-        $expiryDate = null
+        $expiryDate = null,
+        $numberOfDocuments = null
     ) {
         $envelopeType = 'kyc_start';
         $builder = new self($envelopeType, $sequenceId);
@@ -1026,7 +1028,8 @@ class Builder
                 $declineOnSingleStep,
                 $backsideProof,
                 $kycLanguage,
-                $redirectUrl
+                $redirectUrl,
+                $numberOfDocuments
             )
             ->addUserData(
                 $email,
@@ -1053,6 +1056,22 @@ class Builder
                 null,
                 null
             );
+    }
+
+    /**
+     * Returns builder for kyc_proof request
+     *
+     * @param int $kycStartId
+     */
+    public static function kycProofEvent($kycStartId)
+    {
+        $envelopeType = 'kyc_proof';
+        $sequenceId = '';
+
+        $builder = new self($envelopeType, $sequenceId);
+
+        return $builder
+            ->addKycProofData($kycStartId);
     }
 
     /**
@@ -2535,6 +2554,7 @@ class Builder
      * @param bool|null $backsideProof
      * @param string|null $kycLanguage
      * @param string|null $redirectUrl
+     * @param int|null $numberOfDocuments
      * @return $this
      */
     public function addKycData(
@@ -2577,7 +2597,8 @@ class Builder
         $declineOnSingleStep = null,
         $backsideProof = null,
         $kycLanguage = null,
-        $redirectUrl = null
+        $redirectUrl = null,
+        $numberOfDocuments = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -2699,6 +2720,10 @@ class Builder
         if ($redirectUrl !== null && !is_string($redirectUrl)) {
             throw new \InvalidArgumentException('Redirect url must be string');
         }
+        if ($numberOfDocuments !== null && !in_array($numberOfDocuments, [0, 1, 2])) {
+            throw new \InvalidArgumentException('Incorrect value. Number Of Documents must contains 0, 1 or 2');
+        }
+
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
         $this->replace('group_id', $groupId);
@@ -2739,6 +2764,7 @@ class Builder
         $this->replace('backside_proof', $backsideProof);
         $this->replace('kyc_language', $kycLanguage);
         $this->replace('redirect_url', $redirectUrl);
+        $this->replace('number_of_documents', $numberOfDocuments);
 
         return $this;
     }
@@ -3111,5 +3137,23 @@ class Builder
 
         return $this;
     }
+
+    /**
+     * Provides kycProof value to envelope
+     *
+     * @param int $kycStartId
+     * @return $this
+     */
+    public function addKycProofData($kycStartId)
+    {
+        if (!is_int($kycStartId)) {
+            throw new \InvalidArgumentException('KycStartId must be integer');
+        }
+
+        $this->replace('kyc_start_id', $kycStartId);
+
+        return $this;
+    }
+
 
 }

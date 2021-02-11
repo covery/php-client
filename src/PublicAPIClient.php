@@ -5,6 +5,7 @@ namespace Covery\Client;
 use Covery\Client\Envelopes\ValidatorV1;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
+use Covery\Client\Requests\KycProof;
 use Covery\Client\Requests\Ping;
 use Covery\Client\Requests\Postback;
 use Psr\Http\Message\RequestInterface;
@@ -266,6 +267,46 @@ class PublicAPIClient
                 isset($data[ResultBaseField::ACTION]) ? $data[ResultBaseField::ACTION] : null,
                 array_filter($data, function ($field) {
                     return !in_array($field, ResultBaseField::getAll());
+                }, ARRAY_FILTER_USE_KEY)
+            );
+        } catch (\Exception $error) {
+            throw new Exception('Malformed response', 0, $error);
+        }
+    }
+
+    /**
+     * Sends kycProof envelope to Covery and returns KycProofResult on Covery side
+     *
+     * @param EnvelopeInterface $envelope
+     * @return KycProofResult
+     * @throws EnvelopeValidationException
+     * @throws Exception
+     * @throws IoException
+     */
+    public function sendKycProof(EnvelopeInterface $envelope)
+    {
+        // Validating
+        $this->validator->validate($envelope);
+
+        // Sending
+        $data = $this->readJson($this->send(new KycProof($envelope)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        try {
+            return new KycProofResult(
+                $data[KycProofResultBaseField::REQUEST_ID],
+                $data[KycProofResultBaseField::TYPE],
+                $data[KycProofResultBaseField::CREATED_AT],
+                isset($data[KycProofResultBaseField::VERIFICATION_VIDEO]) ? $data[KycProofResultBaseField::VERIFICATION_VIDEO] : null,
+                isset($data[KycProofResultBaseField::FACE_PROOF]) ? $data[KycProofResultBaseField::FACE_PROOF] : null,
+                isset($data[KycProofResultBaseField::DOCUMENT_PROOF]) ? $data[KycProofResultBaseField::DOCUMENT_PROOF] : null,
+                isset($data[KycProofResultBaseField::DOCUMENT_TWO_PROOF]) ? $data[KycProofResultBaseField::DOCUMENT_TWO_PROOF] : null,
+                isset($data[KycProofResultBaseField::CONSENT_PROOF]) ? $data[KycProofResultBaseField::CONSENT_PROOF] : null,
+                array_filter($data, function ($field) {
+                    return !in_array($field, KycProofResultBaseField::getAll());
                 }, ARRAY_FILTER_USE_KEY)
             );
         } catch (\Exception $error) {

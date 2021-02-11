@@ -215,6 +215,8 @@ class ValidatorV1
         'backside_proof' => 'bool',
         'kyc_language' => 'string(255)',
         'redirect_url' => 'string(255)',
+        'number_of_documents' => 'int',
+        'kyc_start_id' => 'int',
     );
 
     private static $sharedOptional = array(
@@ -559,7 +561,14 @@ class ValidatorV1
                 'reg_number',
                 'issue_date',
                 'expiry_date',
+                'number_of_documents',
             )
+        ),
+        'kyc_proof' => array(
+            'mandatory' => array(
+                'kyc_start_id',
+            ),
+            'optional' => array()
         ),
         'order_item' => array(
             'mandatory' => array(
@@ -850,6 +859,11 @@ class ValidatorV1
     public function validate(EnvelopeInterface $envelope)
     {
         if ($envelope->getType() === 'postback') {
+            $details = array_merge(
+                $this->analyzeTypeAndMandatoryFields($envelope),
+                $this->analyzeFieldTypes($envelope)
+            );
+        } elseif ($envelope->getType() === 'kyc_proof') {
             $details = array_merge(
                 $this->analyzeTypeAndMandatoryFields($envelope),
                 $this->analyzeFieldTypes($envelope)

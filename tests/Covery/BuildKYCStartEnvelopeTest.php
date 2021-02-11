@@ -30,12 +30,13 @@ class BuildKYCStartEnvelopeTest extends \PHPUnit_Framework_TestCase
             789,
             "kycStartRegNumber",
             123,
-            456
+            456,
+            1
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('kyc_start', $result->getType());
         self::assertSame('kycStartSequenceId', $result->getSequenceId());
-        self::assertCount(22, $result);
+        self::assertCount(23, $result);
         self::assertSame('kycStartEventId', $result['event_id']);
         self::assertSame('kycStartUserMerchantId', $result['user_merchant_id']);
         self::assertSame('kycStartVerificationMode', $result['verification_mode']);
@@ -58,6 +59,7 @@ class BuildKYCStartEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('kycStartRegNumber', $result['reg_number']);
         self::assertSame(123, $result['issue_date']);
         self::assertSame(456, $result['expiry_date']);
+        self::assertSame(1, $result['number_of_documents']);
 
         $validator->validate($result);
 
