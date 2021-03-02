@@ -217,6 +217,7 @@ class ValidatorV1
         'redirect_url' => 'string(255)',
         'number_of_documents' => 'int',
         'kyc_start_id' => 'int',
+        'second_user_merchant_id' => 'string(255)',
     );
 
     private static $sharedOptional = array(
@@ -405,9 +406,6 @@ class ValidatorV1
                 'event_timestamp',
                 'amount',
                 'currency',
-                'account_id',
-                'second_account_id',
-                'account_system',
                 'user_merchant_id',
             ),
             'optional' => array(
@@ -445,7 +443,11 @@ class ValidatorV1
                 'second_iban',
                 'bic',
                 'transfer_source',
-                "group_id"
+                "group_id",
+                "second_user_merchant_id",
+                'account_system',
+                'account_id',
+                'second_account_id',
             )
         ),
         'postback' => array(

@@ -552,10 +552,10 @@ class Builder
      * @param string $eventId
      * @param float $amount
      * @param string $currency
+     * @param string $userId
      * @param string $accountId
      * @param string $secondAccountId
      * @param string $accountSystem
-     * @param string $userId
      * @param string|null $method
      * @param int|null $eventTimestamp
      * @param float|null $amountConverted
@@ -592,6 +592,7 @@ class Builder
      * @param string|null $bic
      * @param string|null $source
      * @param string|null $groupId
+     * @param string|null $secondUserMerchantId
      *
      * @return Builder
      */
@@ -600,10 +601,10 @@ class Builder
         $eventId,
         $amount,
         $currency,
-        $accountId,
-        $secondAccountId,
-        $accountSystem,
         $userId,
+        $accountId = null,
+        $secondAccountId = null,
+        $accountSystem = null,
         $method = null,
         $eventTimestamp = null,
         $amountConverted = null,
@@ -639,7 +640,8 @@ class Builder
         $secondIban = null,
         $bic = null,
         $source = null,
-        $groupId = null
+        $groupId = null,
+        $secondUserMerchantId = null
     ) {
         $builder = new self('transfer', $sequenceId);
         if ($eventTimestamp === null) {
@@ -673,7 +675,8 @@ class Builder
                $iban,
                $secondIban,
                $bic,
-               $source
+               $source,
+               $secondUserMerchantId
             )
             ->addUserData(
                 $email,
@@ -2371,6 +2374,7 @@ class Builder
      * @param string|null $secondIban
      * @param string|null $bic
      * @param string|null $source
+     * @param string|null $secondUserMerchantId
      *
      * @return $this
      */
@@ -2400,7 +2404,8 @@ class Builder
         $iban = null,
         $secondIban = null,
         $bic = null,
-        $source = null
+        $source = null,
+        $secondUserMerchantId = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -2414,13 +2419,13 @@ class Builder
         if (!is_string($currency)) {
             throw new \InvalidArgumentException('Currency must be string');
         }
-        if (!is_string($accountId)) {
+        if ($accountId !== null && !is_string($accountId)) {
             throw new \InvalidArgumentException('Account id must be string');
         }
-        if (!is_string($secondAccountId)) {
+        if ($secondAccountId !== null && !is_string($secondAccountId)) {
             throw new \InvalidArgumentException('Second account id must be string');
         }
-        if (!is_string($accountSystem)) {
+        if ($accountSystem !== null && !is_string($accountSystem)) {
             throw new \InvalidArgumentException('Account system must be string');
         }
         if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
@@ -2480,6 +2485,9 @@ class Builder
         if ($source !== null && !is_string($source)) {
             throw new \InvalidArgumentException('Transfer source must be string');
         }
+        if ($source !== null && !is_string($secondUserMerchantId)) {
+            throw new \InvalidArgumentException('Transfer second user merchant id must be string');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -2507,6 +2515,7 @@ class Builder
         $this->replace('second_iban', $secondIban);
         $this->replace('bic', $bic);
         $this->replace('transfer_source', $source);
+        $this->replace('second_user_merchant_id', $secondUserMerchantId);
 
         return $this;
     }
