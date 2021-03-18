@@ -12,10 +12,10 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
             'someEventId',
             0.42,
             'GBP',
+            'uid42',
             "accountId",
             'secondAccountId',
             'paypal',
-            'uid42',
             'foo',
             123123,
             42,
@@ -51,7 +51,8 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
             'second_iban',
             'bic value',
             'source value',
-            "group id value"
+            "group id value",
+            "second user merchant id value"
         )
             ->addBrowserData('88889', 'Test curl')
             ->addIdentity(new \Covery\Client\Identities\Stub())
@@ -61,7 +62,7 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('transfer', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(46, $result);
+        self::assertCount(47, $result);
 
         self::assertSame('someEventId', $result['event_id']);
         self::assertSame(0.42, $result['amount']);
@@ -106,6 +107,7 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('bic value', $result['bic']);
         self::assertSame('source value', $result['transfer_source']);
         self::assertSame('group id value', $result['group_id']);
+        self::assertSame('second user merchant id value', $result['second_user_merchant_id']);
 
         $validator->validate($result);
 
@@ -115,21 +117,16 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
             'someEventId',
             0.42,
             'GBP',
-            "accountId",
-            'secondAccountId',
-            'paypal',
             'uid42'
+
         )->build();
         self::assertSame('transfer', $result->getType());
         self::assertCount(0, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(8, $result);
+        self::assertCount(5, $result);
         self::assertSame('someEventId', $result['event_id']);
         self::assertSame(0.42, $result['amount']);
         self::assertSame('GBP', $result['currency']);
-        self::assertSame('accountId', $result['account_id']);
-        self::assertSame("secondAccountId", $result['second_account_id']);
-        self::assertSame('paypal', $result['account_system']);
         self::assertSame('uid42', $result['user_merchant_id']);
         $validator->validate($result);
     }

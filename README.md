@@ -166,6 +166,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.5`
+  * Added optional `second_user_merchant_id` field for transfer event
 * `1.3.4`
   * Added optional `number_of_documents` field for kyc_start event.
   * Added `kyc_proof` event
