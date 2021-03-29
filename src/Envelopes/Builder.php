@@ -957,6 +957,7 @@ class Builder
      * @param int|null $issueDate
      * @param int|null $expiryDate
      * @param int|null $numberOfDocuments
+     * @param string|null $allowedDocumentFormat
      * @return Builder
      */
     public static function kycStartEvent(
@@ -983,7 +984,8 @@ class Builder
         $regNumber = null,
         $issueDate = null,
         $expiryDate = null,
-        $numberOfDocuments = null
+        $numberOfDocuments = null,
+        $allowedDocumentFormat = null
     ) {
         $envelopeType = 'kyc_start';
         $builder = new self($envelopeType, $sequenceId);
@@ -1032,7 +1034,8 @@ class Builder
                 $backsideProof,
                 $kycLanguage,
                 $redirectUrl,
-                $numberOfDocuments
+                $numberOfDocuments,
+                $allowedDocumentFormat
             )
             ->addUserData(
                 $email,
@@ -2564,6 +2567,7 @@ class Builder
      * @param string|null $kycLanguage
      * @param string|null $redirectUrl
      * @param int|null $numberOfDocuments
+     * @param string|null $allowedDocumentFormat
      * @return $this
      */
     public function addKycData(
@@ -2607,7 +2611,8 @@ class Builder
         $backsideProof = null,
         $kycLanguage = null,
         $redirectUrl = null,
-        $numberOfDocuments = null
+        $numberOfDocuments = null,
+        $allowedDocumentFormat = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -2732,6 +2737,9 @@ class Builder
         if ($numberOfDocuments !== null && !in_array($numberOfDocuments, [0, 1, 2])) {
             throw new \InvalidArgumentException('Incorrect value. Number Of Documents must contains 0, 1 or 2');
         }
+        if ($allowedDocumentFormat !== null && !is_string($allowedDocumentFormat)) {
+            throw new \InvalidArgumentException('Allowed document format must be string');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -2774,6 +2782,7 @@ class Builder
         $this->replace('kyc_language', $kycLanguage);
         $this->replace('redirect_url', $redirectUrl);
         $this->replace('number_of_documents', $numberOfDocuments);
+        $this->replace('allowed_document_format', $allowedDocumentFormat);
 
         return $this;
     }

@@ -218,6 +218,7 @@ class ValidatorV1
         'number_of_documents' => 'int',
         'kyc_start_id' => 'int',
         'second_user_merchant_id' => 'string(255)',
+        'allowed_document_format' => 'string(255)',
     );
 
     private static $sharedOptional = array(
@@ -564,6 +565,7 @@ class ValidatorV1
                 'issue_date',
                 'expiry_date',
                 'number_of_documents',
+                'allowed_document_format',
             )
         ),
         'kyc_proof' => array(
