@@ -7,6 +7,8 @@ use Covery\Client\IdentityNodeInterface;
 
 class Builder
 {
+    const EVENT_PROFILE_UPDATE = 'profile_update';
+
     /**
      * @var string
      */
@@ -878,6 +880,202 @@ class Builder
             ->addWebsiteData($websiteUrl);
     }
 
+    public static function profileUpdateEvent(
+        $eventId,
+        $eventTimestamp,
+        $userMerchantId,
+        $sequenceId = null,
+        $groupId = null,
+        $operation = null,
+        $accountId = null,
+        $accountSystem = null,
+        $currency = null,
+        $phone = null,
+        $phoneConfirmed = null,
+        $email = null,
+        $emailConfirmed = null,
+        $contactEmail = null,
+        $contactPhone = null,
+        $toFaAllowed = null,
+        $userName = null,
+        $password = null,
+        $socialType = null,
+        $gameLevel = null,
+        $firstname = null,
+        $lastname = null,
+        $fullName = null,
+        $birthDate = null,
+        $age = null,
+        $gender = null,
+        $maritalStatus = null,
+        $nationality = null,
+        $physique = null,
+        $height = null,
+        $weight = null,
+        $hair = null,
+        $eyes = null,
+        $education = null,
+        $employmentStatus = null,
+        $sourceOfFunds = null,
+        $industry = null,
+        $finalBeneficiary = null,
+        $walletType = null,
+        $websiteUrl = null,
+        $description = null,
+        $country = null,
+        $state = null,
+        $city =  null,
+        $zip = null,
+        $address = null,
+        $addressConfirmed = null,
+        $secondCountry = null,
+        $secondState = null,
+        $secondCity = null,
+        $secondZip = null,
+        $secondAddress = null,
+        $secondAddressConfirmed = null,
+        $profileId = null,
+        $profileType = null,
+        $profileSubType = null,
+        $documentCountry = null,
+        $documentConfirmed = null,
+        $regDate = null,
+        $issueDate = null,
+        $expiryDate = null,
+        $regNumber = null,
+        $vatNumber = null,
+        $purposeToOpenAccount = null,
+        $oneOperationLimit = null,
+        $dailyLimit = null,
+        $weeklyLimit = null,
+        $monthlyLimit = null,
+        $annualLimit = null,
+        $activeFeatures = null,
+        $promotions = null,
+        $ajaxValidation = null,
+        $cookieEnabled = null,
+        $cpuClass = null,
+        $deviceFingerprint = null,
+        $deviceId = null,
+        $doNotTrack = null,
+        $ip = null,
+        $realIp = null,
+        $localIpList = null,
+        $language = null,
+        $languages = null,
+        $languageBrowser = null,
+        $languageUser = null,
+        $languageSystem = null,
+        $os = null,
+        $screenResolution = null,
+        $screenOrientation = null,
+        $clientResolution = null,
+        $timezoneOffset = null,
+        $userAgent = null,
+        $plugins = null,
+        $refererUrl = null,
+        $originUrl = null
+    ) {
+        $builder = new self(self::EVENT_PROFILE_UPDATE, $sequenceId);
+
+        return $builder->addProfileData(
+            $eventId,
+            $eventTimestamp,
+            $userMerchantId,
+            $groupId,
+            $operation,
+            $accountId,
+            $accountSystem,
+            $currency,
+            $phone,
+            $phoneConfirmed,
+            $email,
+            $emailConfirmed,
+            $contactEmail,
+            $contactPhone,
+            $toFaAllowed,
+            $userName,
+            $password,
+            $socialType,
+            $gameLevel,
+            $firstname,
+            $lastname,
+            $fullName,
+            $birthDate,
+            $age,
+            $gender,
+            $maritalStatus,
+            $nationality,
+            $physique,
+            $height,
+            $weight,
+            $hair,
+            $eyes,
+            $education,
+            $employmentStatus,
+            $sourceOfFunds,
+            $industry,
+            $finalBeneficiary,
+            $walletType,
+            $websiteUrl,
+            $description,
+            $country,
+            $state,
+            $city,
+            $zip,
+            $address,
+            $addressConfirmed,
+            $secondCountry,
+            $secondState,
+            $secondCity,
+            $secondZip,
+            $secondAddress,
+            $secondAddressConfirmed,
+            $profileId,
+            $profileType,
+            $profileSubType,
+            $documentCountry,
+            $documentConfirmed,
+            $regDate,
+            $issueDate,
+            $expiryDate,
+            $regNumber,
+            $vatNumber,
+            $purposeToOpenAccount,
+            $oneOperationLimit,
+            $dailyLimit,
+            $weeklyLimit,
+            $monthlyLimit,
+            $annualLimit,
+            $activeFeatures,
+            $promotions,
+            $ajaxValidation,
+            $cookieEnabled,
+            $cpuClass,
+            $deviceFingerprint,
+            $deviceId,
+            $doNotTrack,
+            $ip,
+            $realIp,
+            $localIpList,
+            $language,
+            $languages,
+            $languageBrowser,
+            $languageUser,
+            $languageSystem,
+            $os,
+            $screenResolution,
+            $screenOrientation,
+            $clientResolution,
+            $timezoneOffset,
+            $userAgent,
+            $plugins,
+            $refererUrl,
+            $originUrl
+        );
+
+    }
+
     /**
      * Returns builder for kyc_submit request
      *
@@ -1474,8 +1672,15 @@ class Builder
         if (!is_string($envelopeType)) {
             throw new \InvalidArgumentException('Envelope type must be string');
         }
-        if (!is_string($sequenceId)) {
-            throw new \InvalidArgumentException('Sequence ID must be string');
+
+        if ($envelopeType == self::EVENT_PROFILE_UPDATE) {
+            if (!is_null($sequenceId) && !is_string($sequenceId)) {
+                throw new \InvalidArgumentException('Sequence ID must be string or null');
+            }
+        } else {
+            if (!is_string($sequenceId)) {
+                throw new \InvalidArgumentException('Sequence ID must be string');
+            }
         }
 
         $this->type = $envelopeType;
@@ -3169,6 +3374,570 @@ class Builder
         }
 
         $this->replace('kyc_start_id', $kycStartId);
+
+        return $this;
+    }
+
+    public function addProfileData(
+        $eventId,
+        $eventTimestamp,
+        $userMerchantId,
+        $groupId = null,
+        $operation = null,
+        $accountId = null,
+        $accountSystem = null,
+        $currency = null,
+        $phone = null,
+        $phoneConfirmed = null,
+        $email = null,
+        $emailConfirmed = null,
+        $contactEmail = null,
+        $contactPhone = null,
+        $toFaAllowed = null,
+        $username = null,
+        $password = null,
+        $socialType = null,
+        $gameLevel = null,
+        $firstname = null,
+        $lastname = null,
+        $fullName = null,
+        $birthDate = null,
+        $age = null,
+        $gender = null,
+        $maritalStatus = null,
+        $nationality = null,
+        $physique = null,
+        $height = null,
+        $weight = null,
+        $hair = null,
+        $eyes = null,
+        $education = null,
+        $employmentStatus = null,
+        $sourceOfFunds = null,
+        $industry = null,
+        $finalBeneficiary = null,
+        $walletType = null,
+        $websiteUrl = null,
+        $description = null,
+        $country = null,
+        $state = null,
+        $city =  null,
+        $zip = null,
+        $address = null,
+        $addressConfirmed = null,
+        $secondCountry = null,
+        $secondState = null,
+        $secondCity = null,
+        $secondZip = null,
+        $secondAddress = null,
+        $secondAddressConfirmed = null,
+        $profileId = null,
+        $profileType = null,
+        $profileSubType = null,
+        $documentCountry = null,
+        $documentConfirmed = null,
+        $regDate = null,
+        $issueDate = null,
+        $expiryDate = null,
+        $regNumber = null,
+        $vatNumber = null,
+        $purposeToOpenAccount = null,
+        $oneOperationLimit = null,
+        $dailyLimit = null,
+        $weeklyLimit = null,
+        $monthlyLimit = null,
+        $annualLimit = null,
+        $activeFeatures = null,
+        $promotions = null,
+        $ajaxValidation = null,
+        $cookieEnabled = null,
+        $cpuClass = null,
+        $deviceFingerprint = null,
+        $deviceId = null,
+        $doNotTrack = null,
+        $ip = null,
+        $realIp = null,
+        $localIpList = null,
+        $language = null,
+        $languages = null,
+        $languageBrowser = null,
+        $languageUser = null,
+        $languageSystem = null,
+        $os = null,
+        $screenResolution = null,
+        $screenOrientation = null,
+        $clientResolution = null,
+        $timezoneOffset = null,
+        $userAgent = null,
+        $plugins = null,
+        $refererUrl = null,
+        $originUrl = null
+    ) {
+        if (!is_string($eventId)) {
+            throw new \InvalidArgumentException('Event ID must be string');
+        }
+
+        if (!is_int($eventTimestamp)) {
+            throw new \InvalidArgumentException('Event Timestamp must be int');
+        }
+
+        if (!is_string($userMerchantId)) {
+            throw new \InvalidArgumentException('User Merchant ID must be string');
+        }
+
+        if ($groupId !== null && !is_string($groupId)) {
+            throw new \InvalidArgumentException('Group Id must be string');
+        }
+
+        if ($operation !== null && !is_string($operation)) {
+            throw new \InvalidArgumentException('Operation must be string');
+        }
+
+        if ($accountId !== null && !is_string($accountId)) {
+            throw new \InvalidArgumentException('Account Id must be string');
+        }
+
+        if ($accountSystem !== null && !is_string($accountSystem)) {
+            throw new \InvalidArgumentException('Account System must be string');
+        }
+
+        if ($currency !== null && !is_string($currency)) {
+            throw new \InvalidArgumentException('Currency must be string');
+        }
+
+        if ($phone !== null && !is_string($phone)) {
+            throw new \InvalidArgumentException('Phone must be string');
+        }
+
+        if ($phoneConfirmed !== null && !is_bool($phoneConfirmed)) {
+            throw new \InvalidArgumentException('Phone Confirmed flag must be boolean');
+        }
+
+        if ($email !== null && !is_string($email)) {
+            throw new \InvalidArgumentException('Email must be string');
+        }
+
+        if ($emailConfirmed !== null && !is_bool($emailConfirmed)) {
+            throw new \InvalidArgumentException('Email Confirmed flag must be boolean');
+        }
+
+        if ($contactEmail !== null && !is_string($contactEmail)) {
+            throw new \InvalidArgumentException('Contact Email must be string');
+        }
+
+        if ($contactPhone !== null && !is_string($contactPhone)) {
+            throw new \InvalidArgumentException('Contact Phone must be string');
+        }
+
+        if ($toFaAllowed !== null && !is_bool($toFaAllowed)) {
+            throw new \InvalidArgumentException('2faAllowed flag must be boolean');
+        }
+
+        if ($username !== null && !is_string($username)) {
+            throw new \InvalidArgumentException('Username must be string');
+        }
+
+        if ($password !== null && !is_string($password)) {
+            throw new \InvalidArgumentException('Password must be string');
+        }
+
+        if ($socialType !== null && !is_string($socialType)) {
+            throw new \InvalidArgumentException('Social Type must be string');
+        }
+
+        if ($gameLevel !== null && !is_string($gameLevel)) {
+            throw new \InvalidArgumentException('Game Level must be string');
+        }
+
+        if ($firstname !== null && !is_string($firstname)) {
+            throw new \InvalidArgumentException('Firstname must be string');
+        }
+
+        if ($lastname !== null && !is_string($lastname)) {
+            throw new \InvalidArgumentException('Lastname must be string');
+        }
+
+        if ($fullName !== null && !is_string($fullName)) {
+            throw new \InvalidArgumentException('Full Name must be string');
+        }
+
+        if ($birthDate !== null && !is_int($birthDate)) {
+            throw new \InvalidArgumentException('Birth Date must be int');
+        }
+
+        if ($age !== null && !is_int($age)) {
+            throw new \InvalidArgumentException('Age must be int');
+        }
+
+        if ($gender !== null && !is_string($gender)) {
+            throw new \InvalidArgumentException('Gender must be string');
+        }
+
+        if ($maritalStatus !== null && !is_string($maritalStatus)) {
+            throw new \InvalidArgumentException('Marital Status must be string');
+        }
+
+        if ($nationality !== null && !is_string($nationality)) {
+            throw new \InvalidArgumentException('Nationality must be string');
+        }
+
+        if ($physique !== null && !is_string($physique)) {
+            throw new \InvalidArgumentException('Physique must be string');
+        }
+
+        if ($height !== null && !is_float($height)) {
+            throw new \InvalidArgumentException('Height must be float');
+        }
+
+        if ($weight !== null && !is_float($weight)) {
+            throw new \InvalidArgumentException('Weight must be float');
+        }
+
+        if ($hair !== null && !is_string($hair)) {
+            throw new \InvalidArgumentException('Hair must be string');
+        }
+
+        if ($eyes !== null && !is_string($eyes)) {
+            throw new \InvalidArgumentException('Eyes must be string');
+        }
+
+        if ($education !== null && !is_string($education)) {
+            throw new \InvalidArgumentException('Education must be string');
+        }
+
+        if ($employmentStatus !== null && !is_string($employmentStatus)) {
+            throw new \InvalidArgumentException('Employment Status must be string');
+        }
+
+        if ($sourceOfFunds !== null && !is_string($sourceOfFunds)) {
+            throw new \InvalidArgumentException('Source Of Funds must be string');
+        }
+
+        if ($industry !== null && !is_string($industry)) {
+            throw new \InvalidArgumentException('Industry must be string');
+        }
+
+        if ($finalBeneficiary !== null && !is_bool($finalBeneficiary)) {
+            throw new \InvalidArgumentException('Final Beneficiary must be boolean');
+        }
+
+        if ($walletType !== null && !is_string($walletType)) {
+            throw new \InvalidArgumentException('Wallet Type must be string');
+        }
+
+        if ($websiteUrl !== null && !is_string($websiteUrl)) {
+            throw new \InvalidArgumentException('Website Url must be string');
+        }
+
+        if ($description !== null && !is_string($description)) {
+            throw new \InvalidArgumentException('Description must be string');
+        }
+
+        if ($country !== null && !is_string($country)) {
+            throw new \InvalidArgumentException('Country must be string');
+        }
+
+        if ($state !== null && !is_string($state)) {
+            throw new \InvalidArgumentException('State must be string');
+        }
+
+        if ($city !== null && !is_string($city)) {
+            throw new \InvalidArgumentException('City must be string');
+        }
+
+        if ($zip !== null && !is_string($zip)) {
+            throw new \InvalidArgumentException('Zip must be string');
+        }
+
+        if ($address !== null && !is_string($address)) {
+            throw new \InvalidArgumentException('Address must be string');
+        }
+
+        if ($addressConfirmed !== null && !is_bool($addressConfirmed)) {
+            throw new \InvalidArgumentException('Address Confirmed must be boolean');
+        }
+
+        if ($secondCountry !== null && !is_string($secondCountry)) {
+            throw new \InvalidArgumentException('Second Country must be string');
+        }
+
+        if ($secondState !== null && !is_string($secondState)) {
+            throw new \InvalidArgumentException('Second State must be string');
+        }
+
+        if ($secondCity !== null && !is_string($secondCity)) {
+            throw new \InvalidArgumentException('Second City must be string');
+        }
+
+        if ($secondZip !== null && !is_string($secondZip)) {
+            throw new \InvalidArgumentException('Second Zip must be string');
+        }
+
+        if ($secondAddress !== null && !is_string($secondAddress)) {
+            throw new \InvalidArgumentException('Second Address must be string');
+        }
+
+        if ($secondAddressConfirmed !== null && !is_bool($secondAddressConfirmed)) {
+            throw new \InvalidArgumentException('Second Address Confirmed must be boolean');
+        }
+
+        if ($profileId !== null && !is_string($profileId)) {
+            throw new \InvalidArgumentException('Profile Id must be string');
+        }
+
+        if ($profileType !== null && !is_string($profileType)) {
+            throw new \InvalidArgumentException('Profile Type must be string');
+        }
+
+        if ($profileSubType !== null && !is_string($profileSubType)) {
+            throw new \InvalidArgumentException('Profile Sub Type must be string');
+        }
+
+        if ($documentCountry !== null && !is_string($documentCountry)) {
+            throw new \InvalidArgumentException('Document Country must be string');
+        }
+
+        if ($documentConfirmed !== null && !is_bool($documentConfirmed)) {
+            throw new \InvalidArgumentException('Document Confirmed must be boolean');
+        }
+
+        if ($regDate !== null && !is_int($regDate)) {
+            throw new \InvalidArgumentException('Reg Date must be int');
+        }
+
+        if ($issueDate !== null && !is_int($issueDate)) {
+            throw new \InvalidArgumentException('Issue Date must be int');
+        }
+
+        if ($expiryDate !== null && !is_int($expiryDate)) {
+            throw new \InvalidArgumentException('Expiry Date must be int');
+        }
+
+        if ($regNumber !== null && !is_string($regNumber)) {
+            throw new \InvalidArgumentException('Reg Number must be string');
+        }
+
+        if ($vatNumber !== null && !is_string($vatNumber)) {
+            throw new \InvalidArgumentException('Vat Number must be string');
+        }
+
+        if ($purposeToOpenAccount !== null && !is_string($purposeToOpenAccount)) {
+            throw new \InvalidArgumentException('Purpose To Open Account must be string');
+        }
+
+        if ($oneOperationLimit !== null && !is_float($oneOperationLimit)) {
+            throw new \InvalidArgumentException('One Operation Limit must be float');
+        }
+
+        if ($dailyLimit !== null && !is_float($dailyLimit)) {
+            throw new \InvalidArgumentException('Daily Limit must be float');
+        }
+
+        if ($weeklyLimit !== null && !is_float($weeklyLimit)) {
+            throw new \InvalidArgumentException('Weekly Limit must be float');
+        }
+
+        if ($monthlyLimit !== null && !is_float($monthlyLimit)) {
+            throw new \InvalidArgumentException('Monthly Limit must be float');
+        }
+
+        if ($annualLimit !== null && !is_float($annualLimit)) {
+            throw new \InvalidArgumentException('Annual Limit must be float');
+        }
+
+        if ($activeFeatures !== null && !is_string($activeFeatures)) {
+            throw new \InvalidArgumentException('Active Features must be string');
+        }
+
+        if ($promotions !== null && !is_string($promotions)) {
+            throw new \InvalidArgumentException('Promotions must be string');
+        }
+
+        if ($ajaxValidation !== null && !is_bool($ajaxValidation)) {
+            throw new \InvalidArgumentException('Ajax Validation must be boolean');
+        }
+
+        if ($cookieEnabled !== null && !is_bool($cookieEnabled)) {
+            throw new \InvalidArgumentException('Cookie Enabled must be boolean');
+        }
+
+        if ($cpuClass !== null && !is_string($cpuClass)) {
+            throw new \InvalidArgumentException('CPU Class must be string');
+        }
+
+        if ($deviceFingerprint !== null && !is_string($deviceFingerprint)) {
+            throw new \InvalidArgumentException('Device Fingerprint must be string');
+        }
+
+        if ($deviceId !== null && !is_string($deviceId)) {
+            throw new \InvalidArgumentException('Device Id must be string');
+        }
+
+        if ($doNotTrack !== null && !is_bool($doNotTrack)) {
+            throw new \InvalidArgumentException('Do Not Track must be boolean');
+        }
+
+        if ($ip !== null && !is_string($ip)) {
+            throw new \InvalidArgumentException('IP must be string');
+        }
+
+        if ($realIp !== null && !is_string($realIp)) {
+            throw new \InvalidArgumentException('Real IP must be string');
+        }
+
+        if ($localIpList !== null && !is_string($localIpList)) {
+            throw new \InvalidArgumentException('Local IP List must be string');
+        }
+
+        if ($language !== null && !is_string($language)) {
+            throw new \InvalidArgumentException('Language must be string');
+        }
+
+        if ($languages !== null && !is_string($languages)) {
+            throw new \InvalidArgumentException('Languages must be string');
+        }
+
+        if ($languageBrowser !== null && !is_string($languageBrowser)) {
+            throw new \InvalidArgumentException('Language Browser must be string');
+        }
+
+        if ($languageUser !== null && !is_string($languageUser)) {
+            throw new \InvalidArgumentException('Language User must be string');
+        }
+
+        if ($languageSystem !== null && !is_string($languageSystem)) {
+            throw new \InvalidArgumentException('Language System must be string');
+        }
+
+        if ($os !== null && !is_string($os)) {
+            throw new \InvalidArgumentException('OS must be string');
+        }
+
+        if ($screenResolution !== null && !is_string($screenResolution)) {
+            throw new \InvalidArgumentException('Screen Resolution must be string');
+        }
+
+        if ($screenOrientation !== null && !is_string($screenOrientation)) {
+            throw new \InvalidArgumentException('Screen Orientation must be string');
+        }
+
+        if ($clientResolution !== null && !is_string($clientResolution)) {
+            throw new \InvalidArgumentException('Client Resolution must be string');
+        }
+
+        if ($timezoneOffset !== null && !is_int($timezoneOffset)) {
+            throw new \InvalidArgumentException('Timezone Offset must be int');
+        }
+
+        if ($userAgent !== null && !is_string($userAgent)) {
+            throw new \InvalidArgumentException('User Agent must be string');
+        }
+
+        if ($plugins !== null && !is_string($plugins)) {
+            throw new \InvalidArgumentException('Plugins must be string');
+        }
+
+        if ($refererUrl !== null && !is_string($refererUrl)) {
+            throw new \InvalidArgumentException('Referer Url must be string');
+        }
+
+        if ($originUrl !== null && !is_string($originUrl)) {
+            throw new \InvalidArgumentException('Origin Url must be string');
+        }
+
+        $this->replace('event_id', $eventId);
+        $this->replace('event_timestamp', $eventTimestamp);
+        $this->replace('user_merchant_id', $userMerchantId);
+        $this->replace('group_id', $groupId);
+        $this->replace('operation', $operation);
+        $this->replace('account_id', $accountId);
+        $this->replace('account_system', $accountSystem);
+        $this->replace('currency', $currency);
+        $this->replace('phone', $phone);
+        $this->replace('phone_confirmed', $phoneConfirmed);
+        $this->replace('email', $email);
+        $this->replace('email_confirmed', $emailConfirmed);
+        $this->replace('contact_email', $contactEmail);
+        $this->replace('contact_phone', $contactPhone);
+        $this->replace('2fa_allowed', $toFaAllowed);
+        $this->replace('user_name', $username);
+        $this->replace('password', $password);
+        $this->replace('social_type', $socialType);
+        $this->replace('game_level', $gameLevel);
+        $this->replace('firstname', $firstname);
+        $this->replace('lastname', $lastname);
+        $this->replace('fullname', $fullName);
+        $this->replace('birth_date', $birthDate);
+        $this->replace('age', $age);
+        $this->replace('gender', $gender);
+        $this->replace('marital_status', $maritalStatus);
+        $this->replace('nationality', $nationality);
+        $this->replace('physique', $physique);
+        $this->replace('height', $height);
+        $this->replace('weight', $weight);
+        $this->replace('hair', $hair);
+        $this->replace('eyes', $eyes);
+        $this->replace('education', $education);
+        $this->replace('employment_status', $employmentStatus);
+        $this->replace('source_of_funds', $sourceOfFunds);
+        $this->replace('industry', $industry);
+        $this->replace('final_beneficiary', $finalBeneficiary);
+        $this->replace('wallet_type', $walletType);
+        $this->replace('website_url', $websiteUrl);
+        $this->replace('description', $description);
+        $this->replace('country', $country);
+        $this->replace('state', $state);
+        $this->replace('city', $city);
+        $this->replace('zip', $zip);
+        $this->replace('address', $address);
+        $this->replace('address_confirmed', $addressConfirmed);
+        $this->replace('second_country', $secondCountry);
+        $this->replace('second_state', $secondState);
+        $this->replace('second_city', $secondCity);
+        $this->replace('second_zip', $secondZip);
+        $this->replace('second_address', $secondAddress);
+        $this->replace('second_address_confirmed', $secondAddressConfirmed);
+        $this->replace('profile_id', $profileId);
+        $this->replace('profile_type', $profileType);
+        $this->replace('profile_sub_type', $profileSubType);
+        $this->replace('document_country', $documentCountry);
+        $this->replace('document_confirmed', $documentConfirmed);
+        $this->replace('reg_date', $regDate);
+        $this->replace('issue_date', $issueDate);
+        $this->replace('expiry_date', $expiryDate);
+        $this->replace('reg_number', $regNumber);
+        $this->replace('vat_number', $vatNumber);
+        $this->replace('purpose_to_open_account', $purposeToOpenAccount);
+        $this->replace('one_operation_limit', $oneOperationLimit);
+        $this->replace('daily_limit', $dailyLimit);
+        $this->replace('weekly_limit', $weeklyLimit);
+        $this->replace('monthly_limit', $monthlyLimit);
+        $this->replace('annual_limit', $annualLimit);
+        $this->replace('active_features', $activeFeatures);
+        $this->replace('promotions', $promotions);
+        $this->replace('ajax_validation', $ajaxValidation);
+        $this->replace('cookie_enabled', $cookieEnabled);
+        $this->replace('cpu_class', $cpuClass);
+        $this->replace('device_fingerprint', $deviceFingerprint);
+        $this->replace('device_id', $deviceId);
+        $this->replace('do_not_track', $doNotTrack);
+        $this->replace('ip', $ip);
+        $this->replace('real_ip', $realIp);
+        $this->replace('local_ip_list', $localIpList);
+        $this->replace('language', $language);
+        $this->replace('languages', $languages);
+        $this->replace('language_browser', $languageBrowser);
+        $this->replace('language_user', $languageUser);
+        $this->replace('language_system', $languageSystem);
+        $this->replace('os', $os);
+        $this->replace('screen_resolution', $screenResolution);
+        $this->replace('screen_orientation', $screenOrientation);
+        $this->replace('client_resolution', $clientResolution);
+        $this->replace('timezone_offset', $timezoneOffset);
+        $this->replace('user_agent', $userAgent);
+        $this->replace('plugins', $plugins);
+        $this->replace('referer_url', $refererUrl);
+        $this->replace('origin_url', $originUrl);
 
         return $this;
     }

@@ -166,6 +166,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.7`
+  * Added `profile_update` event
 * `1.3.6`
   * Added optional `allowed_document_format` field for kyc_start event.
 * `1.3.5`
