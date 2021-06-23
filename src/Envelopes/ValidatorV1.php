@@ -219,6 +219,27 @@ class ValidatorV1
         'kyc_start_id' => 'int',
         'second_user_merchant_id' => 'string(255)',
         'allowed_document_format' => 'string(255)',
+        '2fa_allowed' => 'bool',
+        'game_level' => 'string(255)',
+        'marital_status' => 'string(255)',
+        'physique' => 'string(255)',
+        'height' => 'float',
+        'weight' => 'float',
+        'hair' => 'string(255)',
+        'eyes' => 'string(255)',
+        'education' => 'string(255)',
+        'address_confirmed' => 'bool',
+        'second_address_confirmed' => 'bool',
+        'document_country' => 'string(255)',
+        'document_confirmed' => 'bool',
+        'purpose_to_open_account' => 'string(255)',
+        'one_operation_limit' => 'float',
+        'daily_limit' => 'float',
+        'weekly_limit' => 'float',
+        'monthly_limit' => 'float',
+        'annual_limit' => 'float',
+        'active_features' => 'string(1024)',
+        'promotions' => 'string(1024)',
     );
 
     private static $sharedOptional = array(
@@ -676,7 +697,107 @@ class ValidatorV1
                 "carrier_url",
                 "carrier_phone",
             )
-        )
+        ),
+        'profile_update' => array(
+            'mandatory' => array(
+                "event_id",
+                "event_timestamp",
+                "user_merchant_id",
+            ),
+            'optional' => array(
+                "sequence_id",
+                "group_id",
+                "operation",
+                "account_id",
+                "account_system",
+                "currency",
+                "phone",
+                "phone_confirmed",
+                "email",
+                "email_confirmed",
+                "contact_email",
+                "contact_phone",
+                "2fa_allowed",
+                "user_name",
+                "password",
+                "social_type",
+                "game_level",
+                "firstname",
+                "lastname",
+                "fullname",
+                "birth_date",
+                "age",
+                "gender",
+                "marital_status",
+                "nationality",
+                "physique",
+                "height",
+                "weight",
+                "hair",
+                "eyes",
+                "education",
+                "employment_status",
+                "source_of_funds",
+                "industry",
+                "final_beneficiary",
+                "wallet_type",
+                "website_url",
+                "description",
+                "country",
+                "state",
+                "city",
+                "zip",
+                "address",
+                "address_confirmed",
+                "second_country",
+                "second_state",
+                "second_city",
+                "second_zip",
+                "second_address",
+                "second_address_confirmed",
+                "profile_id",
+                "profile_type",
+                "profile_sub_type",
+                "document_country",
+                "document_confirmed",
+                "reg_date",
+                "issue_date",
+                "expiry_date",
+                "reg_number",
+                "vat_number",
+                "purpose_to_open_account",
+                "one_operation_limit",
+                "daily_limit",
+                "weekly_limit",
+                "monthly_limit",
+                "annual_limit",
+                "active_features",
+                "promotions",
+                "ajax_validation",
+                "cookie_enabled",
+                "cpu_class",
+                "device_fingerprint",
+                "device_id",
+                "do_not_track",
+                "ip",
+                "real_ip",
+                "local_ip_list",
+                "language",
+                "languages",
+                "language_browser",
+                "language_user",
+                "language_system",
+                "os",
+                "screen_resolution",
+                "screen_orientation",
+                "client_resolution",
+                "timezone_offset",
+                "user_agent",
+                "plugins",
+                "referer_url",
+                "origin_url"
+            )
+        ),
     );
 
     /**
@@ -872,6 +993,11 @@ class ValidatorV1
                 $this->analyzeTypeAndMandatoryFields($envelope),
                 $this->analyzeFieldTypes($envelope)
             );
+        } elseif ($envelope->getType() === Builder::EVENT_PROFILE_UPDATE) {
+            $details = array_merge(
+                $this->analyzeTypeAndMandatoryFields($envelope),
+                $this->analyzeFieldTypes($envelope)
+            );
         } else {
             $details = array_merge(
                 $this->analyzeSequenceId($envelope->getSequenceId()),
@@ -880,6 +1006,7 @@ class ValidatorV1
                 $this->analyzeFieldTypes($envelope)
             );
         }
+
         if (count($details) > 0) {
             throw new EnvelopeValidationException($details);
         }

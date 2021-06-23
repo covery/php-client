@@ -36,8 +36,15 @@ class Envelope implements EnvelopeInterface
         if (!is_string($type)) {
             throw new \InvalidArgumentException('Envelope type must be string');
         }
-        if (!is_string($sequenceId)) {
-            throw new \InvalidArgumentException('Sequence ID must be string');
+
+        if ($type == Builder::EVENT_PROFILE_UPDATE) {
+            if (!is_null($sequenceId) && !is_string($sequenceId)) {
+                throw new \InvalidArgumentException('Sequence ID must be string or null');
+            }
+        } else {
+            if (!is_string($sequenceId)) {
+                throw new \InvalidArgumentException('Sequence ID must be string');
+            }
         }
         foreach ($inodes as $node) {
             if (!$node instanceof IdentityNodeInterface) {
