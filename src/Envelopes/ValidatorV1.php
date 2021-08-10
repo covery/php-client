@@ -240,6 +240,7 @@ class ValidatorV1
         'annual_limit' => 'float',
         'active_features' => 'string(1024)',
         'promotions' => 'string(1024)',
+        'links_to_documents' => 'string(2048)',
     );
 
     private static $sharedOptional = array(
@@ -355,7 +356,8 @@ class ValidatorV1
                 'merchant_country',
                 'mcc',
                 'acquirer_merchant_id',
-                "group_id"
+                'group_id',
+                'links_to_documents',
             )
         ),
         'payout' => array(
@@ -382,7 +384,8 @@ class ValidatorV1
                 'payout_card_last4',
                 'payout_expiration_month',
                 'payout_expiration_year',
-                "group_id"
+                'group_id',
+                'links_to_documents',
             )
         ),
         'install' => array(
@@ -419,7 +422,8 @@ class ValidatorV1
                 'email',
                 'phone',
                 'user_merchant_id',
-                "group_id"
+                'group_id',
+                'links_to_documents',
             )
         ),
         'transfer' => array(
@@ -470,6 +474,7 @@ class ValidatorV1
                 'account_system',
                 'account_id',
                 'second_account_id',
+                'links_to_documents',
             )
         ),
         'postback' => array(
@@ -540,7 +545,8 @@ class ValidatorV1
                 'source_of_funds',
                 'issue_date',
                 'expiry_date',
-                'gender'
+                'gender',
+                'links_to_documents',
             )
         ),
         'kyc_submit' => array(
@@ -557,6 +563,7 @@ class ValidatorV1
                 'provider_result',
                 'provider_code',
                 'provider_reason',
+                'links_to_documents',
             )
         ),
         'kyc_start' => array(
@@ -795,7 +802,8 @@ class ValidatorV1
                 "user_agent",
                 "plugins",
                 "referer_url",
-                "origin_url"
+                "origin_url",
+                "links_to_documents",
             )
         ),
     );

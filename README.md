@@ -166,6 +166,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.8`
+  * Added optional `links_to_documents` field for transaction, refund, payout, transfer, profile_update, kyc_profile and kyc_submit events
 * `1.3.7`
   * Added `profile_update` event
 * `1.3.6`

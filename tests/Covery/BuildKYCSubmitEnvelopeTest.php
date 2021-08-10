@@ -18,12 +18,13 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
             "kycSubmitReason",
             "kySubmitProviderResult",
             "kycSubmitProviderCode",
-            "kycSubmitProviderReason"
+            "kycSubmitProviderReason",
+            "linksToDocuments"
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('kyc_submit', $result->getType());
         self::assertSame('kycSubmitSequenceIdSome', $result->getSequenceId());
-        self::assertCount(10, $result);
+        self::assertCount(11, $result);
         self::assertSame('kycSubmitEventId', $result['event_id']);
         self::assertSame(1234568, $result['event_timestamp']);
         self::assertSame('kycSubmitUserMerchantId', $result['user_merchant_id']);
@@ -34,6 +35,7 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('kySubmitProviderResult', $result['provider_result']);
         self::assertSame('kycSubmitProviderCode', $result['provider_code']);
         self::assertSame('kycSubmitProviderReason', $result['provider_reason']);
+        self::assertSame('linksToDocuments', $result['links_to_documents']);
 
         $validator->validate($result);
 
