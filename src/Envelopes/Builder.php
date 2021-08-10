@@ -243,6 +243,7 @@ class Builder
      * @param int|null $cardExpirationMonth
      * @param int|null $cardExpirationYear
      * @param string|null $groupId
+     * @param string|null $linksToDocuments
      *
      * @return Builder
      */
@@ -268,28 +269,33 @@ class Builder
         $cardLast4 = null,
         $cardExpirationMonth = null,
         $cardExpirationYear = null,
-        $groupId = null
+        $groupId = null,
+        $linksToDocuments = null
     ) {
         $builder = new self('payout', $sequenceId);
         if ($payoutTimestamp === null) {
             $payoutTimestamp = time();
         }
-        return $builder->addPayoutData(
-            $payoutId,
-            $payoutTimestamp,
-            $amount,
-            $currency,
-            $cardId,
-            $accountId,
-            $method,
-            $system,
-            $mid,
-            $amountConverted,
-            $cardBin,
-            $cardLast4,
-            $cardExpirationMonth,
-            $cardExpirationYear
-        )->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country)->addGroupId($groupId);
+        return $builder
+            ->addPayoutData(
+                $payoutId,
+                $payoutTimestamp,
+                $amount,
+                $currency,
+                $cardId,
+                $accountId,
+                $method,
+                $system,
+                $mid,
+                $amountConverted,
+                $cardBin,
+                $cardLast4,
+                $cardExpirationMonth,
+                $cardExpirationYear
+            )
+            ->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country)
+            ->addGroupId($groupId)
+            ->addLinksToDocuments($linksToDocuments);
     }
 
     /**
@@ -341,6 +347,7 @@ class Builder
      * @param string|null $mcc
      * @param string|null $acquirerMerchantId
      * @param string|null $groupId
+     * @param string|null $linksToDocuments
      *
      * @return Builder
      */
@@ -390,7 +397,8 @@ class Builder
         $merchantCountry = null,
         $mcc = null,
         $acquirerMerchantId = null,
-        $groupId = null
+        $groupId = null,
+        $linksToDocuments = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -440,7 +448,8 @@ class Builder
             ->addProductData($productQuantity, $productName, $productDescription)
             ->addWebsiteData($websiteUrl, null, $affiliateId, $campaign)
             ->addIpData(null, null, $merchantIp)
-            ->addGroupId($groupId);
+            ->addGroupId($groupId)
+            ->addLinksToDocuments($linksToDocuments);
 
     }
 
@@ -502,6 +511,7 @@ class Builder
      * @param string|null $phone
      * @param string|null $userId
      * @param string|null $groupId
+     * @param string|null $linksToDocuments
      *
      * @return Builder
      */
@@ -523,28 +533,33 @@ class Builder
         $email = null,
         $phone = null,
         $userId = null,
-        $groupId = null
+        $groupId = null,
+        $linksToDocuments = null
     ) {
         $builder = new self('refund', $sequenceId);
         if ($refundTimestamp === null) {
             $refundTimestamp = time();
         }
 
-        return $builder->addRefundData(
-            $refundId,
-            $refundTimestamp,
-            $refundAmount,
-            $refundCurrency,
-            $refundAmountConverted,
-            $refundSource,
-            $refundType,
-            $refundCode,
-            $refundReason,
-            $agentId,
-            $refundMethod,
-            $refundSystem,
-            $refundMid
-        )->addUserData($email, $userId, $phone)->addGroupId($groupId);
+        return $builder
+            ->addRefundData(
+                $refundId,
+                $refundTimestamp,
+                $refundAmount,
+                $refundCurrency,
+                $refundAmountConverted,
+                $refundSource,
+                $refundType,
+                $refundCode,
+                $refundReason,
+                $agentId,
+                $refundMethod,
+                $refundSystem,
+                $refundMid
+            )
+            ->addUserData($email, $userId, $phone)
+            ->addGroupId($groupId)
+            ->addLinksToDocuments($linksToDocuments);
     }
 
     /**
@@ -595,6 +610,7 @@ class Builder
      * @param string|null $source
      * @param string|null $groupId
      * @param string|null $secondUserMerchantId
+     * @param string|null $linksToDocuments
      *
      * @return Builder
      */
@@ -643,7 +659,8 @@ class Builder
         $bic = null,
         $source = null,
         $groupId = null,
-        $secondUserMerchantId = null
+        $secondUserMerchantId = null,
+        $linksToDocuments = null
     ) {
         $builder = new self('transfer', $sequenceId);
         if ($eventTimestamp === null) {
@@ -705,7 +722,9 @@ class Builder
                 $zip,
                 null
             )
-            ->addProductData($productQuantity, $productName, $productDescription)->addGroupId($groupId);
+            ->addProductData($productQuantity, $productName, $productDescription)
+            ->addGroupId($groupId)
+            ->addLinksToDocuments($linksToDocuments);
     }
 
     /**
@@ -760,6 +779,7 @@ class Builder
      * @param int|null $issueDate
      * @param int|null $expiryDate
      * @param string|null $gender
+     * @param string|null $linksToDocuments
      * @return Builder
      */
     public static function kycProfileEvent(
@@ -811,7 +831,8 @@ class Builder
         $sourceOfFunds = null,
         $issueDate = null,
         $expiryDate = null,
-        $gender = null
+        $gender = null,
+        $linksToDocuments = null
     ) {
         $builder = new self('kyc_profile', $sequenceId);
         if ($eventTimestamp === null) {
@@ -877,9 +898,108 @@ class Builder
                 $zip,
                 null
             )
-            ->addWebsiteData($websiteUrl);
+            ->addWebsiteData($websiteUrl)
+            ->addLinksToDocuments($linksToDocuments);
     }
 
+    /**
+     * @param $eventId
+     * @param $eventTimestamp
+     * @param $userMerchantId
+     * @param null $sequenceId
+     * @param null $groupId
+     * @param null $operation
+     * @param null $accountId
+     * @param null $accountSystem
+     * @param null $currency
+     * @param null $phone
+     * @param null $phoneConfirmed
+     * @param null $email
+     * @param null $emailConfirmed
+     * @param null $contactEmail
+     * @param null $contactPhone
+     * @param null $toFaAllowed
+     * @param null $userName
+     * @param null $password
+     * @param null $socialType
+     * @param null $gameLevel
+     * @param null $firstname
+     * @param null $lastname
+     * @param null $fullName
+     * @param null $birthDate
+     * @param null $age
+     * @param null $gender
+     * @param null $maritalStatus
+     * @param null $nationality
+     * @param null $physique
+     * @param null $height
+     * @param null $weight
+     * @param null $hair
+     * @param null $eyes
+     * @param null $education
+     * @param null $employmentStatus
+     * @param null $sourceOfFunds
+     * @param null $industry
+     * @param null $finalBeneficiary
+     * @param null $walletType
+     * @param null $websiteUrl
+     * @param null $description
+     * @param null $country
+     * @param null $state
+     * @param null $city
+     * @param null $zip
+     * @param null $address
+     * @param null $addressConfirmed
+     * @param null $secondCountry
+     * @param null $secondState
+     * @param null $secondCity
+     * @param null $secondZip
+     * @param null $secondAddress
+     * @param null $secondAddressConfirmed
+     * @param null $profileId
+     * @param null $profileType
+     * @param null $profileSubType
+     * @param null $documentCountry
+     * @param null $documentConfirmed
+     * @param null $regDate
+     * @param null $issueDate
+     * @param null $expiryDate
+     * @param null $regNumber
+     * @param null $vatNumber
+     * @param null $purposeToOpenAccount
+     * @param null $oneOperationLimit
+     * @param null $dailyLimit
+     * @param null $weeklyLimit
+     * @param null $monthlyLimit
+     * @param null $annualLimit
+     * @param null $activeFeatures
+     * @param null $promotions
+     * @param null $ajaxValidation
+     * @param null $cookieEnabled
+     * @param null $cpuClass
+     * @param null $deviceFingerprint
+     * @param null $deviceId
+     * @param null $doNotTrack
+     * @param null $ip
+     * @param null $realIp
+     * @param null $localIpList
+     * @param null $language
+     * @param null $languages
+     * @param null $languageBrowser
+     * @param null $languageUser
+     * @param null $languageSystem
+     * @param null $os
+     * @param null $screenResolution
+     * @param null $screenOrientation
+     * @param null $clientResolution
+     * @param null $timezoneOffset
+     * @param null $userAgent
+     * @param null $plugins
+     * @param null $refererUrl
+     * @param null $originUrl
+     * @param string|null $linksToDocuments
+     * @return static
+     */
     public static function profileUpdateEvent(
         $eventId,
         $eventTimestamp,
@@ -974,105 +1094,108 @@ class Builder
         $userAgent = null,
         $plugins = null,
         $refererUrl = null,
-        $originUrl = null
+        $originUrl = null,
+        $linksToDocuments = null
     ) {
         $builder = new self(self::EVENT_PROFILE_UPDATE, $sequenceId);
 
-        return $builder->addProfileData(
-            $eventId,
-            $eventTimestamp,
-            $userMerchantId,
-            $groupId,
-            $operation,
-            $accountId,
-            $accountSystem,
-            $currency,
-            $phone,
-            $phoneConfirmed,
-            $email,
-            $emailConfirmed,
-            $contactEmail,
-            $contactPhone,
-            $toFaAllowed,
-            $userName,
-            $password,
-            $socialType,
-            $gameLevel,
-            $firstname,
-            $lastname,
-            $fullName,
-            $birthDate,
-            $age,
-            $gender,
-            $maritalStatus,
-            $nationality,
-            $physique,
-            $height,
-            $weight,
-            $hair,
-            $eyes,
-            $education,
-            $employmentStatus,
-            $sourceOfFunds,
-            $industry,
-            $finalBeneficiary,
-            $walletType,
-            $websiteUrl,
-            $description,
-            $country,
-            $state,
-            $city,
-            $zip,
-            $address,
-            $addressConfirmed,
-            $secondCountry,
-            $secondState,
-            $secondCity,
-            $secondZip,
-            $secondAddress,
-            $secondAddressConfirmed,
-            $profileId,
-            $profileType,
-            $profileSubType,
-            $documentCountry,
-            $documentConfirmed,
-            $regDate,
-            $issueDate,
-            $expiryDate,
-            $regNumber,
-            $vatNumber,
-            $purposeToOpenAccount,
-            $oneOperationLimit,
-            $dailyLimit,
-            $weeklyLimit,
-            $monthlyLimit,
-            $annualLimit,
-            $activeFeatures,
-            $promotions,
-            $ajaxValidation,
-            $cookieEnabled,
-            $cpuClass,
-            $deviceFingerprint,
-            $deviceId,
-            $doNotTrack,
-            $ip,
-            $realIp,
-            $localIpList,
-            $language,
-            $languages,
-            $languageBrowser,
-            $languageUser,
-            $languageSystem,
-            $os,
-            $screenResolution,
-            $screenOrientation,
-            $clientResolution,
-            $timezoneOffset,
-            $userAgent,
-            $plugins,
-            $refererUrl,
-            $originUrl
-        );
+        return $builder
+            ->addProfileData(
+                $eventId,
+                $eventTimestamp,
+                $userMerchantId,
+                $groupId,
+                $operation,
+                $accountId,
+                $accountSystem,
+                $currency,
+                $phone,
+                $phoneConfirmed,
+                $email,
+                $emailConfirmed,
+                $contactEmail,
+                $contactPhone,
+                $toFaAllowed,
+                $userName,
+                $password,
+                $socialType,
+                $gameLevel,
+                $firstname,
+                $lastname,
+                $fullName,
+                $birthDate,
+                $age,
+                $gender,
+                $maritalStatus,
+                $nationality,
+                $physique,
+                $height,
+                $weight,
+                $hair,
+                $eyes,
+                $education,
+                $employmentStatus,
+                $sourceOfFunds,
+                $industry,
+                $finalBeneficiary,
+                $walletType,
+                $websiteUrl,
+                $description,
+                $country,
+                $state,
+                $city,
+                $zip,
+                $address,
+                $addressConfirmed,
+                $secondCountry,
+                $secondState,
+                $secondCity,
+                $secondZip,
+                $secondAddress,
+                $secondAddressConfirmed,
+                $profileId,
+                $profileType,
+                $profileSubType,
+                $documentCountry,
+                $documentConfirmed,
+                $regDate,
+                $issueDate,
+                $expiryDate,
+                $regNumber,
+                $vatNumber,
+                $purposeToOpenAccount,
+                $oneOperationLimit,
+                $dailyLimit,
+                $weeklyLimit,
+                $monthlyLimit,
+                $annualLimit,
+                $activeFeatures,
+                $promotions,
+                $ajaxValidation,
+                $cookieEnabled,
+                $cpuClass,
+                $deviceFingerprint,
+                $deviceId,
+                $doNotTrack,
+                $ip,
+                $realIp,
+                $localIpList,
+                $language,
+                $languages,
+                $languageBrowser,
+                $languageUser,
+                $languageSystem,
+                $os,
+                $screenResolution,
+                $screenOrientation,
+                $clientResolution,
+                $timezoneOffset,
+                $userAgent,
+                $plugins,
+                $refererUrl,
+                $originUrl
+            )
+            ->addLinksToDocuments($linksToDocuments);
 
     }
 
@@ -1090,6 +1213,7 @@ class Builder
      * @param string|null $providerResult
      * @param string|null $providerCode
      * @param string|null $providerReason
+     * @param string|null $linksToDocuments
      *
      * @return Builder
      */
@@ -1104,7 +1228,8 @@ class Builder
         $reason = null,
         $providerResult = null,
         $providerCode = null,
-        $providerReason = null
+        $providerReason = null,
+        $linksToDocuments = null
     ) {
         $builder = new self('kyc_submit', $sequenceId);
         if ($eventTimestamp === null) {
@@ -1125,7 +1250,8 @@ class Builder
             ->addUserData(
                 null,
                 $userId
-            );
+            )
+            ->addLinksToDocuments($linksToDocuments);
     }
 
     /**
@@ -3357,6 +3483,22 @@ class Builder
             throw new \InvalidArgumentException('Group id must be string');
         }
         $this->replace('group_id', $groupId);
+
+        return $this;
+    }
+
+    /**
+     * Add links to documents
+     *
+     * @param null $linksToDocuments
+     * @return $this
+     */
+    public function addLinksToDocuments($linksToDocuments = null)
+    {
+        if ($linksToDocuments != null && !is_string($linksToDocuments)) {
+            throw new \InvalidArgumentException('Links to documents must be string');
+        }
+        $this->replace('links_to_documents', $linksToDocuments);
 
         return $this;
     }

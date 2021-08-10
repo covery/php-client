@@ -56,12 +56,13 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
             "kycProfileSourceOfFunds",
             999,
             888,
-            "male"
+            "male",
+            'linksToDocuments'
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('kyc_profile', $result->getType());
         self::assertSame('kycProfileSequenceIdSome', $result->getSequenceId());
-        self::assertCount(48, $result);
+        self::assertCount(49, $result);
         self::assertSame('kycProfileEventId', $result['event_id']);
         self::assertSame(123456, $result['event_timestamp']);
         self::assertSame('kycProfileUserMerchantId', $result['user_merchant_id']);
@@ -110,6 +111,7 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame(999, $result['issue_date']);
         self::assertSame(888, $result['expiry_date']);
         self::assertSame('male', $result['gender']);
+        self::assertSame('linksToDocuments', $result['links_to_documents']);
 
         $validator->validate($result);
 
