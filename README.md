@@ -166,6 +166,22 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.9`
+  * Added optional `provider_id`, `profile_id`, `profile_type`,
+  `profile_sub_type`, `firstname`, `lastname`, `fullname`, `gender`,
+  `industry`, `wallet_type`, `website_url`, `description`,
+  `employment_status`, `source_of_funds`, `birth_date`, `reg_date`,
+  `issue_date`, `expiry_date`, `reg_number`, `vat_number`, `email`,
+  `email_confirmed`, `phone`, `phone_confirmed`, `contact_email`,
+  `contact_phone`, `country`, `state`, `city`, `address`, `zip`,
+  `nationality`, `second_country`, `second_state`, `second_city`,
+  `second_address`, `second_zip`, `ajax_validation`, `cookie_enabled`,
+  `cpu_class`, `device_fingerprint`, `device_id`, `do_not_track`,
+  `ip`, `real_ip`, `local_ip_list`, `language`, `languages`,
+  `language_browser`, `language_user`, `language_system`, `os`,
+  `screen_resolution`, `screen_orientation`, `client_resolution`,
+  `timezone_offset`, `user_agent`, `plugins`, `referer_url`,
+  `origin_url` fields for kyc_submit event.
 * `1.3.8`
   * Added optional `links_to_documents` field for transaction, refund, payout, transfer, profile_update, kyc_profile and kyc_submit events
 * `1.3.7`
