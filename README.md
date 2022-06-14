@@ -166,6 +166,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.10`
+  * Removed the limit on the number of custom fields in the request
 * `1.3.9`
   * Added optional `provider_id`, `profile_id`, `profile_type`,
   `profile_sub_type`, `firstname`, `lastname`, `fullname`, `gender`,
