@@ -1229,23 +1229,143 @@ class Builder
         $providerResult = null,
         $providerCode = null,
         $providerReason = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $providerId = null,
+        $profileId = null,
+        $profileType = null,
+        $profileSubType = null,
+        $firstName = null,
+        $lastName = null,
+        $fullName = null,
+        $gender = null,
+        $industry = null,
+        $walletType = null,
+        $websiteUrl = null,
+        $description = null,
+        $employmentStatus = null,
+        $sourceOfFunds = null,
+        $birthDate = null,
+        $regDate = null,
+        $issueDate = null,
+        $expiryDate = null,
+        $regNumber = null,
+        $vatNumber = null,
+        $email = null,
+        $emailConfirmed = null,
+        $phone = null,
+        $phoneConfirmed = null,
+        $contactEmail = null,
+        $contactPhone = null,
+        $country = null,
+        $state = null,
+        $city = null,
+        $address = null,
+        $zip = null,
+        $nationality = null,
+        $secondCountry = null,
+        $secondState = null,
+        $secondCity = null,
+        $secondAddress = null,
+        $secondZip = null,
+        $ajaxValidation = null,
+        $cookieEnabled = null,
+        $cpuClass = null,
+        $deviceFingerprint = null,
+        $deviceId = null,
+        $doNotTrack = null,
+        $ip = null,
+        $realIp = null,
+        $localIpList = null,
+        $language = null,
+        $languages = null,
+        $languageBrowser = null,
+        $languageUser = null,
+        $languageSystem = null,
+        $os = null,
+        $screenResolution = null,
+        $screenOrientation = null,
+        $clientResolution = null,
+        $timezoneOffset = null,
+        $userAgent = null,
+        $plugins = null,
+        $refererUrl = null,
+        $originUrl = null
     ) {
         $builder = new self('kyc_submit', $sequenceId);
         if ($eventTimestamp === null) {
             $eventTimestamp = time();
         }
         return $builder
-            ->addKycData(
+            ->addKycSubmitData(
                 $eventId,
                 $eventTimestamp,
                 $groupId,
                 $status,
                 $code,
                 $reason,
+                $providerId,
                 $providerResult,
                 $providerCode,
-                $providerReason
+                $providerReason,
+                $profileId,
+                $profileType,
+                $profileSubType,
+                $firstName,
+                $lastName,
+                $fullName,
+                $gender,
+                $industry,
+                $walletType,
+                $websiteUrl,
+                $description,
+                $employmentStatus,
+                $sourceOfFunds,
+                $birthDate,
+                $regDate,
+                $issueDate,
+                $expiryDate,
+                $regNumber,
+                $vatNumber,
+                $email,
+                $emailConfirmed,
+                $phone,
+                $phoneConfirmed,
+                $contactEmail,
+                $contactPhone,
+                $country,
+                $state,
+                $city,
+                $address,
+                $zip,
+                $nationality,
+                $secondCountry,
+                $secondState,
+                $secondCity,
+                $secondAddress,
+                $secondZip,
+                $ajaxValidation,
+                $cookieEnabled,
+                $cpuClass,
+                $deviceFingerprint,
+                $deviceId,
+                $doNotTrack,
+                $ip,
+                $realIp,
+                $localIpList,
+                $language,
+                $languages,
+                $languageBrowser,
+                $languageUser,
+                $languageSystem,
+                $os,
+                $screenResolution,
+                $screenOrientation,
+                $clientResolution,
+                $timezoneOffset,
+                $userAgent,
+                $plugins,
+                $refererUrl,
+                $originUrl
             )
             ->addUserData(
                 null,
@@ -4084,5 +4204,427 @@ class Builder
         return $this;
     }
 
+    /**
+     * @param string $eventId
+     * @param int $eventTimestamp
+     * @param string|null $groupId
+     * @param string|null $status
+     * @param string|null $code
+     * @param string|null $reason
+     * @param string|null $providerId
+     * @param string|null $providerResult
+     * @param string|null $providerCode
+     * @param string|null $providerReason
+     * @param string|null $profileId
+     * @param string|null $profileType
+     * @param string|null $profileSubType
+     * @param string|null $firstName
+     * @param string|null $lastName
+     * @param string|null $fullName
+     * @param string|null $gender
+     * @param string|null $industry
+     * @param string|null $walletType
+     * @param string|null $websiteUrl
+     * @param string|null $description
+     * @param string|null $employmentStatus
+     * @param string|null $sourceOfFunds
+     * @param int|null $birthDate
+     * @param int|null $regDate
+     * @param int|null $issueDate
+     * @param int|null $expiryDate
+     * @param string|null $regNumber
+     * @param string|null $vatNumber
+     * @param string|null $email
+     * @param bool|null $emailConfirmed
+     * @param string|null $phone
+     * @param bool|null $phoneConfirmed
+     * @param string|null $contactEmail
+     * @param string|null $contactPhone
+     * @param string|null $country
+     * @param string|null $state
+     * @param string|null $city
+     * @param string|null $address
+     * @param string|null $zip
+     * @param string|null $nationality
+     * @param string|null $secondCountry
+     * @param string|null $secondState
+     * @param string|null $secondCity
+     * @param string|null $secondAddress
+     * @param string|null $secondZip
+     * @param bool|null $ajaxValidation
+     * @param bool|null $cookieEnabled
+     * @param string|null $cpuClass
+     * @param string|null $deviceFingerprint
+     * @param string|null $deviceId
+     * @param bool|null $doNotTrack
+     * @param string|null $ip
+     * @param string|null $realIp
+     * @param string|null $localIpList
+     * @param string|null $language
+     * @param string|null $languages
+     * @param string|null $languageBrowser
+     * @param string|null $languageUser
+     * @param string|null $languageSystem
+     * @param string|null $os
+     * @param string|null $screenResolution
+     * @param string|null $screenOrientation
+     * @param string|null $clientResolution
+     * @param int|null $timezoneOffset
+     * @param string|null $userAgent
+     * @param string|null $plugins
+     * @param string|null $refererUrl
+     * @param string|null $originUrl
+     * @return $this
+     */
+    public function addKycSubmitData(
+        $eventId,
+        $eventTimestamp,
+        $groupId = null,
+        $status = null,
+        $code = null,
+        $reason = null,
+        $providerId = null,
+        $providerResult = null,
+        $providerCode = null,
+        $providerReason = null,
+        $profileId = null,
+        $profileType = null,
+        $profileSubType = null,
+        $firstName = null,
+        $lastName = null,
+        $fullName = null,
+        $gender = null,
+        $industry = null,
+        $walletType = null,
+        $websiteUrl = null,
+        $description = null,
+        $employmentStatus = null,
+        $sourceOfFunds = null,
+        $birthDate = null,
+        $regDate = null,
+        $issueDate = null,
+        $expiryDate = null,
+        $regNumber = null,
+        $vatNumber = null,
+        $email = null,
+        $emailConfirmed = null,
+        $phone = null,
+        $phoneConfirmed = null,
+        $contactEmail = null,
+        $contactPhone = null,
+        $country = null,
+        $state = null,
+        $city = null,
+        $address = null,
+        $zip = null,
+        $nationality = null,
+        $secondCountry = null,
+        $secondState = null,
+        $secondCity = null,
+        $secondAddress = null,
+        $secondZip = null,
+        $ajaxValidation = null,
+        $cookieEnabled = null,
+        $cpuClass = null,
+        $deviceFingerprint = null,
+        $deviceId = null,
+        $doNotTrack = null,
+        $ip = null,
+        $realIp = null,
+        $localIpList = null,
+        $language = null,
+        $languages = null,
+        $languageBrowser = null,
+        $languageUser = null,
+        $languageSystem = null,
+        $os = null,
+        $screenResolution = null,
+        $screenOrientation = null,
+        $clientResolution = null,
+        $timezoneOffset = null,
+        $userAgent = null,
+        $plugins = null,
+        $refererUrl = null,
+        $originUrl = null
+    ) {
+        if (!is_string($eventId)) {
+            throw new \InvalidArgumentException('Event ID must be string');
+        }
+        if (!is_int($eventTimestamp)) {
+            throw new \InvalidArgumentException('Event timestamp must be int');
+        }
+        if ($groupId !== null && !is_string($groupId)) {
+            throw new \InvalidArgumentException('Group id must be string');
+        }
+        if ($status !== null && !is_string($status)) {
+            throw new \InvalidArgumentException('Status must be string');
+        }
+        if ($code !== null && !is_string($code)) {
+            throw new \InvalidArgumentException('Code must be string');
+        }
+        if ($reason !== null && !is_string($reason)) {
+            throw new \InvalidArgumentException('Reason must be string');
+        }
+        if ($providerId !== null && !is_string($providerId)) {
+            throw new \InvalidArgumentException('Provider id must be string');
+        }
+        if ($providerResult !== null && !is_string($providerResult)) {
+            throw new \InvalidArgumentException('Provider result must be string');
+        }
+        if ($providerCode !== null && !is_string($providerCode)) {
+            throw new \InvalidArgumentException('Provider code must be string');
+        }
+        if ($providerReason !== null && !is_string($providerReason)) {
+            throw new \InvalidArgumentException('Provider reason must be string');
+        }
+        if ($profileId !== null && !is_string($profileId)) {
+            throw new \InvalidArgumentException('Profile Id must be string');
+        }
+        if ($profileType !== null && !is_string($profileType)) {
+            throw new \InvalidArgumentException('Profile Type must be string');
+        }
+        if ($profileSubType !== null && !is_string($profileSubType)) {
+            throw new \InvalidArgumentException('Profile Sub Type must be string');
+        }
+        if ($firstName !== null && !is_string($firstName)) {
+            throw new \InvalidArgumentException('Firstname must be string');
+        }
+        if ($lastName !== null && !is_string($lastName)) {
+            throw new \InvalidArgumentException('Lastname must be string');
+        }
+        if ($fullName !== null && !is_string($fullName)) {
+            throw new \InvalidArgumentException('Full Name must be string');
+        }
+        if ($gender !== null && !is_string($gender)) {
+            throw new \InvalidArgumentException('Gender must be string');
+        }
+        if ($industry !== null && !is_string($industry)) {
+            throw new \InvalidArgumentException('Industry must be string');
+        }
+        if ($walletType !== null && !is_string($walletType)) {
+            throw new \InvalidArgumentException('Wallet Type must be string');
+        }
+        if ($websiteUrl !== null && !is_string($websiteUrl)) {
+            throw new \InvalidArgumentException('Website Url must be string');
+        }
+        if ($description !== null && !is_string($description)) {
+            throw new \InvalidArgumentException('Description must be string');
+        }
+        if ($employmentStatus !== null && !is_string($employmentStatus)) {
+            throw new \InvalidArgumentException('Employment Status must be string');
+        }
+        if ($sourceOfFunds !== null && !is_string($sourceOfFunds)) {
+            throw new \InvalidArgumentException('Source Of Funds must be string');
+        }
+        if ($birthDate !== null && !is_int($birthDate)) {
+            throw new \InvalidArgumentException('Birth Date must be int');
+        }
+        if ($regDate !== null && !is_int($regDate)) {
+            throw new \InvalidArgumentException('Reg Date must be int');
+        }
+        if ($issueDate !== null && !is_int($issueDate)) {
+            throw new \InvalidArgumentException('Issue Date must be int');
+        }
+        if ($expiryDate !== null && !is_int($expiryDate)) {
+            throw new \InvalidArgumentException('Expiry Date must be int');
+        }
+        if ($regNumber !== null && !is_string($regNumber)) {
+            throw new \InvalidArgumentException('Reg Number must be string');
+        }
+        if ($vatNumber !== null && !is_string($vatNumber)) {
+            throw new \InvalidArgumentException('Vat Number must be string');
+        }
+        if ($email !== null && !is_string($email)) {
+            throw new \InvalidArgumentException('Email must be string');
+        }
+        if ($emailConfirmed !== null && !is_bool($emailConfirmed)) {
+            throw new \InvalidArgumentException('Email Confirmed flag must be boolean');
+        }
+        if ($phone !== null && !is_string($phone)) {
+            throw new \InvalidArgumentException('Phone must be string');
+        }
+        if ($phoneConfirmed !== null && !is_bool($phoneConfirmed)) {
+            throw new \InvalidArgumentException('Phone Confirmed flag must be boolean');
+        }
+        if ($contactEmail !== null && !is_string($contactEmail)) {
+            throw new \InvalidArgumentException('Contact Email must be string');
+        }
+        if ($contactPhone !== null && !is_string($contactPhone)) {
+            throw new \InvalidArgumentException('Contact Phone must be string');
+        }
+        if ($country !== null && !is_string($country)) {
+            throw new \InvalidArgumentException('Country must be string');
+        }
+        if ($state !== null && !is_string($state)) {
+            throw new \InvalidArgumentException('State must be string');
+        }
+        if ($city !== null && !is_string($city)) {
+            throw new \InvalidArgumentException('City must be string');
+        }
+        if ($address !== null && !is_string($address)) {
+            throw new \InvalidArgumentException('Address must be string');
+        }
+        if ($zip !== null && !is_string($zip)) {
+            throw new \InvalidArgumentException('Zip must be string');
+        }
+        if ($nationality !== null && !is_string($nationality)) {
+            throw new \InvalidArgumentException('Nationality must be string');
+        }
+        if ($secondCountry !== null && !is_string($secondCountry)) {
+            throw new \InvalidArgumentException('Second Country must be string');
+        }
+        if ($secondState !== null && !is_string($secondState)) {
+            throw new \InvalidArgumentException('Second State must be string');
+        }
+        if ($secondCity !== null && !is_string($secondCity)) {
+            throw new \InvalidArgumentException('Second City must be string');
+        }
+        if ($secondAddress !== null && !is_string($secondAddress)) {
+            throw new \InvalidArgumentException('Second Address must be string');
+        }
+        if ($secondZip !== null && !is_string($secondZip)) {
+            throw new \InvalidArgumentException('Second Zip must be string');
+        }
+        if ($ajaxValidation !== null && !is_bool($ajaxValidation)) {
+            throw new \InvalidArgumentException('Ajax Validation must be boolean');
+        }
+        if ($cookieEnabled !== null && !is_bool($cookieEnabled)) {
+            throw new \InvalidArgumentException('Cookie Enabled must be boolean');
+        }
+        if ($cpuClass !== null && !is_string($cpuClass)) {
+            throw new \InvalidArgumentException('CPU Class must be string');
+        }
+        if ($deviceFingerprint !== null && !is_string($deviceFingerprint)) {
+            throw new \InvalidArgumentException('Device Fingerprint must be string');
+        }
+        if ($deviceId !== null && !is_string($deviceId)) {
+            throw new \InvalidArgumentException('Device Id must be string');
+        }
+        if ($doNotTrack !== null && !is_bool($doNotTrack)) {
+            throw new \InvalidArgumentException('Do Not Track must be boolean');
+        }
+        if ($ip !== null && !is_string($ip)) {
+            throw new \InvalidArgumentException('IP must be string');
+        }
+        if ($realIp !== null && !is_string($realIp)) {
+            throw new \InvalidArgumentException('Real IP must be string');
+        }
+        if ($localIpList !== null && !is_string($localIpList)) {
+            throw new \InvalidArgumentException('Local IP List must be string');
+        }
+        if ($language !== null && !is_string($language)) {
+            throw new \InvalidArgumentException('Language must be string');
+        }
+        if ($languages !== null && !is_string($languages)) {
+            throw new \InvalidArgumentException('Languages must be string');
+        }
+        if ($languageBrowser !== null && !is_string($languageBrowser)) {
+            throw new \InvalidArgumentException('Language Browser must be string');
+        }
+        if ($languageUser !== null && !is_string($languageUser)) {
+            throw new \InvalidArgumentException('Language User must be string');
+        }
+        if ($languageSystem !== null && !is_string($languageSystem)) {
+            throw new \InvalidArgumentException('Language System must be string');
+        }
+        if ($os !== null && !is_string($os)) {
+            throw new \InvalidArgumentException('OS must be string');
+        }
+        if ($screenResolution !== null && !is_string($screenResolution)) {
+            throw new \InvalidArgumentException('Screen Resolution must be string');
+        }
+        if ($screenOrientation !== null && !is_string($screenOrientation)) {
+            throw new \InvalidArgumentException('Screen Orientation must be string');
+        }
+        if ($clientResolution !== null && !is_string($clientResolution)) {
+            throw new \InvalidArgumentException('Client Resolution must be string');
+        }
+        if ($timezoneOffset !== null && !is_int($timezoneOffset)) {
+            throw new \InvalidArgumentException('Timezone Offset must be int');
+        }
+        if ($userAgent !== null && !is_string($userAgent)) {
+            throw new \InvalidArgumentException('User Agent must be string');
+        }
+        if ($plugins !== null && !is_string($plugins)) {
+            throw new \InvalidArgumentException('Plugins must be string');
+        }
+        if ($refererUrl !== null && !is_string($refererUrl)) {
+            throw new \InvalidArgumentException('Referer Url must be string');
+        }
+        if ($originUrl !== null && !is_string($originUrl)) {
+            throw new \InvalidArgumentException('Origin Url must be string');
+        }
 
+        $this->replace('event_id', $eventId);
+        $this->replace('event_timestamp', $eventTimestamp);
+        $this->replace('group_id', $groupId);
+        $this->replace('status', $status);
+        $this->replace('code', $code);
+        $this->replace('reason', $reason);
+        $this->replace('provider_id', $providerId);
+        $this->replace('provider_result', $providerResult);
+        $this->replace('provider_code', $providerCode);
+        $this->replace('provider_reason', $providerReason);
+        $this->replace('profile_id', $profileId);
+        $this->replace('profile_type', $profileType);
+        $this->replace('profile_sub_type', $profileSubType);
+        $this->replace('firstname', $firstName);
+        $this->replace('lastname', $lastName);
+        $this->replace('fullname', $fullName);
+        $this->replace('gender', $gender);
+        $this->replace('industry', $industry);
+        $this->replace('wallet_type', $walletType);
+        $this->replace('website_url', $websiteUrl);
+        $this->replace('description', $description);
+        $this->replace('employment_status', $employmentStatus);
+        $this->replace('source_of_funds', $sourceOfFunds);
+        $this->replace('birth_date', $birthDate);
+        $this->replace('reg_date', $regDate);
+        $this->replace('issue_date', $issueDate);
+        $this->replace('expiry_date', $expiryDate);
+        $this->replace('reg_number', $regNumber);
+        $this->replace('vat_number', $vatNumber);
+        $this->replace('email', $email);
+        $this->replace('email_confirmed', $emailConfirmed);
+        $this->replace('phone', $phone);
+        $this->replace('phone_confirmed', $phoneConfirmed);
+        $this->replace('contact_email', $contactEmail);
+        $this->replace('contact_phone', $contactPhone);
+        $this->replace('country', $country);
+        $this->replace('state', $state);
+        $this->replace('city', $city);
+        $this->replace('address', $address);
+        $this->replace('zip', $zip);
+        $this->replace('nationality', $nationality);
+        $this->replace('second_country', $secondCountry);
+        $this->replace('second_state', $secondState);
+        $this->replace('second_city', $secondCity);
+        $this->replace('second_address', $secondAddress);
+        $this->replace('second_zip', $secondZip);
+        $this->replace('ajax_validation', $ajaxValidation);
+        $this->replace('cookie_enabled', $cookieEnabled);
+        $this->replace('cpu_class', $cpuClass);
+        $this->replace('device_fingerprint', $deviceFingerprint);
+        $this->replace('device_id', $deviceId);
+        $this->replace('do_not_track', $doNotTrack);
+        $this->replace('ip', $ip);
+        $this->replace('real_ip', $realIp);
+        $this->replace('local_ip_list', $localIpList);
+        $this->replace('language', $language);
+        $this->replace('languages', $languages);
+        $this->replace('language_browser', $languageBrowser);
+        $this->replace('language_user', $languageUser);
+        $this->replace('language_system', $languageSystem);
+        $this->replace('os', $os);
+        $this->replace('screen_resolution', $screenResolution);
+        $this->replace('screen_orientation', $screenOrientation);
+        $this->replace('client_resolution', $clientResolution);
+        $this->replace('timezone_offset', $timezoneOffset);
+        $this->replace('user_agent', $userAgent);
+        $this->replace('plugins', $plugins);
+        $this->replace('referer_url', $refererUrl);
+        $this->replace('origin_url', $originUrl);
+
+        return $this;
+    }
 }
