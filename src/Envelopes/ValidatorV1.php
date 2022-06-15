@@ -942,17 +942,10 @@ class ValidatorV1
 
             // Field presence check
             $fields = array_merge($typeInfo['mandatory'], $typeInfo['optional'], self::$sharedOptional);
-            $customCount = 0;
             foreach ($envelope as $key => $value) {
-                if ($this->isCustom($key)) {
-                    $customCount++;
-                } elseif (!in_array($key, $fields)) {
+                if (!$this->isCustom($key) && !in_array($key, $fields)) {
                     $details[] = sprintf('Field "%s" not found in "%s"', $key, $envelope->getType());
                 }
-            }
-
-            if ($customCount > 10) {
-                $details[] = sprintf('Expected 10 or less custom fields, but %d provided', $customCount);
             }
 
             return $details;
