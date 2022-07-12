@@ -43,8 +43,8 @@ Facade::setCredentials('<token>', '<secret>');
 ```
 
 Optional (use only for debug):
-```
-use \Covery\Client\Loggers\FileLogger;
+```php
+use Covery\Client\Loggers\FileLogger;
 
 //directory must be writable!
 $filePath = "path_to_file/error.log";
