@@ -17,6 +17,7 @@ Official PHP Covery Client
   * [Envelopes](#envelopes)
   * [Results](#results)
   * [Exceptions](#exceptions)
+  * [Error loggers](#loggers)
 * [Changelog](#changelog)
 
 <a name="howto"></a>
@@ -39,6 +40,16 @@ $connectTimeoutSeconds = 5.0;
 $requestTimeoutSeconds = 2.0;
 Facade::setTransport(new Curl($connectTimeoutSeconds, $requestTimeoutSeconds));
 Facade::setCredentials('<token>', '<secret>');
+```
+
+Optional (use only for debug):
+```
+use \Covery\Client\Loggers\FileLogger;
+
+//directory must be writable!
+$filePath = "path_to_file/error.log";
+
+Facade::setLogger(new FileLogger($filePath));
 ```
 
 That's all!
@@ -163,9 +174,16 @@ You may provide the following as envelopes:
   * `Covery\Client\IoException` - server communication error
     * `Covery\Client\TimeoutException` - timeout
 
+<a name="loggers"></a>
+## Error loggers
+* `\Covery\Client\Loggers\VarDumpLogger` - simple var_dump logger
+* `\Covery\Client\Loggers\FileLogger` - writing errors to a file
+* You can also write your own logger class extended from AbstractLogger
+
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.11` Added VarDumpLogger and FileLogger
 * `1.3.10`
   * Removed the limit on the number of custom fields in the request
 * `1.3.9`
