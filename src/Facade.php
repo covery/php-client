@@ -146,4 +146,16 @@ class Facade
     {
         return self::getClient()->sendKycProof($envelope);
     }
+
+    /**
+     * @param EnvelopeInterface $envelope
+     * @return CardIdResult
+     * @throws EnvelopeValidationException
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function sendCardId(EnvelopeInterface $envelope)
+    {
+        return self::getClient()->sendCardId($envelope);
+    }
 }
