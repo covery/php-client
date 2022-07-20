@@ -3,6 +3,7 @@
 namespace Covery\Client;
 
 use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Requests\CardId;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\KycProof;
@@ -12,6 +13,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Covery\Client\CardId\ValidatorV1 as CardIdValidator;
 
 class PublicAPIClient
 {
@@ -36,6 +38,11 @@ class PublicAPIClient
     private $validator;
 
     /**
+     * @var CardIdValidator
+     */
+    private $cardIdValidator;
+
+    /**
      * Client constructor.
      * @param CredentialsInterface $credentials
      * @param TransportInterface $transport
@@ -50,6 +57,7 @@ class PublicAPIClient
         $this->transport = $transport;
         $this->logger = $logger === null ? new NullLogger() : $logger;
         $this->validator = new ValidatorV1();
+        $this->cardIdValidator = new CardIdValidator();
     }
 
     /**
@@ -312,5 +320,31 @@ class PublicAPIClient
         } catch (\Exception $error) {
             throw new Exception('Malformed response', 0, $error);
         }
+    }
+
+    /**
+     * @param CardIdInterface $cardId
+     * @return CardIdResult
+     * @throws CardIdValidationException
+     * @throws Exception
+     * @throws IoException
+     */
+    public function sendCardId(CardIdInterface $cardId)
+    {
+        // Validating
+        $this->cardIdValidator->validate($cardId);
+
+        // Sending
+        $data = $this->readJson($this->send(new CardId($cardId)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new CardIdResult(
+            $data[CardIdResultBaseField::REQUEST_ID],
+            $data[CardIdResultBaseField::CARD_ID],
+            $data[CardIdResultBaseField::CREATED_AT]
+        );
     }
 }
