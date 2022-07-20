@@ -241,7 +241,6 @@ class ValidatorV1
         'active_features' => 'string(1024)',
         'promotions' => 'string(1024)',
         'links_to_documents' => 'string(2048)',
-        'card_number' => 'string(20)',
     );
 
     private static $sharedOptional = array(
@@ -867,12 +866,6 @@ class ValidatorV1
                 "links_to_documents",
             )
         ),
-        'card_id' => array(
-            'mandatory' => array(
-                'card_number',
-            ),
-            'optional' => array()
-        ),
     );
 
     /**
@@ -1062,11 +1055,6 @@ class ValidatorV1
                 $this->analyzeFieldTypes($envelope)
             );
         } elseif ($envelope->getType() === Builder::EVENT_PROFILE_UPDATE) {
-            $details = array_merge(
-                $this->analyzeTypeAndMandatoryFields($envelope),
-                $this->analyzeFieldTypes($envelope)
-            );
-        } elseif ($envelope->getType() === Builder::EVENT_CARD_ID) {
             $details = array_merge(
                 $this->analyzeTypeAndMandatoryFields($envelope),
                 $this->analyzeFieldTypes($envelope)

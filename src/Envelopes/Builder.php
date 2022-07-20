@@ -8,7 +8,6 @@ use Covery\Client\IdentityNodeInterface;
 class Builder
 {
     const EVENT_PROFILE_UPDATE = 'profile_update';
-    const EVENT_CARD_ID = 'card_id';
 
     /**
      * @var string
@@ -4625,41 +4624,6 @@ class Builder
         $this->replace('plugins', $plugins);
         $this->replace('referer_url', $refererUrl);
         $this->replace('origin_url', $originUrl);
-
-        return $this;
-    }
-
-    /**
-     * Returns builder for card id request
-     *
-     * @param string $cardNumber
-     */
-    public static function cardIdEvent($cardNumber)
-    {
-        $envelopeType = self::EVENT_CARD_ID;
-        $sequenceId = '';
-
-        $builder = new self($envelopeType, $sequenceId);
-
-        return $builder
-            ->addCardIdData($cardNumber);
-    }
-
-    /**
-     * Provides cardId value
-     *
-     * @param string $cardNumber
-     * @return $this
-     */
-    public function addCardIdData($cardNumber)
-    {
-        if (!is_string($cardNumber)) {
-            throw new \InvalidArgumentException('Card number must be string');
-        } elseif (strlen($cardNumber) < 10 || strlen($cardNumber) > 20) {
-            throw new \InvalidArgumentException('The length of the card number must be between 10 and 20 characters');
-        }
-
-        $this->replace('card_number', $cardNumber);
 
         return $this;
     }

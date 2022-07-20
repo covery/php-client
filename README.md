@@ -95,7 +95,7 @@ $kycProofData = Facade::sendKycProof($event);
 
 Card Id event example:
 ```php
-use Covery\Client\Envelopes\Builder;
+use Covery\Client\CardId\Builder;
 use Covery\Client\Facade;
 
 $event = Builder::cardIdEvent('curdNumber')->build();

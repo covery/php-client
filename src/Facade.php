@@ -148,14 +148,14 @@ class Facade
     }
 
     /**
-     * @param EnvelopeInterface $envelope
+     * @param CardIdInterface $cardId
      * @return CardIdResult
-     * @throws EnvelopeValidationException
+     * @throws CardIdValidationException
      * @throws Exception
      * @throws IoException
      */
-    public static function sendCardId(EnvelopeInterface $envelope)
+    public static function sendCardId(CardIdInterface $cardId)
     {
-        return self::getClient()->sendCardId($envelope);
+        return self::getClient()->sendCardId($cardId);
     }
 }

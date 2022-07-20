@@ -2,7 +2,7 @@
 
 namespace Covery\Client\Requests;
 
-use Covery\Client\EnvelopeInterface;
+use Covery\Client\CardIdInterface;
 
 /**
  * Class KycProof
@@ -11,10 +11,10 @@ use Covery\Client\EnvelopeInterface;
  *
  * @package Covery\Client\Requests
  */
-class CardId extends AbstractEnvelopeRequest
+class CardId extends AbstractCardIdRequest
 {
-    public function __construct(EnvelopeInterface $envelope)
+    public function __construct(CardIdInterface $cardId)
     {
-        parent::__construct('/api/cardId', $envelope);
+        parent::__construct('/api/cardId', $cardId);
     }
 }
