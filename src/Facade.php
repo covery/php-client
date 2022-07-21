@@ -150,7 +150,6 @@ class Facade
     /**
      * @param CardIdInterface $cardId
      * @return CardIdResult
-     * @throws CardIdValidationException
      * @throws Exception
      * @throws IoException
      */

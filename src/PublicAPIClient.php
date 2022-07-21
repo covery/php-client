@@ -318,7 +318,6 @@ class PublicAPIClient
     /**
      * @param CardIdInterface $cardId
      * @return CardIdResult
-     * @throws CardIdValidationException
      * @throws Exception
      * @throws IoException
      */
