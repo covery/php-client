@@ -7,35 +7,32 @@ use Covery\Client\CardIdInterface;
 class CardId implements CardIdInterface
 {
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @var array
      */
     private $data;
 
     /**
      * CardId constructor.
-     * @param string $type
      */
-    public function __construct($type, array $data)
+    public function __construct(array $data)
     {
-        if (!is_string($type)) {
-            throw new \InvalidArgumentException('CardId type must be string');
-        }
-
-        $this->type = $type;
         $this->data = $data;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getType()
+    public function toArray()
     {
-        return $this->type;
+        return $this->data;
+    }
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->data);
     }
 
     /**
@@ -74,29 +71,5 @@ class CardId implements CardIdInterface
         if ($this->offsetExists($offset)) {
             unset($this->data[$offset]);
         }
-    }
-
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function count()
-    {
-        return count($this->data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->data);
     }
 }

@@ -3,6 +3,7 @@
 namespace Covery\Client\Requests;
 
 use Covery\Client\CardIdInterface;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * Class KycProof
@@ -11,10 +12,19 @@ use Covery\Client\CardIdInterface;
  *
  * @package Covery\Client\Requests
  */
-class CardId extends AbstractCardIdRequest
+class CardId extends Request
 {
+    /**
+     * @param CardIdInterface $cardId
+     */
     public function __construct(CardIdInterface $cardId)
     {
-        parent::__construct('/api/cardId', $cardId);
+        // Building request
+        parent::__construct(
+            'POST',
+            '/api/cardId',
+            array(),
+            json_encode($cardId->toArray())
+        );
     }
 }

@@ -13,7 +13,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Covery\Client\CardId\ValidatorV1 as CardIdValidator;
 
 class PublicAPIClient
 {
@@ -38,11 +37,6 @@ class PublicAPIClient
     private $validator;
 
     /**
-     * @var CardIdValidator
-     */
-    private $cardIdValidator;
-
-    /**
      * Client constructor.
      * @param CredentialsInterface $credentials
      * @param TransportInterface $transport
@@ -57,7 +51,6 @@ class PublicAPIClient
         $this->transport = $transport;
         $this->logger = $logger === null ? new NullLogger() : $logger;
         $this->validator = new ValidatorV1();
-        $this->cardIdValidator = new CardIdValidator();
     }
 
     /**
@@ -331,9 +324,6 @@ class PublicAPIClient
      */
     public function sendCardId(CardIdInterface $cardId)
     {
-        // Validating
-        $this->cardIdValidator->validate($cardId);
-
         // Sending
         $data = $this->readJson($this->send(new CardId($cardId)));
 

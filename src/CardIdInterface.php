@@ -9,13 +9,8 @@ namespace Covery\Client;
  *
  * @package Covery\Client
  */
-interface CardIdInterface extends \IteratorAggregate, \ArrayAccess, \Countable
+interface CardIdInterface extends \ArrayAccess, \Countable
 {
-    /**
-     * @return string
-     */
-    public function getType();
-
     /**
      * @return array
      */

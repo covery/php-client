@@ -6,31 +6,10 @@ use Covery\Client\CardIdInterface;
 
 class Builder
 {
-    const EVENT_CARD_ID = 'card_id';
-
-    /**
-     * @var string
-     */
-    private $type;
-
     /**
      * @var array
      */
     private $data = array();
-
-    /**
-     * Builder constructor.
-     *
-     * @param string $type
-     */
-    public function __construct($type)
-    {
-        if (!is_string($type)) {
-            throw new \InvalidArgumentException('CardId type must be string');
-        }
-
-        $this->type = $type;
-    }
 
     /**
      * Returns builder for card id request
@@ -39,9 +18,7 @@ class Builder
      */
     public static function cardIdEvent($cardNumber)
     {
-        $type = self::EVENT_CARD_ID;
-
-        $builder = new self($type);
+        $builder = new self();
 
         return $builder
             ->addCardIdData($cardNumber);
@@ -74,7 +51,6 @@ class Builder
     public function build()
     {
         return new CardId(
-            $this->type,
             array_filter($this->data, function ($data) {
                 return $data !== null;
             })
