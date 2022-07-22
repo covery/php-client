@@ -93,6 +93,14 @@ $event = Builder::kycProofEvent($kycStartId)->build();
 $kycProofData = Facade::sendKycProof($event);
 ```
 
+Card Id event example:
+```php
+use Covery\Client\CardId\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::cardIdEvent('curdNumber')->build();
+$result = Facade::sendCardId($event);
+```
 
 # Tech Details
 
@@ -183,6 +191,7 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.12` Added sendCardId method
 * `1.3.11` Added VarDumpLogger and FileLogger
 * `1.3.10`
   * Removed the limit on the number of custom fields in the request

@@ -3,6 +3,7 @@
 namespace Covery\Client;
 
 use Covery\Client\Envelopes\ValidatorV1;
+use Covery\Client\Requests\CardId;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\KycProof;
@@ -312,5 +313,27 @@ class PublicAPIClient
         } catch (\Exception $error) {
             throw new Exception('Malformed response', 0, $error);
         }
+    }
+
+    /**
+     * @param CardIdInterface $cardId
+     * @return CardIdResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function sendCardId(CardIdInterface $cardId)
+    {
+        // Sending
+        $data = $this->readJson($this->send(new CardId($cardId)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new CardIdResult(
+            $data[CardIdResultBaseField::REQUEST_ID],
+            $data[CardIdResultBaseField::CARD_ID],
+            $data[CardIdResultBaseField::CREATED_AT]
+        );
     }
 }
