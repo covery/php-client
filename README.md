@@ -191,6 +191,7 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.13` Added StaleDataException exception 
 * `1.3.12` Added sendCardId method
 * `1.3.11` Added VarDumpLogger and FileLogger
 * `1.3.10`
