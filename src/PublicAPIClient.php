@@ -115,6 +115,13 @@ class PublicAPIClient
             // Extended data available
             $message = $response->getHeaderLine('X-Maxwell-Error-Message');
             $type = $response->getHeaderLine('X-Maxwell-Error-Type');
+
+            //throw slate data exception
+            if (strpos($type, 'StaleDataException') !== false) {
+                $this->logger->error($message);
+                throw new StaleDataException($message, $response->getStatusCode());
+            }
+
             if (strpos($type, 'AuthorizationRequiredException') !== false) {
                 $this->logger->error('Authentication failure ' . $message);
                 throw new AuthException($message, $response->getStatusCode());
