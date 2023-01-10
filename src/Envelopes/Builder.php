@@ -4627,4 +4627,59 @@ class Builder
 
         return $this;
     }
+
+    /**
+     * Provides Media Storage value to envelope
+     *
+     * @param $contentType
+     * @param $contentDescription
+     * @param $fileName
+     * @return $this
+     */
+    public function addMediaStorageData($contentType, $contentDescription, $fileName)
+    {
+        if (!is_string($contentType) and !in_array($contentType, MediaStorageValidator::$dataValuesForContentType)) {
+            throw new \InvalidArgumentException('contentType must be string and 
+            must be one of options: "image/jpeg", "image/png", "image/gif"');
+        }
+
+        if (!is_string($contentDescription) and
+            !in_array($contentDescription, MediaStorageValidator::$dataValuesForContentDescription)) {
+            throw new \InvalidArgumentException('contentDescription must be string and 
+            must be one of options: "personal_photo", "linked_document", "general_document"');
+        }
+
+        if (!is_string($fileName)) {
+            throw new \InvalidArgumentException('fileName must be string');
+        }
+
+        $this->replace('content_type', $contentType);
+        $this->replace('content_description', $contentDescription);
+        $this->replace('file_name', $fileName);
+
+        return $this;
+    }
+
+    /**
+     * Provides Media Connection value to envelope
+     *
+     * @param int $requestId
+     * @param int|array $mediaId
+     * @return $this
+     */
+    public function addMediaConnectionData($requestId, $mediaId)
+    {
+        if (!is_int($requestId)) {
+            throw new \InvalidArgumentException('Request ID must be integer');
+        }
+
+        if (!is_int($mediaId) and !is_array($mediaId)) {
+            throw new \InvalidArgumentException('media ID must be integer or array');
+        }
+
+        $this->replace('request_id', $requestId);
+        $this->replace('media_id', $mediaId);
+
+        return $this;
+    }
 }

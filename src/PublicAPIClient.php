@@ -7,6 +7,8 @@ use Covery\Client\Requests\CardId;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\KycProof;
+use Covery\Client\Requests\mediaStorage;
+use Covery\Client\Requests\mediaСonnection;
 use Covery\Client\Requests\Ping;
 use Covery\Client\Requests\Postback;
 use Psr\Http\Message\RequestInterface;
@@ -342,5 +344,64 @@ class PublicAPIClient
             $data[CardIdResultBaseField::CARD_ID],
             $data[CardIdResultBaseField::CREATED_AT]
         );
+    }
+
+    /**
+     * Sends envelope to Covery for analysis
+     *
+     * @param EnvelopeInterface $envelope
+     * @return MediaStorageResult
+     * @throws Exception
+     */
+    public function sendMediaStorage(EnvelopeInterface $envelope)
+    {
+        // Validating
+        $this->validator->validate($envelope);
+
+        // Sending
+        $data = $this->readJson($this->send(new mediaСonnection($envelope)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        try {
+            return new MediaStorageResult(
+                $data[MediaStorageBaseField::UPLOAD_URL],
+                $data[MediaStorageBaseField::MEDIA_ID],
+                $data[MediaStorageBaseField::CREATED_AT]
+            );
+        } catch (\Exception $error) {
+            throw new Exception('Malformed response', 0, $error);
+        }
+    }
+
+    /**
+     * Sends envelope to Covery for analysis
+     *
+     * @param EnvelopeInterface $envelope
+     * @return MediaConnectionResult
+     * @throws Exception
+     */
+    public function sendMediaConnection(EnvelopeInterface $envelope)
+    {
+        // Validating
+        $this->validator->validate($envelope);
+
+        // Sending
+        $data = $this->readJson($this->send(new mediaСonnection($envelope)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        try {
+            return new MediaConnectionResult(
+                $data[MediaConnectionBaseField::REQUEST_ID],
+                $data[MediaConnectionBaseField::MEDIA_ID]
+            );
+        } catch (\Exception $error) {
+            throw new Exception('Malformed response', 0, $error);
+        }
     }
 }

@@ -14,7 +14,7 @@ use GuzzleHttp\Psr7\Request;
  */
 abstract class AbstractEnvelopeRequest extends Request
 {
-    public function __construct($apiPath, EnvelopeInterface $envelope)
+    public function __construct($apiPath, EnvelopeInterface $envelope, $method = 'POST')
     {
         if (!is_string($apiPath) || empty($apiPath)) {
             throw new \InvalidArgumentException('API path must be non-empty string');
@@ -29,7 +29,7 @@ abstract class AbstractEnvelopeRequest extends Request
         $packet = array('type' => $envelope->getType(), 'sequence_id' => $envelope->getSequenceId());
 
         parent::__construct(
-            'POST',
+            $method,
             $apiPath,
             array(
                 'X-Identities' => implode('&', $ids)
