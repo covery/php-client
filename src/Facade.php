@@ -157,4 +157,28 @@ class Facade
     {
         return self::getClient()->sendCardId($cardId);
     }
+
+    /**
+     * Sends envelope to Covery for analysis
+     *
+     * @param EnvelopeInterface $envelope
+     * @return Result
+     * @throws Exception
+     */
+    public static function sendMediaStorage(EnvelopeInterface $envelope)
+    {
+        return self::getClient()->sendMediaStorage($envelope);
+    }
+
+    /**
+     * Sends envelope to Covery for analysis
+     *
+     * @param EnvelopeInterface $envelope
+     * @return Result
+     * @throws Exception
+     */
+    public static function sendMediaConnection(EnvelopeInterface $envelope)
+    {
+        return self::getClient()->sendMediaConnection($envelope);
+    }
 }
