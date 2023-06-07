@@ -157,4 +157,9 @@ class Facade
     {
         return self::getClient()->sendCardId($cardId);
     }
+
+    public static function sendMediaStorage(MediaStorageInterface $mediaStorage)
+    {
+        return self::getClient()->sendMediaStorage($mediaStorage);
+    }
 }

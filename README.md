@@ -102,6 +102,15 @@ $event = Builder::cardIdEvent('curdNumber')->build();
 $result = Facade::sendCardId($event);
 ```
 
+Media Storage event example:
+```php
+use Covery\Client\MediaStorage\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::mediaStorageEvent('image/jpeg', 'personal_photo', '', false)->build();
+$result = Facade::sendMediaStorage($event);
+```
+
 # Tech Details
 
 <a name="facade"></a>
@@ -191,6 +200,7 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.14` Added MediaStorage method
 * `1.3.13` Added StaleDataException exception 
 * `1.3.12` Added sendCardId method
 * `1.3.11` Added VarDumpLogger and FileLogger

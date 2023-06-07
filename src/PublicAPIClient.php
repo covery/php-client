@@ -7,6 +7,7 @@ use Covery\Client\Requests\CardId;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\KycProof;
+use Covery\Client\Requests\MediaStorage;
 use Covery\Client\Requests\Ping;
 use Covery\Client\Requests\Postback;
 use Psr\Http\Message\RequestInterface;
@@ -341,6 +342,21 @@ class PublicAPIClient
             $data[CardIdResultBaseField::REQUEST_ID],
             $data[CardIdResultBaseField::CARD_ID],
             $data[CardIdResultBaseField::CREATED_AT]
+        );
+    }
+
+    public function sendMediaStorage(MediaStorageInterface $media)
+    {
+        $data = $this->readJson($this->send(new MediaStorage($media)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new MediaStorageResult(
+            $data[MediaStorageResultBaseField::UPLOAD_URL],
+            $data[MediaStorageResultBaseField::MEDIA_ID],
+            $data[MediaStorageResultBaseField::CREATED_AT]
         );
     }
 }
