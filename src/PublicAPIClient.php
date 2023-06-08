@@ -14,6 +14,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Covery\Client\Requests\MediaConnection;
 
 class PublicAPIClient
 {
@@ -36,6 +37,10 @@ class PublicAPIClient
      * @var ValidatorV1
      */
     private $validator;
+    /**
+     * @var int
+     */
+    private $statusCode;
 
     /**
      * Client constructor.
@@ -75,6 +80,7 @@ class PublicAPIClient
             throw new IoException('Error sending request', 0, $inner);
         }
         $code = $response->getStatusCode();
+        $this->statusCode = $code;
         $this->logger->debug('Received status code ' . $code);
 
         if ($code >= 400) {
@@ -358,5 +364,15 @@ class PublicAPIClient
             $data[MediaStorageResultBaseField::MEDIA_ID],
             $data[MediaStorageResultBaseField::CREATED_AT]
         );
+    }
+
+    public function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method)
+    {
+        $this->readJson($this->send(new \Covery\Client\Requests\MediaConnection($mediaConnection, $method)));
+        if ($this->statusCode >= 300) {
+            throw new Exception("Malformed response");
+        }
+
+        return new MediaConnectionResult();
     }
 }

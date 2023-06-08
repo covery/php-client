@@ -18,7 +18,7 @@ class BuildMediaStorageTest extends \PHPUnit_Framework_TestCase
 
         $request = new \Covery\Client\Requests\MediaStorage($mediaStorage);
 
-        self::assertEquals($request->getMethod(), 'POST');
+        self::assertEquals('POST', $request->getMethod());
         self::assertContains($request->getUri()->getPath(), '/api/mediaStorage');
     }
 }

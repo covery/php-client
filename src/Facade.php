@@ -162,4 +162,9 @@ class Facade
     {
         return self::getClient()->sendMediaStorage($mediaStorage);
     }
+
+    public static function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method = 'PUT')
+    {
+        return self::getClient()->sendMediaConnection($mediaConnection, $method);
+    }
 }
