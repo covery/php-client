@@ -158,13 +158,47 @@ class Facade
         return self::getClient()->sendCardId($cardId);
     }
 
+    /**
+     * Send Media Storage data and return upload URL
+     *
+     * @param MediaStorageInterface $mediaStorage
+     * @return MediaStorageResult
+     * @throws Exception
+     * @throws IoException
+     */
     public static function sendMediaStorage(MediaStorageInterface $mediaStorage)
     {
         return self::getClient()->sendMediaStorage($mediaStorage);
     }
 
+    /**
+     * Send Media Connection and return status code
+     *
+     * @param MediaConnectionInterface $mediaConnection
+     * @param $method
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
     public static function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method = 'PUT')
     {
         return self::getClient()->sendMediaConnection($mediaConnection, $method);
+    }
+
+    /**
+     * Upload Media file and returns status code
+     *
+     * @param $url
+     * @param $filePath
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     * @throws TimeoutException
+     */
+    public static function uploadMediaFile($url, $filePath)
+    {
+        $mediaFileUploader = new MediaFileUploader($url, $filePath);
+
+        return $mediaFileUploader->upload();
     }
 }

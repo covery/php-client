@@ -10,6 +10,7 @@ use Covery\Client\Requests\KycProof;
 use Covery\Client\Requests\MediaStorage;
 use Covery\Client\Requests\Ping;
 use Covery\Client\Requests\Postback;
+use Covery\Client\Transport\Curl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -40,7 +41,7 @@ class PublicAPIClient
     /**
      * @var int
      */
-    private $statusCode;
+    private $responseStatusCode;
 
     /**
      * Client constructor.
@@ -80,7 +81,7 @@ class PublicAPIClient
             throw new IoException('Error sending request', 0, $inner);
         }
         $code = $response->getStatusCode();
-        $this->statusCode = $code;
+        $this->responseStatusCode = $code;
         $this->logger->debug('Received status code ' . $code);
 
         if ($code >= 400) {
@@ -351,6 +352,14 @@ class PublicAPIClient
         );
     }
 
+    /**
+     * Send Media Storage data and return upload URL
+     *
+     * @param MediaStorageInterface $media
+     * @return MediaStorageResult
+     * @throws Exception
+     * @throws IoException
+     */
     public function sendMediaStorage(MediaStorageInterface $media)
     {
         $data = $this->readJson($this->send(new MediaStorage($media)));
@@ -366,13 +375,22 @@ class PublicAPIClient
         );
     }
 
+    /**
+     * Send Media Connection and return status code
+     *
+     * @param MediaConnectionInterface $mediaConnection
+     * @param $method
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
     public function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method)
     {
         $this->readJson($this->send(new \Covery\Client\Requests\MediaConnection($mediaConnection, $method)));
-        if ($this->statusCode >= 300) {
+        if ($this->responseStatusCode >= 300) {
             throw new Exception("Malformed response");
         }
 
-        return new MediaConnectionResult();
+        return $this->responseStatusCode;
     }
 }

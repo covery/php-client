@@ -111,6 +111,22 @@ $event = Builder::mediaStorageEvent('image/jpeg', 'personal_photo', '', false)->
 $result = Facade::sendMediaStorage($event);
 ```
 
+Media Connection event example:
+```php
+use Covery\Client\MediaConnection\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::mediaConnectionEvent(1, 1)->build();
+$result = Facade::sendMediaConnection($event);
+```
+
+Media file upload example:
+```php
+use Covery\Client\Facade;
+
+$statusCode = \Covery\Client\Facade::uploadMediaFile($mediaUrl, $filePath);
+```
+
 # Tech Details
 
 <a name="facade"></a>
@@ -200,6 +216,7 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.15` Added MediaConnection method. Added UploadMediaFile method
 * `1.3.14` Added MediaStorage method
 * `1.3.13` Added StaleDataException exception 
 * `1.3.12` Added sendCardId method
