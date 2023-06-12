@@ -14,20 +14,20 @@ class MediaFileUploader
     /**
      * @var string
      */
-    private $filePath;
+    private $file;
 
-    public function __construct($url, $filePath)
+    public function __construct($url, $file)
     {
         if (!is_string($url)) {
             throw new \InvalidArgumentException('Url must be string');
         }
 
-        if (!is_string($filePath)) {
-            throw new \InvalidArgumentException('File path must be string');
+        if (!is_resource($file)) {
+            throw new \InvalidArgumentException('File must be resource');
         }
 
         $this->url = $url;
-        $this->filePath = $filePath;
+        $this->file = $file;
     }
 
     /**
@@ -42,7 +42,7 @@ class MediaFileUploader
     {
         $connectionTimeout = 60;
         $transport = new Curl($connectionTimeout);
-        $response = $transport->send(new MediaFileUploaderRequest($this->url, $this->filePath));
+        $response = $transport->send(new MediaFileUploaderRequest($this->url, $this->file));
         $statusCode = $response->getStatusCode();
         if ($statusCode >= 300) {
             $response = json_decode($response->getBody()->getContents());

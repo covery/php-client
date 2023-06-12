@@ -105,11 +105,12 @@ class BuildProfileUpdateEventTest extends \PHPUnit_Framework_TestCase
             "profileUpdatePlugins",
             "profileUpdateRefererUrl",
             "profileUpdateOriginUrl",
-            "linksToDocuments"
+            "linksToDocuments",
+            [1, 2]
         )->build();
 
 
-        self::assertCount(94, $result);
+        self::assertCount(95, $result);
         self::assertSame(Builder::EVENT_PROFILE_UPDATE, $result->getType());
         self::assertSame('profileUpdateSequenceId', $result->getSequenceId());
         self::assertSame('profileUpdateEventId', $result['event_id']);
@@ -208,6 +209,7 @@ class BuildProfileUpdateEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame("profileUpdateRefererUrl", $result['referer_url']);
         self::assertSame("profileUpdateOriginUrl", $result['origin_url']);
         self::assertSame("linksToDocuments", $result['links_to_documents']);
+        self::assertSame([1, 2], $result['media_id']);
 
         $validator->validate($result);
 

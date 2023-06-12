@@ -53,7 +53,8 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
             'source value',
             "group id value",
             "second user merchant id value",
-            'links to documents'
+            'links to documents',
+            [1, 2]
         )
             ->addBrowserData('88889', 'Test curl')
             ->addIdentity(new \Covery\Client\Identities\Stub())
@@ -63,7 +64,7 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('transfer', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(48, $result);
+        self::assertCount(49, $result);
 
         self::assertSame('someEventId', $result['event_id']);
         self::assertSame(0.42, $result['amount']);
@@ -110,6 +111,7 @@ class BuildTransferEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('group id value', $result['group_id']);
         self::assertSame('second user merchant id value', $result['second_user_merchant_id']);
         self::assertSame('links to documents', $result['links_to_documents']);
+        self::assertSame([1, 2], $result['media_id']);
 
         $validator->validate($result);
 

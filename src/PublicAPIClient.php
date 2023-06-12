@@ -10,12 +10,10 @@ use Covery\Client\Requests\KycProof;
 use Covery\Client\Requests\MediaStorage;
 use Covery\Client\Requests\Ping;
 use Covery\Client\Requests\Postback;
-use Covery\Client\Transport\Curl;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Covery\Client\Requests\MediaConnection;
 
 class PublicAPIClient
 {
@@ -392,5 +390,40 @@ class PublicAPIClient
         }
 
         return $this->responseStatusCode;
+    }
+
+    /**
+     * Get Account configuration status object from Covery
+     *
+     * @return AccountConfigurationStatusResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function getAccountConfigurationStatus()
+    {
+        // Sending
+        $data = $this->readJson($this->send(new \Covery\Client\Requests\AccountConfigurationStatus()));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new AccountConfigurationStatusResult(
+            $data[AccountConfigurationStatusResultBaseField::ACTUAL_EVENT_TYPES],
+            $data[AccountConfigurationStatusResultBaseField::BASE_CURRENCY],
+            $data[AccountConfigurationStatusResultBaseField::DECISION_CALLBACK_URL],
+            $data[AccountConfigurationStatusResultBaseField::MANUAL_DECISION_CALLBACK_URL],
+            $data[AccountConfigurationStatusResultBaseField::ONGOING_MONITORING_WEBHOOK_URL],
+            $data[AccountConfigurationStatusResultBaseField::MEDIA_STORAGE_WEBHOOK_URL],
+            $data[AccountConfigurationStatusResultBaseField::FRAUD_ALERT_CALLBACK_URL],
+            $data[AccountConfigurationStatusResultBaseField::CARD_ID_GENERATION],
+            $data[AccountConfigurationStatusResultBaseField::DEVICE_FINGERPRINT_GENERATION],
+            $data[AccountConfigurationStatusResultBaseField::SEQUENCE_ID_GENERATION],
+            $data[AccountConfigurationStatusResultBaseField::SEQUENCE_ID_GENERATION_METHOD],
+            $data[AccountConfigurationStatusResultBaseField::AML_SERVICE],
+            $data[AccountConfigurationStatusResultBaseField::AML_SERVICE_STATUS],
+            $data[AccountConfigurationStatusResultBaseField::DOW_JONES_DATA_BASE_DATE],
+            $data[AccountConfigurationStatusResultBaseField::KYC_PROVIDER]
+        );
     }
 }

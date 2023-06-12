@@ -201,4 +201,16 @@ class Facade
 
         return $mediaFileUploader->upload();
     }
+
+    /**
+     * Get account configuration status and return result object
+     *
+     * @return AccountConfigurationStatusResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function getAccountConfigurationStatus()
+    {
+        return self::getClient()->getAccountConfigurationStatus();
+    }
 }

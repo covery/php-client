@@ -79,13 +79,16 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
             'KycSubmitUserAgent',
             'KycSubmitPlugins',
             'KycSubmitRefererUrl',
-            'KycSubmitOriginUrl'
+            'KycSubmitOriginUrl',
+            [1, 2],
+            true,
+            true
 
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('kyc_submit', $result->getType());
         self::assertSame('kycSubmitSequenceIdSome', $result->getSequenceId());
-        self::assertCount(71, $result);
+        self::assertCount(74, $result);
         self::assertSame('kycSubmitEventId', $result['event_id']);
         self::assertSame(1234568, $result['event_timestamp']);
         self::assertSame('kycSubmitUserMerchantId', $result['user_merchant_id']);
@@ -157,6 +160,9 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('KycSubmitPlugins', $result['plugins']);
         self::assertSame('KycSubmitRefererUrl', $result['referer_url']);
         self::assertSame('KycSubmitOriginUrl', $result['origin_url']);
+        self::assertSame([1, 2], $result['media_id']);
+        self::assertTrue($result['address_confirmed']);
+        self::assertTrue($result['second_address_confirmed']);
 
 
         $validator->validate($result);
@@ -174,7 +180,7 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('kyc_submit', $result->getType());
         self::assertSame('seqIdValue', $result->getSequenceId());
         self::assertCount(1, $result->getIdentities());
-        self::assertCount(3, $result);
+        self::assertCount(5, $result);
         self::assertSame('eventId', $result['event_id']);
         self::assertSame('userId', $result['user_merchant_id']);
         self::assertTrue($result['event_timestamp'] >= $current);
@@ -195,7 +201,7 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('kyc_submit', $result->getType());
         self::assertSame('seqIdValue', $result->getSequenceId());
         self::assertCount(0, $result->getIdentities());
-        self::assertCount(6, $result);
+        self::assertCount(8, $result);
         self::assertSame('eventId', $result['event_id']);
         self::assertSame('userId', $result['user_merchant_id']);
         self::assertSame(333, $result['event_timestamp']);

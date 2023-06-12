@@ -30,13 +30,14 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
             11,
             22,
             "group id value",
-            'links to documents'
+            'links to documents',
+            [1, 2]
         )->addBrowserData('88889', 'Test curl')->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('payout', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(24, $result);
+        self::assertCount(25, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame(5566, $result['payout_timestamp']);
         self::assertSame('payoutLargeId', $result['payout_id']);
@@ -62,6 +63,7 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Test curl', $result['user_agent']);
         self::assertSame('group id value', $result['group_id']);
         self::assertSame('links to documents', $result['links_to_documents']);
+        self::assertSame([1, 2], $result['media_id']);
         $validator->validate($result);
 
         // Minimal data

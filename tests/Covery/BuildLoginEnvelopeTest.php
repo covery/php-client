@@ -18,13 +18,14 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
             'someAffiliateId',
             "somePassword",
             "email campaign",
-            "group id value"
+            "group id value",
+            [1, 2]
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('login', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(10, $result);
+        self::assertCount(11, $result);
         self::assertSame('someUserId', $result['user_merchant_id']);
         self::assertSame(123456, $result['login_timestamp']);
         self::assertSame('foo@bar.com', $result['email']);
@@ -34,6 +35,7 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('somePassword', $result['password']);
         self::assertSame('email campaign', $result['campaign']);
         self::assertSame('group id value', $result['group_id']);
+        self::assertSame([1, 2], $result['media_id']);
 
         self::assertTrue($result['login_failed']);
         $validator->validate($result);

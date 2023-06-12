@@ -48,7 +48,8 @@ class Builder
         $idPhoneConfirmed = null,
         $email = null,
         $phone = null,
-        $groupId = null
+        $groupId = null,
+        $mediaId = null
     ) {
         $builder = new self('confirmation', $sequenceId);
         if ($timestamp === null) {
@@ -72,7 +73,9 @@ class Builder
             $isEmailConfirmed,
             $idPhoneConfirmed,
             null
-        )->addGroupId($groupId);
+        )
+            ->addGroupId($groupId)
+            ->addMediaId($mediaId);
     }
 
     /**
@@ -103,7 +106,8 @@ class Builder
         $affiliateId = null,
         $password = null,
         $campaign = null,
-        $groupId = null
+        $groupId = null,
+        $mediaId = null
     ) {
         $builder = new self('login', $sequenceId);
         if ($timestamp === null) {
@@ -134,7 +138,10 @@ class Builder
             null,
             null,
             $password
-        )->addWebsiteData(null, $trafficSource, $affiliateId, $campaign)->addGroupId($groupId);
+        )
+            ->addWebsiteData(null, $trafficSource, $affiliateId, $campaign)
+            ->addGroupId($groupId)
+            ->addMediaId($mediaId);
     }
 
     /**
@@ -179,7 +186,8 @@ class Builder
         $affiliateId = null,
         $password = null,
         $campaign = null,
-        $groupId = null
+        $groupId = null,
+        $mediaId = null
     ) {
         $builder = new self('registration', $sequenceId);
         if ($timestamp === null) {
@@ -215,7 +223,9 @@ class Builder
             null,
             null,
             $password
-        )-> addGroupId($groupId);
+        )
+            ->addGroupId($groupId)
+            ->addMediaId($mediaId);
     }
 
     /**
@@ -270,7 +280,8 @@ class Builder
         $cardExpirationMonth = null,
         $cardExpirationYear = null,
         $groupId = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self('payout', $sequenceId);
         if ($payoutTimestamp === null) {
@@ -295,7 +306,8 @@ class Builder
             )
             ->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country)
             ->addGroupId($groupId)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaId($mediaId);
     }
 
     /**
@@ -398,7 +410,8 @@ class Builder
         $mcc = null,
         $acquirerMerchantId = null,
         $groupId = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -449,7 +462,8 @@ class Builder
             ->addWebsiteData($websiteUrl, null, $affiliateId, $campaign)
             ->addIpData(null, null, $merchantIp)
             ->addGroupId($groupId)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaId($mediaId);
 
     }
 
@@ -465,6 +479,7 @@ class Builder
      * @param string|null $affiliateId
      * @param string|null $campaign
      * @param string|null $groupId
+     * @param array|null $mediaId
      * @return Builder
      */
     public static function installEvent(
@@ -476,7 +491,8 @@ class Builder
         $trafficSource = null,
         $affiliateId = null,
         $campaign = null,
-        $groupId = null
+        $groupId = null,
+        $mediaId = null
     ) {
         $builder = new self('install', $sequenceId);
         if ($installTimestamp === null) {
@@ -487,7 +503,8 @@ class Builder
             $installTimestamp
         )->addWebsiteData($websiteUrl, $trafficSource, $affiliateId, $campaign)
         ->addShortUserData(null, $userId, null, null, null, $country)
-        ->addGroupId($groupId);
+        ->addGroupId($groupId)
+        ->addMediaId($mediaId);
     }
 
     /**
@@ -534,7 +551,8 @@ class Builder
         $phone = null,
         $userId = null,
         $groupId = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self('refund', $sequenceId);
         if ($refundTimestamp === null) {
@@ -559,7 +577,8 @@ class Builder
             )
             ->addUserData($email, $userId, $phone)
             ->addGroupId($groupId)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaId($mediaId);
     }
 
     /**
@@ -660,7 +679,8 @@ class Builder
         $source = null,
         $groupId = null,
         $secondUserMerchantId = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self('transfer', $sequenceId);
         if ($eventTimestamp === null) {
@@ -724,7 +744,8 @@ class Builder
             )
             ->addProductData($productQuantity, $productName, $productDescription)
             ->addGroupId($groupId)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaId($mediaId);
     }
 
     /**
@@ -832,7 +853,10 @@ class Builder
         $issueDate = null,
         $expiryDate = null,
         $gender = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null,
+        $addressConfirmed = false,
+        $secondAddressConfirmed = false
     ) {
         $builder = new self('kyc_profile', $sequenceId);
         if ($eventTimestamp === null) {
@@ -899,7 +923,10 @@ class Builder
                 null
             )
             ->addWebsiteData($websiteUrl)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaId($mediaId)
+            ->addAddressConfirmed($addressConfirmed)
+            ->addSecondAddressConfirmed($secondAddressConfirmed);
     }
 
     /**
@@ -998,6 +1025,7 @@ class Builder
      * @param null $refererUrl
      * @param null $originUrl
      * @param string|null $linksToDocuments
+     * @param null $mediaId
      * @return static
      */
     public static function profileUpdateEvent(
@@ -1095,7 +1123,8 @@ class Builder
         $plugins = null,
         $refererUrl = null,
         $originUrl = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self(self::EVENT_PROFILE_UPDATE, $sequenceId);
 
@@ -1195,7 +1224,8 @@ class Builder
                 $refererUrl,
                 $originUrl
             )
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaId($mediaId);
 
     }
 
@@ -1289,7 +1319,10 @@ class Builder
         $userAgent = null,
         $plugins = null,
         $refererUrl = null,
-        $originUrl = null
+        $originUrl = null,
+        $mediaId = null,
+        $addressConfirmed = false,
+        $secondAddressConfirmed = false
     ) {
         $builder = new self('kyc_submit', $sequenceId);
         if ($eventTimestamp === null) {
@@ -1371,7 +1404,10 @@ class Builder
                 null,
                 $userId
             )
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaId($mediaId)
+            ->addAddressConfirmed($addressConfirmed)
+            ->addSecondAddressConfirmed($secondAddressConfirmed);
     }
 
     /**
@@ -1625,7 +1661,8 @@ class Builder
         $userMerchantId = null,
         $websiteUrl = null,
         $productUrl = null,
-        $productImageUrl = null
+        $productImageUrl = null,
+        $mediaId = null
     ) {
         $envelopeType = 'order_item';
         $builder = new self($envelopeType, $sequenceId);
@@ -1694,7 +1731,8 @@ class Builder
                 $websiteUrl,
                 null,
                 $affiliateId
-            );
+            )
+            ->addMediaId($mediaId);
     }
 
     /**
@@ -1792,7 +1830,8 @@ class Builder
         $userMerchantId = null,
         $websiteUrl = null,
         $productUrl = null,
-        $productImageUrl = null
+        $productImageUrl = null,
+        $mediaId = null
     ) {
         $envelopeType = 'order_submit';
         $builder = new self($envelopeType, $sequenceId);
@@ -1856,7 +1895,8 @@ class Builder
                 $websiteUrl,
                 null,
                 $affiliateId
-            );
+            )
+            ->addMediaId($mediaId);
     }
 
     /**
@@ -3603,6 +3643,54 @@ class Builder
             throw new \InvalidArgumentException('Group id must be string');
         }
         $this->replace('group_id', $groupId);
+
+        return $this;
+    }
+
+    /**
+     * Provides media id value to envelope
+     *
+     * @param array|null $mediaId
+     * @return $this
+     */
+    public function addMediaId($mediaId = null)
+    {
+        if ($mediaId !== null && !is_array($mediaId)) {
+            throw new \InvalidArgumentException('Media id must be string');
+        }
+        $this->replace('media_id', $mediaId);
+
+        return $this;
+    }
+
+    /**
+     * Provides address confirmed value to envelope
+     *
+     * @param bool $addressConfirmed
+     * @return $this
+     */
+    public function addAddressConfirmed($addressConfirmed = false)
+    {
+        if (!is_bool($addressConfirmed)) {
+            throw new \InvalidArgumentException('Address Confirmed must be bool');
+        }
+        $this->replace('address_confirmed', $addressConfirmed);
+
+        return $this;
+    }
+
+    /**
+     * Provides address confirmed value to envelope
+     *
+     * @param bool $secondAddressConfirmed
+     * @return $this
+     */
+    public function addSecondAddressConfirmed($secondAddressConfirmed = false)
+    {
+        if (!is_bool($secondAddressConfirmed)) {
+            throw new \InvalidArgumentException('Second Address Confirmed must be bool');
+        }
+        $this->replace('second_address_confirmed', $secondAddressConfirmed);
 
         return $this;
     }

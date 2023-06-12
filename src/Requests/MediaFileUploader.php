@@ -15,11 +15,11 @@ class MediaFileUploader extends Request
 {
     /**
      * @param $url
-     * @param $filePath
+     * @param $file
      */
-    public function __construct($url, $filePath)
+    public function __construct($url, $file)
     {
-        $resourceFileText = file_get_contents($filePath);
+        $resourceBinary = stream_get_contents($file);
 
         parent::__construct(
             'PUT',
@@ -27,7 +27,7 @@ class MediaFileUploader extends Request
             [
                 'Content-Type' => 'application/octet-stream',
             ],
-            $resourceFileText
+            $resourceBinary
         );
     }
 }

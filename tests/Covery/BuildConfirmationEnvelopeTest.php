@@ -15,13 +15,14 @@ class BuildConfirmationEnvelopeTest extends \PHPUnit_Framework_TestCase
             false,
             null,
             null,
-            "group id value"
+            "group id value",
+            [1, 2]
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('confirmation', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('sequenceIdSome', $result->getSequenceId());
-        self::assertCount(5, $result);
+        self::assertCount(6, $result);
         self::assertSame('ababagalamaga', $result['user_merchant_id']);
         self::assertSame(42342352, $result['confirmation_timestamp']);
         self::assertTrue($result['email_confirmed']);
@@ -29,6 +30,7 @@ class BuildConfirmationEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertArrayNotHasKey('email', $result);
         self::assertArrayNotHasKey('phone', $result);
         self::assertSame('group id value', $result['group_id']);
+        self::assertSame([1, 2], $result['media_id']);
         $validator->validate($result);
 
         // Minimal data

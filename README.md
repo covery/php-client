@@ -127,6 +127,13 @@ use Covery\Client\Facade;
 $statusCode = \Covery\Client\Facade::uploadMediaFile($mediaUrl, $filePath);
 ```
 
+Account Configuration Status event example:
+```php
+use Covery\Client\Facade;
+
+$accountConfigurationStatus = Facade::getAccountConfigurationStatus();
+```
+
 # Tech Details
 
 <a name="facade"></a>
@@ -216,7 +223,7 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
-* `1.3.15` Added MediaConnection method. Added UploadMediaFile method
+* `1.3.15` Added MediaConnection method. Added UploadMediaFile method. Added optional `media_id` field for install, registration event
 * `1.3.14` Added MediaStorage method
 * `1.3.13` Added StaleDataException exception 
 * `1.3.12` Added sendCardId method
