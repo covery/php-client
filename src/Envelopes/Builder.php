@@ -1025,7 +1025,7 @@ class Builder
      * @param null $refererUrl
      * @param null $originUrl
      * @param string|null $linksToDocuments
-     * @param null $mediaId
+     * @param array|null $mediaId
      * @return static
      */
     public static function profileUpdateEvent(

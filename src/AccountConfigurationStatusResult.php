@@ -12,7 +12,7 @@ namespace Covery\Client;
 class AccountConfigurationStatusResult
 {
     /**
-     * @var string
+     * @var array
      */
     private $actualEventTypes;
     /**

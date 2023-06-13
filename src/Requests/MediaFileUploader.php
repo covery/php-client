@@ -5,7 +5,7 @@ namespace Covery\Client\Requests;
 use GuzzleHttp\Psr7\Request;
 
 /**
- * Class MediaFileUploaderRequest
+ * Class MediaFileUploader
  *
  * Upload Media file
  *

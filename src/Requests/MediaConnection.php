@@ -24,7 +24,7 @@ class MediaConnection extends Request
         parent::__construct(
             $method,
             '/api/mediaConnection',
-            array(),
+            [],
             json_encode($media->toArray())
         );
     }
