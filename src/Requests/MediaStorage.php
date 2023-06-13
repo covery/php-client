@@ -23,7 +23,7 @@ class MediaStorage extends Request
         parent::__construct(
             'POST',
             '/api/mediaStorage',
-            array(),
+            [],
             json_encode($media->toArray())
         );
     }
