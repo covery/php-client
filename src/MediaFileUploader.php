@@ -4,6 +4,7 @@ namespace Covery\Client;
 
 use Covery\Client\Transport\Curl;
 use Covery\Client\Requests\MediaFileUploader as MediaFileUploaderRequest;
+use Psr\Http\Message\StreamInterface;
 
 class MediaFileUploader
 {
@@ -11,8 +12,9 @@ class MediaFileUploader
      * @var string
      */
     private $url;
+
     /**
-     * @var string
+     * @var StreamInterface
      */
     private $file;
 
@@ -22,8 +24,8 @@ class MediaFileUploader
             throw new \InvalidArgumentException('Url must be string');
         }
 
-        if (!is_resource($file)) {
-            throw new \InvalidArgumentException('File must be resource');
+        if (!($file instanceof StreamInterface)) {
+            throw new \InvalidArgumentException('File must be instance of StreamInterface');
         }
 
         $this->url = $url;
