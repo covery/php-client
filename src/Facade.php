@@ -82,22 +82,6 @@ class Facade
     }
 
     /**
-     * Sends request to Covery and returns access level, associated with
-     * used credentials
-     *
-     * This method can be used for Covery health check and availability
-     * On any problem (network, credentials, server side) this method
-     * will throw an exception
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    public static function ping()
-    {
-        return self::getClient()->ping();
-    }
-
-    /**
      * Sends envelope to Covery and returns it's ID on Covery side
      * Before sending, validation is performed
      *
@@ -189,15 +173,15 @@ class Facade
      * Upload Media file and returns status code
      *
      * @param $url
-     * @param $filePath
+     * @param $file
      * @return int
      * @throws Exception
      * @throws IoException
      * @throws TimeoutException
      */
-    public static function uploadMediaFile($url, $filePath)
+    public static function uploadMediaFile($url, $file)
     {
-        $mediaFileUploader = new MediaFileUploader($url, $filePath);
+        $mediaFileUploader = new MediaFileUploader($url, $file);
 
         return $mediaFileUploader->upload();
     }

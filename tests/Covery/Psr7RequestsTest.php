@@ -2,15 +2,6 @@
 
 class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
 {
-    public function testPing()
-    {
-        $req = new \Covery\Client\Requests\Ping();
-        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
-        self::assertSame('', $req->getBody()->getContents());
-        self::assertSame('POST', $req->getMethod());
-        self::assertSame('/api/ping', strval($req->getUri()));
-    }
-
     public function testEvent()
     {
         $noIdentities = new \Covery\Client\Envelopes\Builder('foo', 'bar');

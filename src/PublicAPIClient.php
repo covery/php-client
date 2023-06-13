@@ -8,7 +8,6 @@ use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\KycProof;
 use Covery\Client\Requests\MediaStorage;
-use Covery\Client\Requests\Ping;
 use Covery\Client\Requests\Postback;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -178,27 +177,6 @@ class PublicAPIClient
         }
 
         return $data;
-    }
-
-    /**
-     * Sends request to Covery and returns access level, associated with
-     * used credentials
-     *
-     * This method can be used for Covery health check and availability
-     * On any problem (network, credentials, server side) this method
-     * will throw an exception
-     *
-     * @return string
-     * @throws Exception
-     */
-    public function ping()
-    {
-        $data = $this->readJson($this->send(new Ping()));
-        if (!is_array($data) || !isset($data['level'])) {
-            throw new Exception("Malformed response");
-        }
-
-        return $data['level'];
     }
 
     /**
