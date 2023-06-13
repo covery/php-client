@@ -108,8 +108,8 @@ class AccountConfigurationStatusResult
         $dowJonesDataBaseDate,
         $kycProvider
     ) {
-        if (!is_string($actualEventTypes)) {
-            throw new \InvalidArgumentException("Actual Event Types must be string");
+        if (!is_array($actualEventTypes)) {
+            throw new \InvalidArgumentException("Actual Event Types must be array");
         }
         if (!is_string($baseCurrency)) {
             throw new \InvalidArgumentException("Base Currency must be string");
@@ -147,13 +147,12 @@ class AccountConfigurationStatusResult
         if (!is_bool($amlServiceStatus)) {
             throw new \InvalidArgumentException("Aml Service Status must be string");
         }
-        if (!is_string($dowJonesDataBaseDate)) {
-            throw new \InvalidArgumentException("Dow Jones Data Base Date must be string");
+        if (!is_int($dowJonesDataBaseDate)) {
+            throw new \InvalidArgumentException("Dow Jones Data Base Date must be integer");
         }
         if (!is_string($kycProvider)) {
             throw new \InvalidArgumentException("Kyc Provider must be string");
         }
-
 
         $this->actualEventTypes = $actualEventTypes;
         $this->baseCurrency = $baseCurrency;
@@ -173,7 +172,7 @@ class AccountConfigurationStatusResult
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getActualEventTypes()
     {
@@ -277,7 +276,7 @@ class AccountConfigurationStatusResult
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getDowJonesDataBaseDate()
     {
