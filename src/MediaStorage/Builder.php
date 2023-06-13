@@ -8,7 +8,7 @@ class Builder
     /**
      * @var array
      */
-    private $data = array();
+    private $data = [];
     /**
      * @var string
      */
