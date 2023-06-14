@@ -9,28 +9,8 @@ namespace Covery\Client;
  *
  * @package Covery\Client
  */
-interface MediaStorageInterface extends \IteratorAggregate, \ArrayAccess, \Countable
+interface MediaStorageInterface extends \ArrayAccess, \Countable
 {
-    /**
-     * @return string
-     */
-    public function getContentType();
-
-    /**
-     * @return string
-     */
-    public function getContentDescription();
-
-    /**
-     * @return @sting
-     */
-    public function getFileName();
-
-    /**
-     * @return @bool
-     */
-    public function getOCR();
-
     /**
      * @return array
      */

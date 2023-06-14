@@ -8,14 +8,6 @@ class Builder
      * @var array
      */
     private $data = [];
-    /**
-     * @var int
-     */
-    private $requestId;
-    /**
-     * @var array
-     */
-    private $mediaId;
 
     /**
      * Returns builder for media request
@@ -48,9 +40,6 @@ class Builder
             throw new \InvalidArgumentException('Media Id must be array');
         }
 
-        $this->requestId = $requestId;
-        $this->mediaId = $mediaId;
-
         $this->replace('request_id', $requestId);
         $this->replace('media_id', $mediaId);
 
@@ -65,8 +54,6 @@ class Builder
     public function build()
     {
         return new MediaConnection(
-            $this->requestId,
-            $this->mediaId,
             array_filter($this->data, function ($data) {
                 return $data !== null;
             })

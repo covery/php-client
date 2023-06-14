@@ -2,6 +2,8 @@
 
 namespace Covery\Client\MediaStorage;
 
+use Covery\Client\ContentDescription;
+use Covery\Client\ContentType;
 
 class Builder
 {
@@ -9,22 +11,6 @@ class Builder
      * @var array
      */
     private $data = [];
-    /**
-     * @var string
-     */
-    private $contentType;
-    /**
-     * @var string
-     */
-    private $contentDescription;
-    /**
-     * @var string
-     */
-    private $fileName;
-    /**
-     * @var bool
-     */
-    private $ocr;
 
     /**
      * Returns builder for media request
@@ -35,7 +21,7 @@ class Builder
      * @param $ocr
      * @return Builder
      */
-    public static function mediaStorageEvent($contentType, $contentDescription, $fileName = '', $ocr = false)
+    public static function mediaStorageEvent($contentType, $contentDescription, $fileName = null, $ocr = false)
     {
         $builder = new self();
 
@@ -52,25 +38,40 @@ class Builder
      * @param $ocr
      * @return Builder
      */
-    public function addMediaStorageData($contentType, $contentDescription, $fileName = '', $ocr = false)
+    public function addMediaStorageData($contentType, $contentDescription, $fileName = null, $ocr = false)
     {
-        if (!is_string($contentType)) {
-            throw new \InvalidArgumentException('Content type must be string');
+        if (!is_string($contentType) || strlen($contentType) > 255) {
+            throw new \InvalidArgumentException(
+                'Content type must be string and contain no more than 255 characters'
+            );
         }
-        if (!is_string($contentDescription)) {
-            throw new \InvalidArgumentException('Content Description must be string');
+        if (!in_array($contentType, ContentType::getAll())) {
+            throw new \InvalidArgumentException('Content type must be one of the types: ' . implode(
+                    ', ',
+                    ContentType::getAll()
+                )
+            );
         }
-        if (!is_string($fileName)) {
-            throw new \InvalidArgumentException('File name must be string');
+        if (!is_string($contentDescription) || strlen($contentDescription) > 255) {
+            throw new \InvalidArgumentException(
+                'Content Description must be string and contain no more than 255 characters'
+            );
+        }
+        if (!in_array($contentDescription, ContentDescription::getAll())) {
+            throw new \InvalidArgumentException('Content type must be one of the types: ' . implode(
+                    ', ',
+                    ContentType::getAll()
+                )
+            );
+        }
+        if ($fileName && !is_string($fileName) || strlen($fileName) > 255) {
+            throw new \InvalidArgumentException(
+                'File name must be string and contain no more than 255 characters'
+            );
         }
         if (!is_bool($ocr)) {
             throw new \InvalidArgumentException('Ocr must be bool');
         }
-
-        $this->contentType = $contentType;
-        $this->contentDescription = $contentDescription;
-        $this->fileName = $fileName;
-        $this->ocr = $ocr;
 
         $this->replace('content_type', $contentType);
         $this->replace('content_description', $contentDescription);
@@ -88,10 +89,6 @@ class Builder
     public function build()
     {
         return new MediaStorage(
-            $this->contentType,
-            $this->contentDescription,
-            $this->fileName,
-            $this->ocr,
             array_filter($this->data, function ($data) {
                 return $data !== null;
             })

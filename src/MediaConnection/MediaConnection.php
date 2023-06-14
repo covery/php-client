@@ -7,16 +7,6 @@ use Covery\Client\MediaConnectionInterface;
 class MediaConnection implements MediaConnectionInterface
 {
     /**
-     * @var int
-     */
-    private $requestId;
-
-    /**
-     * @var array
-     */
-    private $mediaId;
-
-    /**
      * @var array
      */
     private $data;
@@ -24,17 +14,8 @@ class MediaConnection implements MediaConnectionInterface
     /**
      * MediaConnection constructor.
      */
-    public function __construct($requestId, $mediaId = [], $data = [])
+    public function __construct($data = [])
     {
-        if (!is_int($requestId)) {
-            throw new \InvalidArgumentException('Request Id must be string');
-        }
-        if (!is_array($mediaId)) {
-            throw new \InvalidArgumentException('Media Id must be array');
-        }
-
-        $this->requestId = $requestId;
-        $this->mediaId = $mediaId;
         $this->data = $data;
     }
 
@@ -90,29 +71,5 @@ class MediaConnection implements MediaConnectionInterface
         if ($this->offsetExists($offset)) {
             unset($this->data[$offset]);
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->data);
-    }
-
-    /**
-     * @return int
-     */
-    public function getRequestId()
-    {
-        return $this->requestId;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMediaId()
-    {
-        return $this->mediaId;
     }
 }

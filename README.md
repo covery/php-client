@@ -105,7 +105,7 @@ Media Storage event example:
 use Covery\Client\MediaStorage\Builder;
 use Covery\Client\Facade;
 
-$event = Builder::mediaStorageEvent('image/jpeg', 'personal_photo', '', false)->build();
+$event = Builder::mediaStorageEvent(\Covery\Client\ContentType::JPEG, \Covery\Client\ContentDescription::GENERAL_DOCUMENT, null, false)->build();
 $result = Facade::sendMediaStorage($event);
 ```
 
