@@ -19,7 +19,6 @@ class MediaFileUploader extends Request
      */
     public function __construct($url, $file)
     {
-
         parent::__construct(
             'PUT',
             $url,
