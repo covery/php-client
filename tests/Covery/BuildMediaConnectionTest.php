@@ -24,7 +24,7 @@ class BuildMediaConnectionTest extends \PHPUnit_Framework_TestCase
 
     public function testEventExpectsInvalidArgumentException()
     {
-        $requestId = 'text';
+        $requestId = -1;
         $mediaId = -1;
 
         self::setExpectedException('InvalidArgumentException');
