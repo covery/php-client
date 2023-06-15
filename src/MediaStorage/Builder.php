@@ -40,7 +40,10 @@ class Builder
      */
     public function addMediaStorageData($contentType, $contentDescription, $fileName = null, $ocr = false)
     {
-        if (!is_string($contentType) || empty($contentType)) {
+        if (!is_string($contentType)) {
+            throw new \InvalidArgumentException('Content type must be a string');
+        }
+        if (empty($contentType)) {
             throw new \InvalidArgumentException('Content type is empty');
         }
         if (!in_array($contentType, ContentType::getAll())) {
@@ -51,8 +54,11 @@ class Builder
             );
         }
 
-        if (!is_string($contentDescription) || empty($contentDescription)) {
+        if (!is_string($contentDescription)) {
             throw new \InvalidArgumentException('Content description must be string');
+        }
+        if (empty($contentDescription)) {
+            throw new \InvalidArgumentException('Content description is empty');
         }
         if (!in_array($contentDescription, ContentDescription::getAll())) {
             throw new \InvalidArgumentException('Content description must be one of the types: ' . implode(
@@ -62,6 +68,7 @@ class Builder
             );
         }
 
+        //fileName is optional field
         if (!empty($fileName) && !is_string($fileName)) {
             throw new \InvalidArgumentException('File name is empty');
         }
@@ -72,6 +79,7 @@ class Builder
         if (!is_bool($ocr)) {
             throw new \InvalidArgumentException('OCR must be boolean');
         }
+        //ocr is optional field
         if ($ocr && !in_array($contentType, ContentType::getOCRAllowed())) {
             throw new \InvalidArgumentException('Allowed Content type for OCR: ' . implode(
                     ', ',
