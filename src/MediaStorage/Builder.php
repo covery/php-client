@@ -72,7 +72,7 @@ class Builder
             if (!is_string($fileName)) {
                 throw new \InvalidArgumentException('File name is empty');
             }
-            if(strlen($fileName) > 255) {
+            if (strlen($fileName) > 255) {
                 throw new \InvalidArgumentException('File name must contain no more than 255 characters');
             }
         }

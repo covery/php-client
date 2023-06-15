@@ -33,6 +33,7 @@ class BuildMediaConnectionTest extends \PHPUnit_Framework_TestCase
             $mediaId
         )->build();
     }
+
     public function testEventExpectsInvalidArgumentExceptionCheckZeroFields()
     {
         $requestId = 0;
