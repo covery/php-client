@@ -33,7 +33,10 @@ class Builder
      */
     public function addConnectionData($requestId, $mediaId)
     {
-        if (!is_int($requestId) && $requestId < 0) {
+        if (!is_int($requestId)) {
+            throw new \InvalidArgumentException('Request Id must be integer');
+        }
+        if ($requestId <= 0) {
             throw new \InvalidArgumentException('Request Id must be positive integer');
         }
         if (!is_array($mediaId)) {
@@ -83,7 +86,7 @@ class Builder
     private function isListOfPositiveInt(array $ids)
     {
         foreach ($ids as $id) {
-            if (!is_int($id) || $id < 0) {
+            if (!is_int($id) || $id <= 0) {
                 return false;
             }
         }
