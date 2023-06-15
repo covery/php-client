@@ -109,15 +109,6 @@ $event = Builder::mediaStorageEvent(\Covery\Client\ContentType::JPEG, \Covery\Cl
 $result = Facade::sendMediaStorage($event);
 ```
 
-Media Connection event example:
-```php
-use Covery\Client\MediaConnection\Builder;
-use Covery\Client\Facade;
-
-$event = Builder::mediaConnectionEvent(1, 1)->build();
-$result = Facade::sendMediaConnection($event);
-```
-
 Attach media connection event example:
 ```php
 use Covery\Client\MediaConnection\Builder;
