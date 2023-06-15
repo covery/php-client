@@ -58,6 +58,8 @@ class BuildMediaStorageTest extends \PHPUnit_Framework_TestCase
             null,
             false
         )->build();
+
+        self::assertSame($mediaStorage['content_type'], \Covery\Client\ContentType::PNG);
     }
 
     /**
