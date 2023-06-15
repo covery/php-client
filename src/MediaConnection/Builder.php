@@ -33,7 +33,7 @@ class Builder
      */
     public function addConnectionData($requestId, $mediaId)
     {
-        if (!is_int($requestId) && $requestId > 0) {
+        if (!is_int($requestId) && $requestId < 0) {
             throw new \InvalidArgumentException('Request Id must be positive integer');
         }
         if (!is_array($mediaId)) {
