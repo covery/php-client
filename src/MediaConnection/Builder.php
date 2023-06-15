@@ -33,11 +33,14 @@ class Builder
      */
     public function addConnectionData($requestId, $mediaId)
     {
-        if (!is_int($requestId)) {
-            throw new \InvalidArgumentException('Request Id must be integer');
+        if (!is_int($requestId) && $requestId > 0) {
+            throw new \InvalidArgumentException('Request Id must be positive integer');
         }
         if (!is_array($mediaId)) {
             throw new \InvalidArgumentException('Media Id must be array');
+        }
+        if (!$this->isListOfPositiveInt($mediaId)) {
+            throw new \InvalidArgumentException('Media Id must be list of positive int');
         }
 
         $this->replace('request_id', $requestId);
@@ -71,5 +74,20 @@ class Builder
         if ($value !== null && $value !== '' && $value !== 0 && $value !== 0.0) {
             $this->data[$key] = $value;
         }
+    }
+
+    /**
+     * @param array $ids
+     * @return bool
+     */
+    private function isListOfPositiveInt(array $ids)
+    {
+        foreach ($ids as $id) {
+            if (!is_int($id) || $id < 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

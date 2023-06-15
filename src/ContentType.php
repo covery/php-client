@@ -16,4 +16,13 @@ class ContentType
             self::GIF,
         ];
     }
+
+    public static function getOCRAllowed()
+    {
+        return [
+            self::JPEG,
+            self::PNG,
+            self::GIF,
+        ];
+    }
 }

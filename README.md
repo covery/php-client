@@ -118,6 +118,24 @@ $event = Builder::mediaConnectionEvent(1, 1)->build();
 $result = Facade::sendMediaConnection($event);
 ```
 
+Attach media connection event example:
+```php
+use Covery\Client\MediaConnection\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::mediaConnectionEvent(1, [1])->build();
+$result = Facade::attachMediaConnection($event);
+```
+
+Detach media connection event example:
+```php
+use Covery\Client\MediaConnection\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::mediaConnectionEvent(1, [1])->build();
+$result = Facade::detachMediaConnection($event);
+```
+
 Media file upload example:
 ```php
 use Covery\Client\Facade;

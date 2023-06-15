@@ -156,17 +156,29 @@ class Facade
     }
 
     /**
-     * Send Media Connection and return status code
+     * Attach media connection and return status code
      *
      * @param MediaConnectionInterface $mediaConnection
-     * @param $method
      * @return int
      * @throws Exception
      * @throws IoException
      */
-    public static function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method = 'PUT')
+    public static function attachMediaConnection(MediaConnectionInterface $mediaConnection)
     {
-        return self::getClient()->sendMediaConnection($mediaConnection, $method);
+        return self::getClient()->attachMediaConnection($mediaConnection);
+    }
+
+    /**
+     * Detach media connection and return status code
+     *
+     * @param MediaConnectionInterface $mediaConnection
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function detachMediaConnection(MediaConnectionInterface $mediaConnection)
+    {
+        return self::getClient()->detachMediaConnection($mediaConnection);
     }
 
     /**

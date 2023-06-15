@@ -352,7 +352,29 @@ class PublicAPIClient
     }
 
     /**
-     * Send Media Connection and return status code
+     * @param MediaConnectionInterface $mediaConnection
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function attachMediaConnection(MediaConnectionInterface $mediaConnection)
+    {
+        return $this->sendMediaConnection($mediaConnection, 'PUT');
+    }
+
+    /**
+     * @param MediaConnectionInterface $mediaConnection
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function detachMediaConnection(MediaConnectionInterface $mediaConnection)
+    {
+        return $this->sendMediaConnection($mediaConnection, 'DELETE');
+    }
+
+    /**
+     * Send media connection and return status code
      *
      * @param MediaConnectionInterface $mediaConnection
      * @param $method
@@ -360,7 +382,7 @@ class PublicAPIClient
      * @throws Exception
      * @throws IoException
      */
-    public function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method)
+    private function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method)
     {
         $this->readJson($this->send(new \Covery\Client\Requests\MediaConnection($mediaConnection, $method)));
         if ($this->responseStatusCode >= 300) {

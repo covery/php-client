@@ -40,10 +40,8 @@ class Builder
      */
     public function addMediaStorageData($contentType, $contentDescription, $fileName = null, $ocr = false)
     {
-        if (!is_string($contentType) || strlen($contentType) > 255) {
-            throw new \InvalidArgumentException(
-                'Content type must be string and contain no more than 255 characters'
-            );
+        if (!is_string($contentType) || empty($contentType)) {
+            throw new \InvalidArgumentException('Content type is empty');
         }
         if (!in_array($contentType, ContentType::getAll())) {
             throw new \InvalidArgumentException('Content type must be one of the types: ' . implode(
@@ -52,25 +50,34 @@ class Builder
                 )
             );
         }
-        if (!is_string($contentDescription) || strlen($contentDescription) > 255) {
-            throw new \InvalidArgumentException(
-                'Content Description must be string and contain no more than 255 characters'
-            );
+
+        if (!is_string($contentDescription) || empty($contentDescription)) {
+            throw new \InvalidArgumentException('Content description must be string');
         }
         if (!in_array($contentDescription, ContentDescription::getAll())) {
-            throw new \InvalidArgumentException('Content type must be one of the types: ' . implode(
+            throw new \InvalidArgumentException('Content description must be one of the types: ' . implode(
                     ', ',
-                    ContentType::getAll()
+                    ContentDescription::getAll()
                 )
             );
         }
-        if ($fileName && !is_string($fileName) || strlen($fileName) > 255) {
-            throw new \InvalidArgumentException(
-                'File name must be string and contain no more than 255 characters'
-            );
+
+        if (!is_string($fileName) || empty($fileName)) {
+            throw new \InvalidArgumentException('File name is empty');
         }
+        if (strlen($fileName) > 255) {
+            throw new \InvalidArgumentException('File name must contain no more than 255 characters');
+        }
+
         if (!is_bool($ocr)) {
-            throw new \InvalidArgumentException('Ocr must be bool');
+            throw new \InvalidArgumentException('OCR must be boolean');
+        }
+        if ($ocr && !in_array($contentType, ContentType::getOCRAllowed())) {
+            throw new \InvalidArgumentException('Allowed Content type for OCR: ' . implode(
+                    ', ',
+                    ContentType::getOCRAllowed()
+                )
+            );
         }
 
         $this->replace('content_type', $contentType);
