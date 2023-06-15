@@ -68,18 +68,18 @@ class Builder
             );
         }
 
-        //fileName is optional field
-        if (!empty($fileName) && !is_string($fileName)) {
-            throw new \InvalidArgumentException('File name is empty');
-        }
-        if (!empty($fileName) && strlen($fileName) > 255) {
-            throw new \InvalidArgumentException('File name must contain no more than 255 characters');
+        if (!empty($fileName)) {
+            if (!is_string($fileName)) {
+                throw new \InvalidArgumentException('File name is empty');
+            }
+            if(strlen($fileName) > 255) {
+                throw new \InvalidArgumentException('File name must contain no more than 255 characters');
+            }
         }
 
         if (!is_bool($ocr)) {
             throw new \InvalidArgumentException('OCR must be boolean');
         }
-        //ocr is optional field
         if ($ocr && !in_array($contentType, ContentType::getOCRAllowed())) {
             throw new \InvalidArgumentException('Allowed Content type for OCR: ' . implode(
                     ', ',
