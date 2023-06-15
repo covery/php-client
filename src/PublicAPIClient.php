@@ -13,6 +13,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Covery\Client\Requests\MediaFileUploader as MediaFileUploaderRequest;
 
 class PublicAPIClient
 {
@@ -371,6 +372,25 @@ class PublicAPIClient
     public function detachMediaConnection(MediaConnectionInterface $mediaConnection)
     {
         return $this->sendMediaConnection($mediaConnection, 'DELETE');
+    }
+
+    /**
+     * Upload Media file and returns status code
+     *
+     * @param MediaFileUploaderInterface $mediaFileUploader
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function uploadMediaFile(MediaFileUploaderInterface $mediaFileUploader)
+    {
+        $this->send(new MediaFileUploaderRequest($mediaFileUploader));
+
+        if ($this->responseStatusCode >= 300) {
+            throw new Exception("Malformed response");
+        }
+
+        return $this->responseStatusCode;
     }
 
     /**

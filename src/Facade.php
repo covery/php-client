@@ -184,18 +184,14 @@ class Facade
     /**
      * Upload Media file and returns status code
      *
-     * @param $url
-     * @param $file
+     * @param MediaFileUploaderInterface $mediaFileUploader
      * @return int
      * @throws Exception
      * @throws IoException
-     * @throws TimeoutException
      */
-    public static function uploadMediaFile($url, $file)
+    public static function uploadMediaFile(MediaFileUploaderInterface $mediaFileUploader)
     {
-        $mediaFileUploader = new MediaFileUploader($url, $file);
-
-        return $mediaFileUploader->upload();
+        return self::getClient()->uploadMediaFile($mediaFileUploader);
     }
 
     /**

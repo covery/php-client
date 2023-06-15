@@ -2,6 +2,7 @@
 
 namespace Covery\Client\Requests;
 
+use Covery\Client\MediaFileUploaderInterface;
 use GuzzleHttp\Psr7\Request;
 
 /**
@@ -14,18 +15,17 @@ use GuzzleHttp\Psr7\Request;
 class MediaFileUploader extends Request
 {
     /**
-     * @param $url
-     * @param $file
+     * @param MediaFileUploaderInterface $mediaFileUploader
      */
-    public function __construct($url, $file)
+    public function __construct(MediaFileUploaderInterface $mediaFileUploader)
     {
         parent::__construct(
             'PUT',
-            $url,
+            $mediaFileUploader['url'],
             [
                 'Content-Type' => 'application/octet-stream',
             ],
-            $file
+            $mediaFileUploader['file']
         );
     }
 }
