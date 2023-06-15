@@ -50,6 +50,15 @@ class BuildMediaStorageTest extends \PHPUnit_Framework_TestCase
             false
         )->build();
     }
+    public function testEmptyFileNameIsValidString()
+    {
+        $mediaStorage = \Covery\Client\MediaStorage\Builder::mediaStorageEvent(
+            \Covery\Client\ContentType::PNG,
+            \Covery\Client\ContentDescription::GENERAL_DOCUMENT,
+            null,
+            false
+        )->build();
+    }
 
     /**
      * @param int $length
