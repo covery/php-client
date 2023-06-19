@@ -75,7 +75,7 @@ class Builder
             null
         )
             ->addGroupId($groupId)
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -141,7 +141,7 @@ class Builder
         )
             ->addWebsiteData(null, $trafficSource, $affiliateId, $campaign)
             ->addGroupId($groupId)
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -225,7 +225,7 @@ class Builder
             $password
         )
             ->addGroupId($groupId)
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -307,7 +307,7 @@ class Builder
             ->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -463,7 +463,7 @@ class Builder
             ->addIpData(null, null, $merchantIp)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
 
     }
 
@@ -504,7 +504,7 @@ class Builder
         )->addWebsiteData($websiteUrl, $trafficSource, $affiliateId, $campaign)
         ->addShortUserData(null, $userId, null, null, null, $country)
         ->addGroupId($groupId)
-        ->addMediaId($mediaId);
+        ->addMediaData($mediaId);
     }
 
     /**
@@ -578,7 +578,7 @@ class Builder
             ->addUserData($email, $userId, $phone)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -745,7 +745,7 @@ class Builder
             ->addProductData($productQuantity, $productName, $productDescription)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -801,6 +801,9 @@ class Builder
      * @param int|null $expiryDate
      * @param string|null $gender
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
+     * @param bool|null $addressConfirmed
+     * @param bool|null $secondAddressConfirmed
      * @return Builder
      */
     public static function kycProfileEvent(
@@ -855,8 +858,8 @@ class Builder
         $gender = null,
         $linksToDocuments = null,
         $mediaId = null,
-        $addressConfirmed = false,
-        $secondAddressConfirmed = false
+        $addressConfirmed = null,
+        $secondAddressConfirmed = null
     ) {
         $builder = new self('kyc_profile', $sequenceId);
         if ($eventTimestamp === null) {
@@ -895,7 +898,19 @@ class Builder
                 $employmentStatus,
                 $sourceOfFunds,
                 $issueDate,
-                $expiryDate
+                $expiryDate,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $addressConfirmed,
+                $secondAddressConfirmed
             )
             ->addUserData(
                 $email,
@@ -924,9 +939,7 @@ class Builder
             )
             ->addWebsiteData($websiteUrl)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaId($mediaId)
-            ->addAddressConfirmed($addressConfirmed)
-            ->addSecondAddressConfirmed($secondAddressConfirmed);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -1225,7 +1238,7 @@ class Builder
                 $originUrl
             )
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
 
     }
 
@@ -1321,8 +1334,8 @@ class Builder
         $refererUrl = null,
         $originUrl = null,
         $mediaId = null,
-        $addressConfirmed = false,
-        $secondAddressConfirmed = false
+        $addressConfirmed = null,
+        $secondAddressConfirmed = null
     ) {
         $builder = new self('kyc_submit', $sequenceId);
         if ($eventTimestamp === null) {
@@ -1398,16 +1411,16 @@ class Builder
                 $userAgent,
                 $plugins,
                 $refererUrl,
-                $originUrl
+                $originUrl,
+                $addressConfirmed,
+                $secondAddressConfirmed
             )
             ->addUserData(
                 null,
                 $userId
             )
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaId($mediaId)
-            ->addAddressConfirmed($addressConfirmed)
-            ->addSecondAddressConfirmed($secondAddressConfirmed);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -1419,6 +1432,7 @@ class Builder
      * @param string $verificationMode
      * @param string $verificationSource
      * @param bool $consent
+     * @param array $mediaId
      * @param null|int $eventTimestamp
      * @param bool|null $allowNaOcrInputs
      * @param bool|null $declineOnSingleStep
@@ -1447,6 +1461,7 @@ class Builder
         $verificationMode,
         $verificationSource,
         $consent,
+        $mediaId,
         $eventTimestamp = null,
         $allowNaOcrInputs = null,
         $declineOnSingleStep = null,
@@ -1515,8 +1530,11 @@ class Builder
                 $kycLanguage,
                 $redirectUrl,
                 $numberOfDocuments,
-                $allowedDocumentFormat
+                $allowedDocumentFormat,
+                null,
+                null
             )
+            ->addMediaData($mediaId)
             ->addUserData(
                 $email,
                 $userMerchantId,
@@ -1732,7 +1750,7 @@ class Builder
                 null,
                 $affiliateId
             )
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -1896,7 +1914,7 @@ class Builder
                 null,
                 $affiliateId
             )
-            ->addMediaId($mediaId);
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -3059,6 +3077,8 @@ class Builder
      * @param string|null $redirectUrl
      * @param int|null $numberOfDocuments
      * @param string|null $allowedDocumentFormat
+     * @param bool|null $addressConfirmed
+     * @param bool|null $secondAddressConfirmed
      * @return $this
      */
     public function addKycData(
@@ -3103,7 +3123,9 @@ class Builder
         $kycLanguage = null,
         $redirectUrl = null,
         $numberOfDocuments = null,
-        $allowedDocumentFormat = null
+        $allowedDocumentFormat = null,
+        $addressConfirmed = null,
+        $secondAddressConfirmed = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -3231,6 +3253,12 @@ class Builder
         if ($allowedDocumentFormat !== null && !is_string($allowedDocumentFormat)) {
             throw new \InvalidArgumentException('Allowed document format must be string');
         }
+        if ($addressConfirmed !== null && !is_bool($addressConfirmed)) {
+            throw new \InvalidArgumentException('Address confirmed must be boolean');
+        }
+        if ($secondAddressConfirmed !== null && !is_bool($secondAddressConfirmed)) {
+            throw new \InvalidArgumentException('Second address confirmed must be boolean');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -3274,6 +3302,8 @@ class Builder
         $this->replace('redirect_url', $redirectUrl);
         $this->replace('number_of_documents', $numberOfDocuments);
         $this->replace('allowed_document_format', $allowedDocumentFormat);
+        $this->replace('address_confirmed', $addressConfirmed);
+        $this->replace('second_address_confirmed', $secondAddressConfirmed);
 
         return $this;
     }
@@ -3653,44 +3683,20 @@ class Builder
      * @param array|null $mediaId
      * @return $this
      */
-    public function addMediaId($mediaId = null)
+    public function addMediaData($mediaId = null)
     {
-        if ($mediaId !== null && !is_array($mediaId)) {
-            throw new \InvalidArgumentException('Media id must be string');
+        if ($mediaId !== null) {
+            if (!is_array($mediaId)) {
+                throw new \InvalidArgumentException('Media id must be array');
+            }
+
+            foreach ($mediaId as $id) {
+                if (!is_int($id) || $id <= 0) {
+                    throw new \InvalidArgumentException('Media id must be list of int');
+                }
+            }
         }
         $this->replace('media_id', $mediaId);
-
-        return $this;
-    }
-
-    /**
-     * Provides address confirmed value to envelope
-     *
-     * @param bool $addressConfirmed
-     * @return $this
-     */
-    public function addAddressConfirmed($addressConfirmed = false)
-    {
-        if (!is_bool($addressConfirmed)) {
-            throw new \InvalidArgumentException('Address Confirmed must be bool');
-        }
-        $this->replace('address_confirmed', $addressConfirmed);
-
-        return $this;
-    }
-
-    /**
-     * Provides address confirmed value to envelope
-     *
-     * @param bool $secondAddressConfirmed
-     * @return $this
-     */
-    public function addSecondAddressConfirmed($secondAddressConfirmed = false)
-    {
-        if (!is_bool($secondAddressConfirmed)) {
-            throw new \InvalidArgumentException('Second Address Confirmed must be bool');
-        }
-        $this->replace('second_address_confirmed', $secondAddressConfirmed);
 
         return $this;
     }
@@ -4433,7 +4439,9 @@ class Builder
         $userAgent = null,
         $plugins = null,
         $refererUrl = null,
-        $originUrl = null
+        $originUrl = null,
+        $addressConfirmed = null,
+        $secondAddressConfirmed = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -4642,6 +4650,12 @@ class Builder
         if ($originUrl !== null && !is_string($originUrl)) {
             throw new \InvalidArgumentException('Origin Url must be string');
         }
+        if ($addressConfirmed !== null && !is_bool($addressConfirmed)) {
+            throw new \InvalidArgumentException('Address confirmed must be boolean');
+        }
+        if ($secondAddressConfirmed !== null && !is_bool($secondAddressConfirmed)) {
+            throw new \InvalidArgumentException('Second address confirmed must be boolean');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -4712,6 +4726,8 @@ class Builder
         $this->replace('plugins', $plugins);
         $this->replace('referer_url', $refererUrl);
         $this->replace('origin_url', $originUrl);
+        $this->replace('address_confirmed', $addressConfirmed);
+        $this->replace('second_address_confirmed', $secondAddressConfirmed);
 
         return $this;
     }

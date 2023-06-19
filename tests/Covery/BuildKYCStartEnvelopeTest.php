@@ -14,6 +14,7 @@ class BuildKYCStartEnvelopeTest extends \PHPUnit_Framework_TestCase
             "kycStartVerificationMode",
             "kycStartVerificationSource",
             true,
+            [1, 2],
             444,
             false,
             true,
@@ -37,13 +38,14 @@ class BuildKYCStartEnvelopeTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame('kyc_start', $result->getType());
         self::assertSame('kycStartSequenceId', $result->getSequenceId());
-        self::assertCount(24, $result);
+        self::assertCount(25, $result);
         self::assertSame('kycStartEventId', $result['event_id']);
         self::assertSame('kycStartUserMerchantId', $result['user_merchant_id']);
         self::assertSame('kycStartVerificationMode', $result['verification_mode']);
         self::assertSame('kycStartVerificationSource', $result['verification_source']);
         self::assertSame(true, $result['consent']);
         self::assertSame(444, $result['event_timestamp']);
+        self::assertSame([1, 2], $result['media_id']);
         self::assertSame(false, $result['allow_na_ocr_inputs']);
         self::assertSame(true, $result['decline_on_single_step']);
         self::assertSame(false, $result['backside_proof']);
@@ -74,12 +76,13 @@ class BuildKYCStartEnvelopeTest extends \PHPUnit_Framework_TestCase
             "kycStartVerificationMode",
             "kycStartVerificationSource",
             true,
+            [1, 2],
             555
         )->build();
 
         self::assertSame('kyc_start', $result->getType());
         self::assertSame('kycStartSequenceId', $result->getSequenceId());
-        self::assertCount(6, $result);
+        self::assertCount(7, $result);
         self::assertSame('kycStartEventId', $result['event_id']);
         self::assertSame('kycStartUserMerchantId', $result['user_merchant_id']);
         self::assertSame('kycStartVerificationMode', $result['verification_mode']);
@@ -97,6 +100,7 @@ class BuildKYCStartEnvelopeTest extends \PHPUnit_Framework_TestCase
             "kycStartVerificationMode",
             "kycStartVerificationSource",
             true,
+            [1, 2],
             555
         )->addBrowserData(
             "deviceFingerprint",
@@ -105,7 +109,7 @@ class BuildKYCStartEnvelopeTest extends \PHPUnit_Framework_TestCase
         )->build();
         self::assertSame('kyc_start', $result->getType());
         self::assertSame('kycStartSequenceId', $result->getSequenceId());
-        self::assertCount(9, $result);
+        self::assertCount(10, $result);
         self::assertSame('kycStartEventId', $result['event_id']);
         self::assertSame('kycStartUserMerchantId', $result['user_merchant_id']);
         self::assertSame('kycStartVerificationMode', $result['verification_mode']);

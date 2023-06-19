@@ -241,7 +241,7 @@ class ValidatorV1
         'active_features' => 'string(1024)',
         'promotions' => 'string(1024)',
         'links_to_documents' => 'string(2048)',
-        'media_id' => 'array',
+        'media_id' => 'array_int',
     );
 
     private static $sharedOptional = array(
@@ -648,6 +648,7 @@ class ValidatorV1
                 'verification_mode',
                 'verification_source',
                 'consent',
+                'media_id',
             ),
             'optional' => array(
                 'allow_na_ocr_inputs',
@@ -1038,13 +1039,24 @@ class ValidatorV1
                                     );
                                 }
                                 break;
-                            case 'array':
+                            case 'array_int':
                                 if (!is_array($value)) {
                                     $details[] = sprintf(
                                         'Field "%s" must be array, but %s provided',
                                         $key,
                                         $value === null ? 'null' : gettype($value)
                                     );
+                                }
+                                if (is_array($value)) {
+                                    foreach ($value as $id) {
+                                        if (!is_int($id) || $id <= 0) {
+                                            $details[] = sprintf(
+                                                'ID: "%s" must be int, but %s provided',
+                                                $id,
+                                                $id === null ? 'null' : gettype($id)
+                                            );
+                                        }
+                                    }
                                 }
                                 break;
                             default:

@@ -62,16 +62,23 @@ class PublicAPIClient
      * Sends PSR-7 compatible request to Covery and returns
      *
      * @param RequestInterface $request
+     * @param bool $sign
      * @return string
+     * @throws Exception
      * @throws IoException
      */
-    public function send(RequestInterface $request)
+    public function send(RequestInterface $request, $sign = true)
     {
-        $request = $this->prepareRequest($request);
+        $requestPrepared = $this->prepareRequest($request);
+        if ($sign) {
+            $requestSigned = $this->credentials->signRequest($requestPrepared);
+        } else {
+            $requestSigned = $requestPrepared;
+        }
         try {
             $this->logger->info('Sending request to ' . $request->getUri());
             $before = microtime(true);
-            $response = $this->transport->send($request);
+            $response = $this->transport->send($requestSigned);
             $this->logger->info(sprintf('Request done in %.2f', microtime(true) - $before));
         } catch (\Exception $inner) {
             $this->logger->error($inner->getMessage(), ['exception' => $inner]);
@@ -105,7 +112,7 @@ class PublicAPIClient
             );
         }
 
-        return $this->credentials->signRequest($request);
+        return $request;
     }
 
     /**
@@ -384,7 +391,7 @@ class PublicAPIClient
      */
     public function uploadMediaFile(MediaFileUploaderInterface $mediaFileUploader)
     {
-        $this->send(new MediaFileUploaderRequest($mediaFileUploader));
+        $this->send(new MediaFileUploaderRequest($mediaFileUploader), false);
 
         if ($this->responseStatusCode >= 300) {
             throw new Exception("Malformed response");

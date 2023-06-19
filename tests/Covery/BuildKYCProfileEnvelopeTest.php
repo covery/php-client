@@ -133,7 +133,7 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('kyc_profile', $result->getType());
         self::assertSame('seqIdValue', $result->getSequenceId());
         self::assertCount(1, $result->getIdentities());
-        self::assertCount(5, $result);
+        self::assertCount(3, $result);
         self::assertSame('eventId', $result['event_id']);
         self::assertSame('userId', $result['user_merchant_id']);
         self::assertTrue($result['event_timestamp'] >= $current);
@@ -154,7 +154,7 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('kyc_profile', $result->getType());
         self::assertSame('seqIdValue', $result->getSequenceId());
         self::assertCount(0, $result->getIdentities());
-        self::assertCount(8, $result);
+        self::assertCount(6, $result);
         self::assertSame('eventId', $result['event_id']);
         self::assertSame('userId', $result['user_merchant_id']);
         self::assertSame(333, $result['event_timestamp']);
