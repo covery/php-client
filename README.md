@@ -224,7 +224,7 @@ You may provide the following as envelopes:
 ## Changelog
 * `1.3.14` Added MediaStorage method. Added MediaConnection method. Added UploadMediaFile method.
   * Added optional `media_id` field for events: install, registration, confirmation, login, order-item, order-submit, transaction, refund, payout, transfer, profile-update, kyc-profile, kyc-submit.
-  * Added address_confirmed, second_address_confirmed fields for KYC profile and KYC submit events.
+  * Added optional address_confirmed, second_address_confirmed fields for KYC profile and KYC submit events.
   * Added AccountConfigurationStatus method.
   * Removed Health check method.
 * `1.3.13` Added StaleDataException exception 
