@@ -135,7 +135,7 @@ $stream = fopen('PATH_TO_FILE', 'r');
 $mediaUrl = 'UPLOAD_URL'; //URL from Covery
 $mediaFileUploader = \Covery\Client\MediaFileUploader\Builder::mediaFileUploaderEvent(
     $mediaUrl,
-    $fileStream
+    $stream
 )->build();
 
 $result = \Covery\Client\Facade::uploadMediaFile($mediaFileUploader);
