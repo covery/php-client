@@ -131,7 +131,19 @@ Media file upload example:
 ```php
 use Covery\Client\Facade;
 
-$statusCode = \Covery\Client\Facade::uploadMediaFile($mediaUrl, $file);
+$base64EncodedFile = 'base64';
+$stream = fopen('php://temp', 'r+');
+fwrite($stream, $base64EncodedFile);
+rewind($stream);
+$fileStream = new \GuzzleHttp\Psr7\Stream($stream);
+
+$mediaUrl = 'UPLOAD_URL'; //URL from Covery
+$mediaFileUploader = \Covery\Client\MediaFileUploader\Builder::mediaFileUploaderEvent(
+    $mediaUrl,
+    $fileStream
+)->build();
+
+$result = \Covery\Client\Facade::uploadMediaFile($mediaFileUploader);
 ```
 
 Account Configuration Status event example:

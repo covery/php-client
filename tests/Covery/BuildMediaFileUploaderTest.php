@@ -1,0 +1,21 @@
+<?php
+
+class BuildMediaFileUploaderTest extends \PHPUnit_Framework_TestCase
+{
+    public function testBuild()
+    {
+        $base64EncodedFile = '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';
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, $base64EncodedFile);
+        rewind($stream);
+
+        $mediaUrl = 'https://covery.devafenv.net/media/v1/1/1';
+        $fileStream = new \GuzzleHttp\Psr7\Stream($stream);
+        $mediaStorageResult = \Covery\Client\MediaFileUploader\Builder::mediaFileUploaderEvent(
+            $mediaUrl,
+            $fileStream
+        )->build();
+        self::assertSame($mediaUrl, $mediaStorageResult['url']);
+        self::assertInstanceOf('Psr\Http\Message\StreamInterface', $mediaStorageResult['file']);
+    }
+}

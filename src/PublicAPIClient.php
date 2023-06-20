@@ -76,7 +76,7 @@ class PublicAPIClient
             $requestSigned = $requestPrepared;
         }
         try {
-            $this->logger->info('Sending request to ' . $request->getUri());
+            $this->logger->info('Sending request to ' . $requestSigned->getUri());
             $before = microtime(true);
             $response = $this->transport->send($requestSigned);
             $this->logger->info(sprintf('Request done in %.2f', microtime(true) - $before));

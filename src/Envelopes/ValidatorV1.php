@@ -648,7 +648,6 @@ class ValidatorV1
                 'verification_mode',
                 'verification_source',
                 'consent',
-                'media_id',
             ),
             'optional' => array(
                 'allow_na_ocr_inputs',

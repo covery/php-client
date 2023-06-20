@@ -37,6 +37,7 @@ class Builder
      * @param string|null $email
      * @param string|null $phone
      * @param string|null $groupId
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -92,6 +93,7 @@ class Builder
      * @param string|null $password
      * @param string|null $campaign
      * @param string|null $groupId
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -165,6 +167,7 @@ class Builder
      * @param string|null $password
      * @param string|null $campaign
      * @param string|null $groupId
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -254,6 +257,7 @@ class Builder
      * @param int|null $cardExpirationYear
      * @param string|null $groupId
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -360,6 +364,7 @@ class Builder
      * @param string|null $acquirerMerchantId
      * @param string|null $groupId
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -529,6 +534,7 @@ class Builder
      * @param string|null $userId
      * @param string|null $groupId
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -630,6 +636,7 @@ class Builder
      * @param string|null $groupId
      * @param string|null $secondUserMerchantId
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -1257,6 +1264,9 @@ class Builder
      * @param string|null $providerCode
      * @param string|null $providerReason
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
+     * @param bool|null $addressConfirmed
+     * @param bool|null $secondAddressConfirmed
      *
      * @return Builder
      */
@@ -1432,7 +1442,6 @@ class Builder
      * @param string $verificationMode
      * @param string $verificationSource
      * @param bool $consent
-     * @param array $mediaId
      * @param null|int $eventTimestamp
      * @param bool|null $allowNaOcrInputs
      * @param bool|null $declineOnSingleStep
@@ -1461,7 +1470,6 @@ class Builder
         $verificationMode,
         $verificationSource,
         $consent,
-        $mediaId,
         $eventTimestamp = null,
         $allowNaOcrInputs = null,
         $declineOnSingleStep = null,
@@ -1534,7 +1542,6 @@ class Builder
                 null,
                 null
             )
-            ->addMediaData($mediaId)
             ->addUserData(
                 $email,
                 $userMerchantId,
@@ -1629,6 +1636,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $productUrl
      * @param string|null $productImageUrl
+     * @param array|null $mediaId
      * @return Builder
      */
     public static function orderItemEvent(
@@ -1801,6 +1809,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $productUrl
      * @param string|null $productImageUrl
+     * @param array|null $mediaId
      * @return Builder
      */
     public static function orderSubmitEvent(
