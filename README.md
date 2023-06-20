@@ -131,12 +131,7 @@ Media file upload example:
 ```php
 use Covery\Client\Facade;
 
-$base64EncodedFile = 'base64';
-$stream = fopen('php://temp', 'r+');
-fwrite($stream, $base64EncodedFile);
-rewind($stream);
-$fileStream = new \GuzzleHttp\Psr7\Stream($stream);
-
+$stream = fopen('PATH_TO_FILE', 'r');
 $mediaUrl = 'UPLOAD_URL'; //URL from Covery
 $mediaFileUploader = \Covery\Client\MediaFileUploader\Builder::mediaFileUploaderEvent(
     $mediaUrl,
