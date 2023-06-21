@@ -241,6 +241,7 @@ class ValidatorV1
         'active_features' => 'string(1024)',
         'promotions' => 'string(1024)',
         'links_to_documents' => 'string(2048)',
+        'media_id' => 'array_int',
     );
 
     private static $sharedOptional = array(
@@ -272,7 +273,7 @@ class ValidatorV1
     private static $types = array(
         'confirmation' => array(
             'mandatory' => array('confirmation_timestamp', 'user_merchant_id'),
-            'optional' => array('email_confirmed', 'phone_confirmed', 'email', 'phone', "group_id"),
+            'optional' => array('email_confirmed', 'phone_confirmed', 'email', 'phone', "group_id", "media_id"),
         ),
         'login' => array(
             'mandatory' => array('login_timestamp', 'user_merchant_id'),
@@ -285,7 +286,8 @@ class ValidatorV1
                 'affiliate_id',
                 'password',
                 'campaign',
-                "group_id"
+                "group_id",
+                "media_id",
             )
         ),
         'registration' => array(
@@ -305,7 +307,8 @@ class ValidatorV1
                 'affiliate_id',
                 'password',
                 'campaign',
-                "group_id"
+                "group_id",
+                "media_id",
             ),
         ),
         'transaction' => array(
@@ -358,6 +361,7 @@ class ValidatorV1
                 'acquirer_merchant_id',
                 'group_id',
                 'links_to_documents',
+                'media_id',
             )
         ),
         'payout' => array(
@@ -386,6 +390,7 @@ class ValidatorV1
                 'payout_expiration_year',
                 'group_id',
                 'links_to_documents',
+                'media_id',
             )
         ),
         'install' => array(
@@ -399,7 +404,8 @@ class ValidatorV1
                 'traffic_source',
                 'affiliate_id',
                 'campaign',
-                "group_id"
+                "group_id",
+                "media_id",
             )
         ),
         'refund' => array(
@@ -424,6 +430,7 @@ class ValidatorV1
                 'user_merchant_id',
                 'group_id',
                 'links_to_documents',
+                'media_id',
             )
         ),
         'transfer' => array(
@@ -475,6 +482,7 @@ class ValidatorV1
                 'account_id',
                 'second_account_id',
                 'links_to_documents',
+                'media_id',
             )
         ),
         'postback' => array(
@@ -547,6 +555,9 @@ class ValidatorV1
                 'expiry_date',
                 'gender',
                 'links_to_documents',
+                'media_id',
+                'address_confirmed',
+                'second_address_confirmed',
             )
         ),
         'kyc_submit' => array(
@@ -624,6 +635,9 @@ class ValidatorV1
                 'plugins',
                 'referer_url',
                 'origin_url',
+                'media_id',
+                'address_confirmed',
+                'second_address_confirmed',
             )
         ),
         'kyc_start' => array(
@@ -713,6 +727,7 @@ class ValidatorV1
                 "product_image_url",
                 "carrier_url",
                 "carrier_phone",
+                'media_id',
             )
         ),
         'order_submit' => array(
@@ -763,6 +778,7 @@ class ValidatorV1
                 "product_image_url",
                 "carrier_url",
                 "carrier_phone",
+                'media_id',
             )
         ),
         'profile_update' => array(
@@ -864,6 +880,7 @@ class ValidatorV1
                 "referer_url",
                 "origin_url",
                 "links_to_documents",
+                "media_id",
             )
         ),
     );
@@ -1019,6 +1036,26 @@ class ValidatorV1
                                         $key,
                                         $value === null ? 'null' : gettype($value)
                                     );
+                                }
+                                break;
+                            case 'array_int':
+                                if (!is_array($value)) {
+                                    $details[] = sprintf(
+                                        'Field "%s" must be array, but %s provided',
+                                        $key,
+                                        $value === null ? 'null' : gettype($value)
+                                    );
+                                }
+                                if (is_array($value)) {
+                                    foreach ($value as $id) {
+                                        if (!is_int($id) || $id <= 0) {
+                                            $details[] = sprintf(
+                                                'ID: "%s" must be int, but %s provided',
+                                                $id,
+                                                $id === null ? 'null' : gettype($id)
+                                            );
+                                        }
+                                    }
                                 }
                                 break;
                             default:

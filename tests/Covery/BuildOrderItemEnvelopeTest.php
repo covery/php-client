@@ -54,7 +54,8 @@ class BuildOrderItemEnvelopeTest extends \PHPUnit_Framework_TestCase
             "userMerchantId",
             "websiteUrl",
             "productUrl",
-            "productImageUrl"
+            "productImageUrl",
+            [1, 2]
         )->addIdentity(new \Covery\Client\Identities\Stub()
         )->addBrowserData(
             "deviceFingerprint",
@@ -81,7 +82,7 @@ class BuildOrderItemEnvelopeTest extends \PHPUnit_Framework_TestCase
         )->build();
 
         self::assertSame('order_item', $result->getType());
-        self::assertCount(68, $result);
+        self::assertCount(69, $result);
         self::assertCount(1, $result->getIdentities());
         self::assertSame('sequenceId', $result->getSequenceId());
         self::assertSame(123.456, $result["amount"]);
@@ -152,6 +153,7 @@ class BuildOrderItemEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame(true, $result["cookie_enabled"]);
         self::assertSame(false, $result["do_not_track"]);
         self::assertSame(true, $result["ajax_validation"]);
+        self::assertSame([1, 2], $result["media_id"]);
 
         $validator->validate($result);
 

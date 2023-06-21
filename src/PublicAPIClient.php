@@ -7,12 +7,13 @@ use Covery\Client\Requests\CardId;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\KycProof;
-use Covery\Client\Requests\Ping;
+use Covery\Client\Requests\MediaStorage;
 use Covery\Client\Requests\Postback;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Covery\Client\Requests\MediaFileUploader as MediaFileUploaderRequest;
 
 class PublicAPIClient
 {
@@ -35,6 +36,10 @@ class PublicAPIClient
      * @var ValidatorV1
      */
     private $validator;
+    /**
+     * @var int
+     */
+    private $responseStatusCode;
 
     /**
      * Client constructor.
@@ -57,16 +62,23 @@ class PublicAPIClient
      * Sends PSR-7 compatible request to Covery and returns
      *
      * @param RequestInterface $request
+     * @param bool $sign
      * @return string
+     * @throws Exception
      * @throws IoException
      */
-    public function send(RequestInterface $request)
+    public function send(RequestInterface $request, $sign = true)
     {
-        $request = $this->prepareRequest($request);
+        $requestPrepared = $this->prepareRequest($request);
+        if ($sign) {
+            $requestSigned = $this->credentials->signRequest($requestPrepared);
+        } else {
+            $requestSigned = $requestPrepared;
+        }
         try {
-            $this->logger->info('Sending request to ' . $request->getUri());
+            $this->logger->info('Sending request to ' . $requestSigned->getUri());
             $before = microtime(true);
-            $response = $this->transport->send($request);
+            $response = $this->transport->send($requestSigned);
             $this->logger->info(sprintf('Request done in %.2f', microtime(true) - $before));
         } catch (\Exception $inner) {
             $this->logger->error($inner->getMessage(), ['exception' => $inner]);
@@ -74,6 +86,7 @@ class PublicAPIClient
             throw new IoException('Error sending request', 0, $inner);
         }
         $code = $response->getStatusCode();
+        $this->responseStatusCode = $code;
         $this->logger->debug('Received status code ' . $code);
 
         if ($code >= 400) {
@@ -99,7 +112,7 @@ class PublicAPIClient
             );
         }
 
-        return $this->credentials->signRequest($request);
+        return $request;
     }
 
     /**
@@ -172,27 +185,6 @@ class PublicAPIClient
         }
 
         return $data;
-    }
-
-    /**
-     * Sends request to Covery and returns access level, associated with
-     * used credentials
-     *
-     * This method can be used for Covery health check and availability
-     * On any problem (network, credentials, server side) this method
-     * will throw an exception
-     *
-     * @return string
-     * @throws Exception
-     */
-    public function ping()
-    {
-        $data = $this->readJson($this->send(new Ping()));
-        if (!is_array($data) || !isset($data['level'])) {
-            throw new Exception("Malformed response");
-        }
-
-        return $data['level'];
     }
 
     /**
@@ -341,6 +333,124 @@ class PublicAPIClient
             $data[CardIdResultBaseField::REQUEST_ID],
             $data[CardIdResultBaseField::CARD_ID],
             $data[CardIdResultBaseField::CREATED_AT]
+        );
+    }
+
+    /**
+     * Send Media Storage data and return upload URL
+     *
+     * @param MediaStorageInterface $media
+     * @return MediaStorageResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function sendMediaStorage(MediaStorageInterface $media)
+    {
+        $data = $this->readJson($this->send(new MediaStorage($media)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new MediaStorageResult(
+            $data[MediaStorageResultBaseField::UPLOAD_URL],
+            $data[MediaStorageResultBaseField::MEDIA_ID],
+            $data[MediaStorageResultBaseField::CREATED_AT]
+        );
+    }
+
+    /**
+     * @param MediaConnectionInterface $mediaConnection
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function attachMediaConnection(MediaConnectionInterface $mediaConnection)
+    {
+        return $this->sendMediaConnection($mediaConnection, 'PUT');
+    }
+
+    /**
+     * @param MediaConnectionInterface $mediaConnection
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function detachMediaConnection(MediaConnectionInterface $mediaConnection)
+    {
+        return $this->sendMediaConnection($mediaConnection, 'DELETE');
+    }
+
+    /**
+     * Upload Media file and returns status code
+     *
+     * @param MediaFileUploaderInterface $mediaFileUploader
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function uploadMediaFile(MediaFileUploaderInterface $mediaFileUploader)
+    {
+        $this->send(new MediaFileUploaderRequest($mediaFileUploader), false);
+
+        if ($this->responseStatusCode >= 300) {
+            throw new Exception("Malformed response");
+        }
+
+        return $this->responseStatusCode;
+    }
+
+    /**
+     * Send media connection and return status code
+     *
+     * @param MediaConnectionInterface $mediaConnection
+     * @param $method
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    private function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method)
+    {
+        $this->readJson($this->send(new \Covery\Client\Requests\MediaConnection($mediaConnection, $method)));
+        if ($this->responseStatusCode >= 300) {
+            throw new Exception("Malformed response");
+        }
+
+        return $this->responseStatusCode;
+    }
+
+    /**
+     * Get Account configuration status object from Covery
+     *
+     * @return AccountConfigurationStatusResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function getAccountConfigurationStatus()
+    {
+        // Sending
+        $data = $this->readJson($this->send(new \Covery\Client\Requests\AccountConfigurationStatus()));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new AccountConfigurationStatusResult(
+            $data[AccountConfigurationStatusResultBaseField::ACTUAL_EVENT_TYPES],
+            $data[AccountConfigurationStatusResultBaseField::BASE_CURRENCY],
+            $data[AccountConfigurationStatusResultBaseField::DECISION_CALLBACK_URL],
+            $data[AccountConfigurationStatusResultBaseField::MANUAL_DECISION_CALLBACK_URL],
+            $data[AccountConfigurationStatusResultBaseField::ONGOING_MONITORING_WEBHOOK_URL],
+            $data[AccountConfigurationStatusResultBaseField::MEDIA_STORAGE_WEBHOOK_URL],
+            $data[AccountConfigurationStatusResultBaseField::FRAUD_ALERT_CALLBACK_URL],
+            $data[AccountConfigurationStatusResultBaseField::CARD_ID_GENERATION],
+            $data[AccountConfigurationStatusResultBaseField::DEVICE_FINGERPRINT_GENERATION],
+            $data[AccountConfigurationStatusResultBaseField::SEQUENCE_ID_GENERATION],
+            $data[AccountConfigurationStatusResultBaseField::SEQUENCE_ID_GENERATION_METHOD],
+            $data[AccountConfigurationStatusResultBaseField::AML_SERVICE],
+            $data[AccountConfigurationStatusResultBaseField::AML_SERVICE_STATUS],
+            $data[AccountConfigurationStatusResultBaseField::DOW_JONES_DATA_BASE_DATE],
+            $data[AccountConfigurationStatusResultBaseField::KYC_PROVIDER]
         );
     }
 }

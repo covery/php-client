@@ -82,22 +82,6 @@ class Facade
     }
 
     /**
-     * Sends request to Covery and returns access level, associated with
-     * used credentials
-     *
-     * This method can be used for Covery health check and availability
-     * On any problem (network, credentials, server side) this method
-     * will throw an exception
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    public static function ping()
-    {
-        return self::getClient()->ping();
-    }
-
-    /**
      * Sends envelope to Covery and returns it's ID on Covery side
      * Before sending, validation is performed
      *
@@ -156,5 +140,69 @@ class Facade
     public static function sendCardId(CardIdInterface $cardId)
     {
         return self::getClient()->sendCardId($cardId);
+    }
+
+    /**
+     * Send Media Storage data and return upload URL
+     *
+     * @param MediaStorageInterface $mediaStorage
+     * @return MediaStorageResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function sendMediaStorage(MediaStorageInterface $mediaStorage)
+    {
+        return self::getClient()->sendMediaStorage($mediaStorage);
+    }
+
+    /**
+     * Attach media connection and return status code
+     *
+     * @param MediaConnectionInterface $mediaConnection
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function attachMediaConnection(MediaConnectionInterface $mediaConnection)
+    {
+        return self::getClient()->attachMediaConnection($mediaConnection);
+    }
+
+    /**
+     * Detach media connection and return status code
+     *
+     * @param MediaConnectionInterface $mediaConnection
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function detachMediaConnection(MediaConnectionInterface $mediaConnection)
+    {
+        return self::getClient()->detachMediaConnection($mediaConnection);
+    }
+
+    /**
+     * Upload Media file and returns status code
+     *
+     * @param MediaFileUploaderInterface $mediaFileUploader
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function uploadMediaFile(MediaFileUploaderInterface $mediaFileUploader)
+    {
+        return self::getClient()->uploadMediaFile($mediaFileUploader);
+    }
+
+    /**
+     * Get account configuration status and return result object
+     *
+     * @return AccountConfigurationStatusResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function getAccountConfigurationStatus()
+    {
+        return self::getClient()->getAccountConfigurationStatus();
     }
 }

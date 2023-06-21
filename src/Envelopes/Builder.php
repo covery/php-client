@@ -37,6 +37,7 @@ class Builder
      * @param string|null $email
      * @param string|null $phone
      * @param string|null $groupId
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -48,7 +49,8 @@ class Builder
         $idPhoneConfirmed = null,
         $email = null,
         $phone = null,
-        $groupId = null
+        $groupId = null,
+        $mediaId = null
     ) {
         $builder = new self('confirmation', $sequenceId);
         if ($timestamp === null) {
@@ -72,7 +74,9 @@ class Builder
             $isEmailConfirmed,
             $idPhoneConfirmed,
             null
-        )->addGroupId($groupId);
+        )
+            ->addGroupId($groupId)
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -89,6 +93,7 @@ class Builder
      * @param string|null $password
      * @param string|null $campaign
      * @param string|null $groupId
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -103,7 +108,8 @@ class Builder
         $affiliateId = null,
         $password = null,
         $campaign = null,
-        $groupId = null
+        $groupId = null,
+        $mediaId = null
     ) {
         $builder = new self('login', $sequenceId);
         if ($timestamp === null) {
@@ -134,7 +140,10 @@ class Builder
             null,
             null,
             $password
-        )->addWebsiteData(null, $trafficSource, $affiliateId, $campaign)->addGroupId($groupId);
+        )
+            ->addWebsiteData(null, $trafficSource, $affiliateId, $campaign)
+            ->addGroupId($groupId)
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -158,6 +167,7 @@ class Builder
      * @param string|null $password
      * @param string|null $campaign
      * @param string|null $groupId
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -179,7 +189,8 @@ class Builder
         $affiliateId = null,
         $password = null,
         $campaign = null,
-        $groupId = null
+        $groupId = null,
+        $mediaId = null
     ) {
         $builder = new self('registration', $sequenceId);
         if ($timestamp === null) {
@@ -215,7 +226,9 @@ class Builder
             null,
             null,
             $password
-        )-> addGroupId($groupId);
+        )
+            ->addGroupId($groupId)
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -244,6 +257,7 @@ class Builder
      * @param int|null $cardExpirationYear
      * @param string|null $groupId
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -270,7 +284,8 @@ class Builder
         $cardExpirationMonth = null,
         $cardExpirationYear = null,
         $groupId = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self('payout', $sequenceId);
         if ($payoutTimestamp === null) {
@@ -295,7 +310,8 @@ class Builder
             )
             ->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country)
             ->addGroupId($groupId)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -348,6 +364,7 @@ class Builder
      * @param string|null $acquirerMerchantId
      * @param string|null $groupId
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -398,7 +415,8 @@ class Builder
         $mcc = null,
         $acquirerMerchantId = null,
         $groupId = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -449,7 +467,8 @@ class Builder
             ->addWebsiteData($websiteUrl, null, $affiliateId, $campaign)
             ->addIpData(null, null, $merchantIp)
             ->addGroupId($groupId)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaData($mediaId);
 
     }
 
@@ -465,6 +484,7 @@ class Builder
      * @param string|null $affiliateId
      * @param string|null $campaign
      * @param string|null $groupId
+     * @param array|null $mediaId
      * @return Builder
      */
     public static function installEvent(
@@ -476,7 +496,8 @@ class Builder
         $trafficSource = null,
         $affiliateId = null,
         $campaign = null,
-        $groupId = null
+        $groupId = null,
+        $mediaId = null
     ) {
         $builder = new self('install', $sequenceId);
         if ($installTimestamp === null) {
@@ -487,7 +508,8 @@ class Builder
             $installTimestamp
         )->addWebsiteData($websiteUrl, $trafficSource, $affiliateId, $campaign)
         ->addShortUserData(null, $userId, null, null, null, $country)
-        ->addGroupId($groupId);
+        ->addGroupId($groupId)
+        ->addMediaData($mediaId);
     }
 
     /**
@@ -512,6 +534,7 @@ class Builder
      * @param string|null $userId
      * @param string|null $groupId
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -534,7 +557,8 @@ class Builder
         $phone = null,
         $userId = null,
         $groupId = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self('refund', $sequenceId);
         if ($refundTimestamp === null) {
@@ -559,7 +583,8 @@ class Builder
             )
             ->addUserData($email, $userId, $phone)
             ->addGroupId($groupId)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -611,6 +636,7 @@ class Builder
      * @param string|null $groupId
      * @param string|null $secondUserMerchantId
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      *
      * @return Builder
      */
@@ -660,7 +686,8 @@ class Builder
         $source = null,
         $groupId = null,
         $secondUserMerchantId = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self('transfer', $sequenceId);
         if ($eventTimestamp === null) {
@@ -724,7 +751,8 @@ class Builder
             )
             ->addProductData($productQuantity, $productName, $productDescription)
             ->addGroupId($groupId)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -780,6 +808,9 @@ class Builder
      * @param int|null $expiryDate
      * @param string|null $gender
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
+     * @param bool|null $addressConfirmed
+     * @param bool|null $secondAddressConfirmed
      * @return Builder
      */
     public static function kycProfileEvent(
@@ -832,7 +863,10 @@ class Builder
         $issueDate = null,
         $expiryDate = null,
         $gender = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null,
+        $addressConfirmed = null,
+        $secondAddressConfirmed = null
     ) {
         $builder = new self('kyc_profile', $sequenceId);
         if ($eventTimestamp === null) {
@@ -871,7 +905,19 @@ class Builder
                 $employmentStatus,
                 $sourceOfFunds,
                 $issueDate,
-                $expiryDate
+                $expiryDate,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $addressConfirmed,
+                $secondAddressConfirmed
             )
             ->addUserData(
                 $email,
@@ -899,7 +945,8 @@ class Builder
                 null
             )
             ->addWebsiteData($websiteUrl)
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -998,6 +1045,7 @@ class Builder
      * @param null $refererUrl
      * @param null $originUrl
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
      * @return static
      */
     public static function profileUpdateEvent(
@@ -1095,7 +1143,8 @@ class Builder
         $plugins = null,
         $refererUrl = null,
         $originUrl = null,
-        $linksToDocuments = null
+        $linksToDocuments = null,
+        $mediaId = null
     ) {
         $builder = new self(self::EVENT_PROFILE_UPDATE, $sequenceId);
 
@@ -1195,7 +1244,8 @@ class Builder
                 $refererUrl,
                 $originUrl
             )
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaData($mediaId);
 
     }
 
@@ -1214,6 +1264,9 @@ class Builder
      * @param string|null $providerCode
      * @param string|null $providerReason
      * @param string|null $linksToDocuments
+     * @param array|null $mediaId
+     * @param bool|null $addressConfirmed
+     * @param bool|null $secondAddressConfirmed
      *
      * @return Builder
      */
@@ -1289,7 +1342,10 @@ class Builder
         $userAgent = null,
         $plugins = null,
         $refererUrl = null,
-        $originUrl = null
+        $originUrl = null,
+        $mediaId = null,
+        $addressConfirmed = null,
+        $secondAddressConfirmed = null
     ) {
         $builder = new self('kyc_submit', $sequenceId);
         if ($eventTimestamp === null) {
@@ -1365,13 +1421,16 @@ class Builder
                 $userAgent,
                 $plugins,
                 $refererUrl,
-                $originUrl
+                $originUrl,
+                $addressConfirmed,
+                $secondAddressConfirmed
             )
             ->addUserData(
                 null,
                 $userId
             )
-            ->addLinksToDocuments($linksToDocuments);
+            ->addLinksToDocuments($linksToDocuments)
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -1479,7 +1538,9 @@ class Builder
                 $kycLanguage,
                 $redirectUrl,
                 $numberOfDocuments,
-                $allowedDocumentFormat
+                $allowedDocumentFormat,
+                null,
+                null
             )
             ->addUserData(
                 $email,
@@ -1575,6 +1636,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $productUrl
      * @param string|null $productImageUrl
+     * @param array|null $mediaId
      * @return Builder
      */
     public static function orderItemEvent(
@@ -1625,7 +1687,8 @@ class Builder
         $userMerchantId = null,
         $websiteUrl = null,
         $productUrl = null,
-        $productImageUrl = null
+        $productImageUrl = null,
+        $mediaId = null
     ) {
         $envelopeType = 'order_item';
         $builder = new self($envelopeType, $sequenceId);
@@ -1694,7 +1757,8 @@ class Builder
                 $websiteUrl,
                 null,
                 $affiliateId
-            );
+            )
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -1745,6 +1809,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $productUrl
      * @param string|null $productImageUrl
+     * @param array|null $mediaId
      * @return Builder
      */
     public static function orderSubmitEvent(
@@ -1792,7 +1857,8 @@ class Builder
         $userMerchantId = null,
         $websiteUrl = null,
         $productUrl = null,
-        $productImageUrl = null
+        $productImageUrl = null,
+        $mediaId = null
     ) {
         $envelopeType = 'order_submit';
         $builder = new self($envelopeType, $sequenceId);
@@ -1856,7 +1922,8 @@ class Builder
                 $websiteUrl,
                 null,
                 $affiliateId
-            );
+            )
+            ->addMediaData($mediaId);
     }
 
     /**
@@ -3019,6 +3086,8 @@ class Builder
      * @param string|null $redirectUrl
      * @param int|null $numberOfDocuments
      * @param string|null $allowedDocumentFormat
+     * @param bool|null $addressConfirmed
+     * @param bool|null $secondAddressConfirmed
      * @return $this
      */
     public function addKycData(
@@ -3063,7 +3132,9 @@ class Builder
         $kycLanguage = null,
         $redirectUrl = null,
         $numberOfDocuments = null,
-        $allowedDocumentFormat = null
+        $allowedDocumentFormat = null,
+        $addressConfirmed = null,
+        $secondAddressConfirmed = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -3191,6 +3262,12 @@ class Builder
         if ($allowedDocumentFormat !== null && !is_string($allowedDocumentFormat)) {
             throw new \InvalidArgumentException('Allowed document format must be string');
         }
+        if ($addressConfirmed !== null && !is_bool($addressConfirmed)) {
+            throw new \InvalidArgumentException('Address confirmed must be boolean');
+        }
+        if ($secondAddressConfirmed !== null && !is_bool($secondAddressConfirmed)) {
+            throw new \InvalidArgumentException('Second address confirmed must be boolean');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -3234,6 +3311,8 @@ class Builder
         $this->replace('redirect_url', $redirectUrl);
         $this->replace('number_of_documents', $numberOfDocuments);
         $this->replace('allowed_document_format', $allowedDocumentFormat);
+        $this->replace('address_confirmed', $addressConfirmed);
+        $this->replace('second_address_confirmed', $secondAddressConfirmed);
 
         return $this;
     }
@@ -3603,6 +3682,30 @@ class Builder
             throw new \InvalidArgumentException('Group id must be string');
         }
         $this->replace('group_id', $groupId);
+
+        return $this;
+    }
+
+    /**
+     * Provides media id value to envelope
+     *
+     * @param array|null $mediaId
+     * @return $this
+     */
+    public function addMediaData($mediaId = null)
+    {
+        if ($mediaId !== null) {
+            if (!is_array($mediaId)) {
+                throw new \InvalidArgumentException('Media id must be array');
+            }
+
+            foreach ($mediaId as $id) {
+                if (!is_int($id) || $id <= 0) {
+                    throw new \InvalidArgumentException('Media id must be list of int');
+                }
+            }
+        }
+        $this->replace('media_id', $mediaId);
 
         return $this;
     }
@@ -4345,7 +4448,9 @@ class Builder
         $userAgent = null,
         $plugins = null,
         $refererUrl = null,
-        $originUrl = null
+        $originUrl = null,
+        $addressConfirmed = null,
+        $secondAddressConfirmed = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -4554,6 +4659,12 @@ class Builder
         if ($originUrl !== null && !is_string($originUrl)) {
             throw new \InvalidArgumentException('Origin Url must be string');
         }
+        if ($addressConfirmed !== null && !is_bool($addressConfirmed)) {
+            throw new \InvalidArgumentException('Address confirmed must be boolean');
+        }
+        if ($secondAddressConfirmed !== null && !is_bool($secondAddressConfirmed)) {
+            throw new \InvalidArgumentException('Second address confirmed must be boolean');
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -4624,6 +4735,8 @@ class Builder
         $this->replace('plugins', $plugins);
         $this->replace('referer_url', $refererUrl);
         $this->replace('origin_url', $originUrl);
+        $this->replace('address_confirmed', $addressConfirmed);
+        $this->replace('second_address_confirmed', $secondAddressConfirmed);
 
         return $this;
     }

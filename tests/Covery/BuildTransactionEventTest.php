@@ -54,7 +54,8 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
             "mcc value",
             "acquirer merchant id value",
             "group id value",
-            'links to documents'
+            'links to documents',
+            [1, 2]
         )
             ->addBrowserData('88889', 'Test curl')
             ->addIdentity(new \Covery\Client\Identities\Stub())
@@ -64,7 +65,7 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('transaction', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(49, $result);
+        self::assertCount(50, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame('transactionId', $result['transaction_id']);
         self::assertSame(0.12, $result['transaction_amount']);
@@ -112,6 +113,7 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('acquirer merchant id value', $result['acquirer_merchant_id']);
         self::assertSame('group id value', $result['group_id']);
         self::assertSame('links to documents', $result['links_to_documents']);
+        self::assertSame([1, 2], $result['media_id']);
 
         $validator->validate($result);
 

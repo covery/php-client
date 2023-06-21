@@ -13,7 +13,6 @@ Official PHP Covery Client
   * [Facade](#facade)
   * [PSR-3 logging](#psr) [PSR-4 autoloading](#psr) and [PSR-7 HTTP messages](#psr)
   * [Transports](#transports)
-  * [Health check](#ping)
   * [Envelopes](#envelopes)
   * [Results](#results)
   * [Exceptions](#exceptions)
@@ -55,7 +54,6 @@ Facade::setLogger(new FileLogger($filePath));
 That's all!
 
 Having completed this procedure, you can now query Covery using `Facade::sendEvent`, `Facade::sendPostback`, `Facade::makeDecision`.
-You can test connectivity problems and token/secret validity using `Facade::ping` request.
 
 Login event example:
 
@@ -102,6 +100,54 @@ $event = Builder::cardIdEvent('curdNumber')->build();
 $result = Facade::sendCardId($event);
 ```
 
+Media Storage event example:
+```php
+use Covery\Client\MediaStorage\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::mediaStorageEvent(\Covery\Client\ContentType::JPEG, \Covery\Client\ContentDescription::GENERAL_DOCUMENT, null, false)->build();
+$result = Facade::sendMediaStorage($event);
+```
+
+Attach media connection event example:
+```php
+use Covery\Client\MediaConnection\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::mediaConnectionEvent(1, [1])->build();
+$result = Facade::attachMediaConnection($event);
+```
+
+Detach media connection event example:
+```php
+use Covery\Client\MediaConnection\Builder;
+use Covery\Client\Facade;
+
+$event = Builder::mediaConnectionEvent(1, [1])->build();
+$result = Facade::detachMediaConnection($event);
+```
+
+Media file upload example:
+```php
+use Covery\Client\Facade;
+
+$stream = fopen('PATH_TO_FILE', 'r');
+$mediaUrl = 'UPLOAD_URL'; //URL from Covery
+$mediaFileUploader = \Covery\Client\MediaFileUploader\Builder::mediaFileUploaderEvent(
+    $mediaUrl,
+    $stream
+)->build();
+
+$result = \Covery\Client\Facade::uploadMediaFile($mediaFileUploader);
+```
+
+Account Configuration Status event example:
+```php
+use Covery\Client\Facade;
+
+$accountConfigurationStatus = Facade::getAccountConfigurationStatus();
+```
+
 # Tech Details
 
 <a name="facade"></a>
@@ -124,13 +170,6 @@ Covery client may use any class that satisfies `Covery\Client\TransportInterface
 
 1. `Covery\Client\Transport\Curl` - simple PHP curl implementation
 2. `Covery\Client\Transport\OverGuzzle` - adapter over [Guzzle](https://github.com/guzzle/guzzle) HTTP client
-
-<a name="ping"></a>
-## Health Check
-
-To perform network accessibility and token validity tests, run `ping()` method inside `Facade`
-or `PublicAPIClient`. It will throw an exception on any problems or return your token access level on success. 
-In most cases it will return `"DECISION"` as your token level.
 
 <a name="envelopes"></a>
 ## Envelopes
@@ -165,9 +204,8 @@ You may provide the following as envelopes:
 <a name="results"></a>
 ## Results
 
-1. `ping` will return `string` containing current token access level on success.
-2. `sendEvent` will return `integer` (may be x64) containing ID of a stored entity on Covery side. You should log it.
-3. `makeDecision` will return `Covery\Client\Result` object:
+1. `sendEvent` will return `integer` (may be x64) containing ID of a stored entity on Covery side. You should log it.
+2. `makeDecision` will return `Covery\Client\Result` object:
    * Call `getScore()` to obtain score in range [-100, 100]
    * Method `isAccept()` will return `true` if Covery did not found fraud in incoming envelope data
    * Method `isReject()` will return `true` if Covery found fraud in incoming envelope data
@@ -191,6 +229,11 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.3.14` Added MediaStorage method. Added MediaConnection method. Added UploadMediaFile method.
+  * Added optional `media_id` field for events: install, registration, confirmation, login, order-item, order-submit, transaction, refund, payout, transfer, profile-update, kyc-profile, kyc-submit.
+  * Added optional address_confirmed, second_address_confirmed fields for KYC profile and KYC submit events.
+  * Added AccountConfigurationStatus method.
+  * Removed Health check method.
 * `1.3.13` Added StaleDataException exception 
 * `1.3.12` Added sendCardId method
 * `1.3.11` Added VarDumpLogger and FileLogger
