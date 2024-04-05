@@ -7,13 +7,13 @@ use Covery\Client\Requests\CardId;
 use Covery\Client\Requests\Decision;
 use Covery\Client\Requests\Event;
 use Covery\Client\Requests\KycProof;
-use Covery\Client\Requests\MediaStorage;
+use Covery\Client\Requests\DocumentStorage;
 use Covery\Client\Requests\Postback;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Covery\Client\Requests\MediaFileUploader as MediaFileUploaderRequest;
+use Covery\Client\Requests\DocumentFileUploader as DocumentFileUploaderRequest;
 
 class PublicAPIClient
 {
@@ -337,61 +337,61 @@ class PublicAPIClient
     }
 
     /**
-     * Send Media Storage data and return upload URL
+     * Send Document Storage data and return upload URL
      *
-     * @param MediaStorageInterface $media
-     * @return MediaStorageResult
+     * @param DocumentStorageInterface $document
+     * @return DocumentStorageResult
      * @throws Exception
      * @throws IoException
      */
-    public function sendMediaStorage(MediaStorageInterface $media)
+    public function sendDocumentStorage(DocumentStorageInterface $document)
     {
-        $data = $this->readJson($this->send(new MediaStorage($media)));
+        $data = $this->readJson($this->send(new DocumentStorage($document)));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
         }
 
-        return new MediaStorageResult(
-            $data[MediaStorageResultBaseField::UPLOAD_URL],
-            $data[MediaStorageResultBaseField::MEDIA_ID],
-            $data[MediaStorageResultBaseField::CREATED_AT]
+        return new DocumentStorageResult(
+            $data[DocumentStorageResultBaseField::UPLOAD_URL],
+            $data[DocumentStorageResultBaseField::DOCUMENT_ID],
+            $data[DocumentStorageResultBaseField::CREATED_AT]
         );
     }
 
     /**
-     * @param MediaConnectionInterface $mediaConnection
+     * @param DocumentConnectionInterface $documentConnection
      * @return int
      * @throws Exception
      * @throws IoException
      */
-    public function attachMediaConnection(MediaConnectionInterface $mediaConnection)
+    public function attachDocumentConnection(DocumentConnectionInterface $documentConnection)
     {
-        return $this->sendMediaConnection($mediaConnection, 'PUT');
+        return $this->sendDocumentConnection($documentConnection, 'PUT');
     }
 
     /**
-     * @param MediaConnectionInterface $mediaConnection
+     * @param DocumentConnectionInterface $documentConnection
      * @return int
      * @throws Exception
      * @throws IoException
      */
-    public function detachMediaConnection(MediaConnectionInterface $mediaConnection)
+    public function detachDocumentConnection(DocumentConnectionInterface $documentConnection)
     {
-        return $this->sendMediaConnection($mediaConnection, 'DELETE');
+        return $this->sendDocumentConnection($documentConnection, 'DELETE');
     }
 
     /**
-     * Upload Media file and returns status code
+     * Upload Document file and returns status code
      *
-     * @param MediaFileUploaderInterface $mediaFileUploader
+     * @param DocumentFileUploaderInterface $documentFileUploader
      * @return int
      * @throws Exception
      * @throws IoException
      */
-    public function uploadMediaFile(MediaFileUploaderInterface $mediaFileUploader)
+    public function uploadDocumentFile(DocumentFileUploaderInterface $documentFileUploader)
     {
-        $this->send(new MediaFileUploaderRequest($mediaFileUploader), false);
+        $this->send(new DocumentFileUploaderRequest($documentFileUploader), false);
 
         if ($this->responseStatusCode >= 300) {
             throw new Exception("Malformed response");
@@ -401,17 +401,17 @@ class PublicAPIClient
     }
 
     /**
-     * Send media connection and return status code
+     * Send document connection and return status code
      *
-     * @param MediaConnectionInterface $mediaConnection
+     * @param DocumentConnectionInterface $documentConnection
      * @param $method
      * @return int
      * @throws Exception
      * @throws IoException
      */
-    private function sendMediaConnection(MediaConnectionInterface $mediaConnection, $method)
+    private function sendDocumentConnection(DocumentConnectionInterface $documentConnection, $method)
     {
-        $this->readJson($this->send(new \Covery\Client\Requests\MediaConnection($mediaConnection, $method)));
+        $this->readJson($this->send(new \Covery\Client\Requests\DocumentConnection($documentConnection, $method)));
         if ($this->responseStatusCode >= 300) {
             throw new Exception("Malformed response");
         }
@@ -441,7 +441,7 @@ class PublicAPIClient
             $data[AccountConfigurationStatusResultBaseField::DECISION_CALLBACK_URL],
             $data[AccountConfigurationStatusResultBaseField::MANUAL_DECISION_CALLBACK_URL],
             $data[AccountConfigurationStatusResultBaseField::ONGOING_MONITORING_WEBHOOK_URL],
-            $data[AccountConfigurationStatusResultBaseField::MEDIA_STORAGE_WEBHOOK_URL],
+            $data[AccountConfigurationStatusResultBaseField::DOCUMENT_STORAGE_WEBHOOK_URL],
             $data[AccountConfigurationStatusResultBaseField::FRAUD_ALERT_CALLBACK_URL],
             $data[AccountConfigurationStatusResultBaseField::CARD_ID_GENERATION],
             $data[AccountConfigurationStatusResultBaseField::DEVICE_FINGERPRINT_GENERATION],

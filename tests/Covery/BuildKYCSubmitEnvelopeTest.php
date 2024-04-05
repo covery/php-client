@@ -63,6 +63,7 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
             'KycSubmitDeviceFingerPrint',
             'KycSubmitDeviceId',
             false,
+            true,
             'KycSubmitIp',
             'KycSubmitRealIp',
             'KycSubmitLocalIpList',
@@ -88,7 +89,7 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame('kyc_submit', $result->getType());
         self::assertSame('kycSubmitSequenceIdSome', $result->getSequenceId());
-        self::assertCount(74, $result);
+        self::assertCount(75, $result);
         self::assertSame('kycSubmitEventId', $result['event_id']);
         self::assertSame(1234568, $result['event_timestamp']);
         self::assertSame('kycSubmitUserMerchantId', $result['user_merchant_id']);
@@ -143,6 +144,7 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('KycSubmitDeviceFingerPrint', $result['device_fingerprint']);
         self::assertSame('KycSubmitDeviceId', $result['device_id']);
         self::assertSame(false, $result['do_not_track']);
+        self::assertSame(true, $result['anonymous']);
         self::assertSame('KycSubmitIp', $result['ip']);
         self::assertSame('KycSubmitRealIp', $result['real_ip']);
         self::assertSame('KycSubmitLocalIpList', $result['local_ip_list']);
@@ -160,7 +162,7 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('KycSubmitPlugins', $result['plugins']);
         self::assertSame('KycSubmitRefererUrl', $result['referer_url']);
         self::assertSame('KycSubmitOriginUrl', $result['origin_url']);
-        self::assertSame([1, 2], $result['media_id']);
+        self::assertSame([1, 2], $result['document_id']);
         self::assertTrue($result['address_confirmed']);
         self::assertTrue($result['second_address_confirmed']);
 

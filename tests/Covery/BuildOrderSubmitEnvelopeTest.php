@@ -70,6 +70,7 @@ class BuildOrderSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
             true,
             false,
             true,
+            true,
             "deviceId",
             "ipList",
             "plugins",
@@ -79,7 +80,7 @@ class BuildOrderSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
         )->build();
 
         self::assertSame('order_submit', $result->getType());
-        self::assertCount(66, $result);
+        self::assertCount(67, $result);
         self::assertCount(1, $result->getIdentities());
         self::assertSame('sequenceId', $result->getSequenceId());
         self::assertSame(123.456, $result["amount"]);
@@ -146,8 +147,9 @@ class BuildOrderSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame("clientResolution", $result["client_resolution"]);
         self::assertSame(true, $result["cookie_enabled"]);
         self::assertSame(false, $result["do_not_track"]);
+        self::assertSame(true, $result['anonymous']);
         self::assertSame(true, $result["ajax_validation"]);
-        self::assertSame([1, 2], $result["media_id"]);
+        self::assertSame([1, 2], $result["document_id"]);
 
         $validator->validate($result);
 

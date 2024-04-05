@@ -115,7 +115,7 @@ class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame(888, $result['expiry_date']);
         self::assertSame('male', $result['gender']);
         self::assertSame('linksToDocuments', $result['links_to_documents']);
-        self::assertSame([1, 2], $result['media_id']);
+        self::assertSame([1, 2], $result['document_id']);
         self::assertTrue($result['address_confirmed']);
         self::assertTrue($result['second_address_confirmed']);
 

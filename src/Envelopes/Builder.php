@@ -2,12 +2,26 @@
 
 namespace Covery\Client\Envelopes;
 
+use Covery\Client\DocumentType;
 use Covery\Client\EnvelopeInterface;
 use Covery\Client\IdentityNodeInterface;
 
 class Builder
 {
     const EVENT_PROFILE_UPDATE = 'profile_update';
+
+    const EVENT_POSTBACK = 'postback';
+
+    const EVENT_KYC_PROOF = 'kyc_proof';
+
+    const EVENT_DOCUMENT = 'document';
+
+    const LIMITED_VALIDATION_EVENTS = [
+        self::EVENT_PROFILE_UPDATE,
+        self::EVENT_POSTBACK,
+        self::EVENT_KYC_PROOF,
+        self::EVENT_DOCUMENT
+    ];
 
     /**
      * @var string
@@ -37,7 +51,7 @@ class Builder
      * @param string|null $email
      * @param string|null $phone
      * @param string|null $groupId
-     * @param array|null $mediaId
+     * @param array|null $documentId
      *
      * @return Builder
      */
@@ -50,7 +64,7 @@ class Builder
         $email = null,
         $phone = null,
         $groupId = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self('confirmation', $sequenceId);
         if ($timestamp === null) {
@@ -76,7 +90,7 @@ class Builder
             null
         )
             ->addGroupId($groupId)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -93,7 +107,7 @@ class Builder
      * @param string|null $password
      * @param string|null $campaign
      * @param string|null $groupId
-     * @param array|null $mediaId
+     * @param array|null $documentId
      *
      * @return Builder
      */
@@ -109,7 +123,7 @@ class Builder
         $password = null,
         $campaign = null,
         $groupId = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self('login', $sequenceId);
         if ($timestamp === null) {
@@ -143,7 +157,7 @@ class Builder
         )
             ->addWebsiteData(null, $trafficSource, $affiliateId, $campaign)
             ->addGroupId($groupId)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -167,7 +181,7 @@ class Builder
      * @param string|null $password
      * @param string|null $campaign
      * @param string|null $groupId
-     * @param array|null $mediaId
+     * @param array|null $documentId
      *
      * @return Builder
      */
@@ -190,7 +204,7 @@ class Builder
         $password = null,
         $campaign = null,
         $groupId = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self('registration', $sequenceId);
         if ($timestamp === null) {
@@ -228,7 +242,7 @@ class Builder
             $password
         )
             ->addGroupId($groupId)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -257,7 +271,7 @@ class Builder
      * @param int|null $cardExpirationYear
      * @param string|null $groupId
      * @param string|null $linksToDocuments
-     * @param array|null $mediaId
+     * @param array|null $documentId
      *
      * @return Builder
      */
@@ -285,7 +299,7 @@ class Builder
         $cardExpirationYear = null,
         $groupId = null,
         $linksToDocuments = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self('payout', $sequenceId);
         if ($payoutTimestamp === null) {
@@ -311,7 +325,7 @@ class Builder
             ->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -364,7 +378,7 @@ class Builder
      * @param string|null $acquirerMerchantId
      * @param string|null $groupId
      * @param string|null $linksToDocuments
-     * @param array|null $mediaId
+     * @param array|null $documentId
      *
      * @return Builder
      */
@@ -416,7 +430,7 @@ class Builder
         $acquirerMerchantId = null,
         $groupId = null,
         $linksToDocuments = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -468,7 +482,7 @@ class Builder
             ->addIpData(null, null, $merchantIp)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
 
     }
 
@@ -484,7 +498,7 @@ class Builder
      * @param string|null $affiliateId
      * @param string|null $campaign
      * @param string|null $groupId
-     * @param array|null $mediaId
+     * @param array|null $documentId
      * @return Builder
      */
     public static function installEvent(
@@ -497,7 +511,7 @@ class Builder
         $affiliateId = null,
         $campaign = null,
         $groupId = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self('install', $sequenceId);
         if ($installTimestamp === null) {
@@ -509,7 +523,7 @@ class Builder
         )->addWebsiteData($websiteUrl, $trafficSource, $affiliateId, $campaign)
         ->addShortUserData(null, $userId, null, null, null, $country)
         ->addGroupId($groupId)
-        ->addMediaData($mediaId);
+        ->addDocumentData($documentId);
     }
 
     /**
@@ -534,7 +548,7 @@ class Builder
      * @param string|null $userId
      * @param string|null $groupId
      * @param string|null $linksToDocuments
-     * @param array|null $mediaId
+     * @param array|null $documentId
      *
      * @return Builder
      */
@@ -558,7 +572,7 @@ class Builder
         $userId = null,
         $groupId = null,
         $linksToDocuments = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self('refund', $sequenceId);
         if ($refundTimestamp === null) {
@@ -584,7 +598,7 @@ class Builder
             ->addUserData($email, $userId, $phone)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -636,7 +650,7 @@ class Builder
      * @param string|null $groupId
      * @param string|null $secondUserMerchantId
      * @param string|null $linksToDocuments
-     * @param array|null $mediaId
+     * @param array|null $documentId
      *
      * @return Builder
      */
@@ -687,7 +701,7 @@ class Builder
         $groupId = null,
         $secondUserMerchantId = null,
         $linksToDocuments = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self('transfer', $sequenceId);
         if ($eventTimestamp === null) {
@@ -752,7 +766,7 @@ class Builder
             ->addProductData($productQuantity, $productName, $productDescription)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -808,7 +822,7 @@ class Builder
      * @param int|null $expiryDate
      * @param string|null $gender
      * @param string|null $linksToDocuments
-     * @param array|null $mediaId
+     * @param array|null $documentId
      * @param bool|null $addressConfirmed
      * @param bool|null $secondAddressConfirmed
      * @return Builder
@@ -864,7 +878,7 @@ class Builder
         $expiryDate = null,
         $gender = null,
         $linksToDocuments = null,
-        $mediaId = null,
+        $documentId = null,
         $addressConfirmed = null,
         $secondAddressConfirmed = null
     ) {
@@ -946,7 +960,7 @@ class Builder
             )
             ->addWebsiteData($websiteUrl)
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -1027,6 +1041,7 @@ class Builder
      * @param null $deviceFingerprint
      * @param null $deviceId
      * @param null $doNotTrack
+     * @param null $anonymous
      * @param null $ip
      * @param null $realIp
      * @param null $localIpList
@@ -1045,7 +1060,7 @@ class Builder
      * @param null $refererUrl
      * @param null $originUrl
      * @param string|null $linksToDocuments
-     * @param array|null $mediaId
+     * @param array|null $documentId
      * @return static
      */
     public static function profileUpdateEvent(
@@ -1126,6 +1141,7 @@ class Builder
         $deviceFingerprint = null,
         $deviceId = null,
         $doNotTrack = null,
+        $anonymous = null,
         $ip = null,
         $realIp = null,
         $localIpList = null,
@@ -1144,7 +1160,7 @@ class Builder
         $refererUrl = null,
         $originUrl = null,
         $linksToDocuments = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $builder = new self(self::EVENT_PROFILE_UPDATE, $sequenceId);
 
@@ -1226,6 +1242,7 @@ class Builder
                 $deviceFingerprint,
                 $deviceId,
                 $doNotTrack,
+                $anonymous,
                 $ip,
                 $realIp,
                 $localIpList,
@@ -1245,7 +1262,7 @@ class Builder
                 $originUrl
             )
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
 
     }
 
@@ -1264,7 +1281,7 @@ class Builder
      * @param string|null $providerCode
      * @param string|null $providerReason
      * @param string|null $linksToDocuments
-     * @param array|null $mediaId
+     * @param array|null $documentId
      * @param bool|null $addressConfirmed
      * @param bool|null $secondAddressConfirmed
      *
@@ -1326,6 +1343,7 @@ class Builder
         $deviceFingerprint = null,
         $deviceId = null,
         $doNotTrack = null,
+        $anonymous = null,
         $ip = null,
         $realIp = null,
         $localIpList = null,
@@ -1343,7 +1361,7 @@ class Builder
         $plugins = null,
         $refererUrl = null,
         $originUrl = null,
-        $mediaId = null,
+        $documentId = null,
         $addressConfirmed = null,
         $secondAddressConfirmed = null
     ) {
@@ -1405,6 +1423,7 @@ class Builder
                 $deviceFingerprint,
                 $deviceId,
                 $doNotTrack,
+                $anonymous,
                 $ip,
                 $realIp,
                 $localIpList,
@@ -1430,7 +1449,7 @@ class Builder
                 $userId
             )
             ->addLinksToDocuments($linksToDocuments)
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -1576,10 +1595,9 @@ class Builder
      */
     public static function kycProofEvent($kycStartId)
     {
-        $envelopeType = 'kyc_proof';
         $sequenceId = '';
 
-        $builder = new self($envelopeType, $sequenceId);
+        $builder = new self(self::EVENT_KYC_PROOF, $sequenceId);
 
         return $builder
             ->addKycProofData($kycStartId);
@@ -1636,7 +1654,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $productUrl
      * @param string|null $productImageUrl
-     * @param array|null $mediaId
+     * @param array|null $documentId
      * @return Builder
      */
     public static function orderItemEvent(
@@ -1688,7 +1706,7 @@ class Builder
         $websiteUrl = null,
         $productUrl = null,
         $productImageUrl = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $envelopeType = 'order_item';
         $builder = new self($envelopeType, $sequenceId);
@@ -1758,7 +1776,7 @@ class Builder
                 null,
                 $affiliateId
             )
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
@@ -1809,7 +1827,7 @@ class Builder
      * @param string|null $websiteUrl
      * @param string|null $productUrl
      * @param string|null $productImageUrl
-     * @param array|null $mediaId
+     * @param array|null $documentId
      * @return Builder
      */
     public static function orderSubmitEvent(
@@ -1858,7 +1876,7 @@ class Builder
         $websiteUrl = null,
         $productUrl = null,
         $productImageUrl = null,
-        $mediaId = null
+        $documentId = null
     ) {
         $envelopeType = 'order_submit';
         $builder = new self($envelopeType, $sequenceId);
@@ -1923,14 +1941,13 @@ class Builder
                 null,
                 $affiliateId
             )
-            ->addMediaData($mediaId);
+            ->addDocumentData($documentId);
     }
 
     /**
      * Returns builder for postback request
      *
-     * @param int|null $requestId
-     * @param string|null $transactionId
+     * @param int $requestId
      * @param string|null $transactionStatus
      * @param string|null $code
      * @param string|null $reason
@@ -1939,13 +1956,14 @@ class Builder
      * @param string|null $cvvResult
      * @param string|null $pspCode
      * @param string|null $pspReason
+     * @param string|null $merchantAdviceCode
+     * @param string|null $merchantAdviceText
      * @param string|null $arn
      * @param string|null $paymentAccountId
      * @return Builder
      */
     public static function postBackEvent(
-        $requestId =  null,
-        $transactionId = null,
+        $requestId,
         $transactionStatus = null,
         $code = null,
         $reason = null,
@@ -1954,13 +1972,14 @@ class Builder
         $cvvResult = null,
         $pspCode = null,
         $pspReason = null,
+        $merchantAdviceCode = null,
+        $merchantAdviceText = null,
         $arn = null,
         $paymentAccountId = null
     ) {
-        $builder = new self('postback', '');
+        $builder = new self(self::EVENT_POSTBACK, '');
         return $builder->addPostBackData(
             $requestId,
-            $transactionId,
             $transactionStatus,
             $code,
             $reason,
@@ -1969,9 +1988,190 @@ class Builder
             $cvvResult,
             $pspCode,
             $pspReason,
+            $merchantAdviceCode,
+            $merchantAdviceText,
             $arn,
             $paymentAccountId
        );
+    }
+
+    /**
+     * Returns builder for document request
+     *
+     * @param string $eventId
+     * @param int $eventTimestamp
+     * @param string $userId
+     * @param string $documentType
+     * @param string|null $sequenceId
+     * @param string|null $groupId
+     * @param string|null $documentCountry
+     * @param string|null $documentNumber
+     * @param string|null $fileName
+     * @param string|null $email
+     * @param string|null $firstname
+     * @param string|null $lastname
+     * @param string|null $fullname
+     * @param int|null $birthDate
+     * @param int|null $age
+     * @param string|null $gender
+     * @param string|null $nationality
+     * @param string|null $country
+     * @param string|null $city
+     * @param string|null $zip
+     * @param string|null $address
+     * @param int|null $issueDate
+     * @param int|null $expiryDate
+     * @param string|null $authority
+     * @param string|null $recordNumber
+     * @param string|null $personalNumber
+     * @param string|null $description
+     * @param float|null $productQuantity
+     * @param string|null $paymentMethod
+     * @param float|null $amount
+     * @param float|null $amountConverted
+     * @param string|null $currency
+     * @param string|null $mrzDocumentType
+     * @param string|null $mrzCountry
+     * @param string|null $mrzLastname
+     * @param string|null $mrzFirstname
+     * @param string|null $mrzFullname
+     * @param string|null $mrzDocumentNumber
+     * @param string|null $mrzNationality
+     * @param string|null $mrzPersonalNumber
+     * @param int|null $mrzBirthDate
+     * @param string|null $mrzGender
+     * @param int|null $mrzExpiryDate
+     * @param string|null $mrzRecordNumber
+     * @param bool|null $mrzCheckDigitsValidation
+     * @param string|null $extractedTest
+     * @param array|null $textLanguageDetails
+     * @param string|null $translatedExtractedText
+     * @param string|null $translatedFrom
+     * @param string|null $translatedTo
+     *
+     * @return Builder
+     */
+    public static function documentEvent(
+        $eventId,
+        $eventTimestamp,
+        $userId,
+        $documentType,
+        $sequenceId = null,
+        $groupId = null,
+        $documentCountry = null,
+        $documentNumber = null,
+        $fileName = null,
+        $email = null,
+        $firstname = null,
+        $lastname = null,
+        $fullname = null,
+        $birthDate = null,
+        $age = null,
+        $gender = null,
+        $nationality = null,
+        $country = null,
+        $city = null,
+        $zip = null,
+        $address = null,
+        $issueDate = null,
+        $expiryDate = null,
+        $authority = null,
+        $recordNumber = null,
+        $personalNumber = null,
+        $description = null,
+        $productQuantity = null,
+        $paymentMethod = null,
+        $amount = null,
+        $amountConverted = null,
+        $currency = null,
+        $mrzDocumentType = null,
+        $mrzCountry = null,
+        $mrzLastname = null,
+        $mrzFirstname = null,
+        $mrzFullname = null,
+        $mrzDocumentNumber = null,
+        $mrzNationality = null,
+        $mrzPersonalNumber = null,
+        $mrzBirthDate = null,
+        $mrzGender = null,
+        $mrzExpiryDate = null,
+        $mrzRecordNumber = null,
+        $mrzCheckDigitsValidation = null,
+        $extractedTest = null,
+        $textLanguageDetails = null,
+        $translatedExtractedText = null,
+        $translatedFrom = null,
+        $translatedTo = null
+    ) {
+        $sequenceId = $sequenceId ?? '';
+        $builder = new self(self::EVENT_DOCUMENT, $sequenceId);
+        if ($eventTimestamp === null) {
+            $eventTimestamp = time();
+        }
+        return $builder
+            ->addDocumentEventData(
+                $eventId,
+                $eventTimestamp,
+                $documentType,
+                $groupId,
+                $documentCountry,
+                $documentNumber,
+                $fileName,
+                $nationality,
+                $issueDate,
+                $expiryDate,
+                $authority,
+                $recordNumber,
+                $personalNumber,
+                $description,
+                $productQuantity,
+                $paymentMethod,
+                $amount,
+                $amountConverted,
+                $currency,
+                $mrzDocumentType,
+                $mrzCountry,
+                $mrzLastname,
+                $mrzFirstname,
+                $mrzFullname,
+                $mrzDocumentNumber,
+                $mrzNationality,
+                $mrzPersonalNumber,
+                $mrzBirthDate,
+                $mrzGender,
+                $mrzExpiryDate,
+                $mrzRecordNumber,
+                $mrzCheckDigitsValidation,
+                $extractedTest,
+                $textLanguageDetails,
+                $translatedExtractedText,
+                $translatedFrom,
+                $translatedTo
+            )
+            ->addUserData(
+                $email,
+                $userId,
+                null,
+                null,
+                $firstname,
+                $lastname,
+                $gender,
+                $age,
+                $country,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                $birthDate,
+                $fullname,
+                null,
+                $city,
+                $address,
+                $zip
+            );
     }
 
     /**
@@ -1986,7 +2186,7 @@ class Builder
             throw new \InvalidArgumentException('Envelope type must be string');
         }
 
-        if ($envelopeType == self::EVENT_PROFILE_UPDATE) {
+        if ($envelopeType == self::EVENT_PROFILE_UPDATE || $envelopeType == self::EVENT_DOCUMENT) {
             if (!is_null($sequenceId) && !is_string($sequenceId)) {
                 throw new \InvalidArgumentException('Sequence ID must be string or null');
             }
@@ -2120,6 +2320,7 @@ class Builder
      * @param string|null $languageSystem
      * @param bool|null $cookieEnabled
      * @param bool|null $doNotTrack
+     * @param bool|null $anonymous
      * @param bool|null $ajaxValidation
      * @param string|null $deviceId
      * @param string|null $ipList
@@ -2144,6 +2345,7 @@ class Builder
         $languageSystem = '',
         $cookieEnabled = null,
         $doNotTrack = null,
+        $anonymous = null,
         $ajaxValidation = null,
         $deviceId = '',
         $ipList = null,
@@ -2194,6 +2396,9 @@ class Builder
         if ($doNotTrack !== null && !is_bool($doNotTrack)) {
             throw new \InvalidArgumentException('DNT flag must be boolean');
         }
+        if ($anonymous !== null && !is_bool($anonymous)) {
+            throw new \InvalidArgumentException('Anonymous flag must be boolean');
+        }
         if ($ajaxValidation !== null && !is_bool($ajaxValidation)) {
             throw new \InvalidArgumentException('AJAX validation flag must be boolean');
         }
@@ -2230,6 +2435,7 @@ class Builder
         $this->replace('language_user', $languageUser);
         $this->replace('cookie_enabled', $cookieEnabled);
         $this->replace('do_not_track', $doNotTrack);
+        $this->replace('anonymous', $anonymous);
         $this->replace('ajax_validation', $ajaxValidation);
         $this->replace('device_id', $deviceId);
         $this->replace('local_ip_list', $ipList);
@@ -3561,7 +3767,7 @@ class Builder
     /**
      * Provides postback information to envelope
      *
-     * @param int|null $requestId
+     * @param int $requestId
      * @param string|null $transactionId
      * @param string|null $transactionStatus
      * @param string|null $code
@@ -3571,13 +3777,14 @@ class Builder
      * @param string|null $cvvResult
      * @param string|null $pspCode
      * @param string|null $pspReason
+     * @param string|null $merchantAdviceCode
+     * @param string|null $merchantAdviceText
      * @param string|null $arn
      * @param string|null $paymentAccountId
      * @return $this
      */
     public function addPostbackData(
-        $requestId = null,
-        $transactionId = null,
+        $requestId,
         $transactionStatus = null,
         $code = null,
         $reason = null,
@@ -3586,17 +3793,13 @@ class Builder
         $cvvResult = null,
         $pspCode = null,
         $pspReason = null,
+        $merchantAdviceCode = null,
+        $merchantAdviceText = null,
         $arn = null,
         $paymentAccountId = null
     ) {
-        if ($requestId === null && $transactionId === null) {
-            throw new \InvalidArgumentException('request_id or transaction_id should be provided');
-        }
-        if ($transactionId !== null && !is_string($transactionId)) {
-            throw new \InvalidArgumentException('TransactionId must be string');
-        }
-        if ($requestId !== null && !is_int($requestId)) {
-            throw new \InvalidArgumentException('RequestId must be int');
+        if (!is_int($requestId)) {
+            throw new \InvalidArgumentException('Request ID must be integer');
         }
         if ($transactionStatus !== null && !is_string($transactionStatus)) {
             throw new \InvalidArgumentException('Transaction status must be string');
@@ -3622,6 +3825,12 @@ class Builder
         if ($pspReason !== null && !is_string($pspReason)) {
             throw new \InvalidArgumentException('PspReason must be string');
         }
+        if ($merchantAdviceCode !== null && !is_string($merchantAdviceCode)) {
+            throw new \InvalidArgumentException('Merchant advice code must be string');
+        }
+        if ($merchantAdviceText !== null && !is_string($merchantAdviceText)) {
+            throw new \InvalidArgumentException('Merchant advice text must be string');
+        }
         if ($arn !== null && !is_string($arn)) {
             throw new \InvalidArgumentException('Arn must be string');
         }
@@ -3630,7 +3839,6 @@ class Builder
         }
 
         $this->replace('request_id', $requestId);
-        $this->replace('transaction_id', $transactionId);
         $this->replace('transaction_status', $transactionStatus);
         $this->replace('code', $code);
         $this->replace('reason', $reason);
@@ -3639,6 +3847,8 @@ class Builder
         $this->replace('cvv_result', $cvvResult);
         $this->replace('psp_code', $pspCode);
         $this->replace('psp_reason', $pspReason);
+        $this->replace('merchant_advice_code', $merchantAdviceCode);
+        $this->replace('merchant_advice_text', $merchantAdviceText);
         $this->replace('arn', $arn);
         $this->replace('payment_account_id', $paymentAccountId);
 
@@ -3687,25 +3897,25 @@ class Builder
     }
 
     /**
-     * Provides media id value to envelope
+     * Provides document id value to envelope
      *
-     * @param array|null $mediaId
+     * @param array|null $documentId
      * @return $this
      */
-    public function addMediaData($mediaId = null)
+    public function addDocumentData($documentId = null)
     {
-        if ($mediaId !== null) {
-            if (!is_array($mediaId)) {
-                throw new \InvalidArgumentException('Media id must be array');
+        if ($documentId !== null) {
+            if (!is_array($documentId)) {
+                throw new \InvalidArgumentException('Document id must be array');
             }
 
-            foreach ($mediaId as $id) {
+            foreach ($documentId as $id) {
                 if (!is_int($id) || $id <= 0) {
-                    throw new \InvalidArgumentException('Media id must be list of int');
+                    throw new \InvalidArgumentException('Document id must be list of int');
                 }
             }
         }
-        $this->replace('media_id', $mediaId);
+        $this->replace('document_id', $documentId);
 
         return $this;
     }
@@ -3735,7 +3945,7 @@ class Builder
     public function addKycProofData($kycStartId)
     {
         if (!is_int($kycStartId)) {
-            throw new \InvalidArgumentException('KycStartId must be integer');
+            throw new \InvalidArgumentException('Kyc start ID must be integer');
         }
 
         $this->replace('kyc_start_id', $kycStartId);
@@ -3819,7 +4029,8 @@ class Builder
         $cpuClass = null,
         $deviceFingerprint = null,
         $deviceId = null,
-        $doNotTrack = null,
+        $doNotTrack = null, 
+        $anonymous = null,
         $ip = null,
         $realIp = null,
         $localIpList = null,
@@ -4142,6 +4353,10 @@ class Builder
             throw new \InvalidArgumentException('Do Not Track must be boolean');
         }
 
+        if ($anonymous !== null && !is_bool($anonymous)) {
+            throw new \InvalidArgumentException('Anonymous flag must be boolean');
+        }
+
         if ($ip !== null && !is_string($ip)) {
             throw new \InvalidArgumentException('IP must be string');
         }
@@ -4286,6 +4501,7 @@ class Builder
         $this->replace('device_fingerprint', $deviceFingerprint);
         $this->replace('device_id', $deviceId);
         $this->replace('do_not_track', $doNotTrack);
+        $this->replace('anonymous', $anonymous);
         $this->replace('ip', $ip);
         $this->replace('real_ip', $realIp);
         $this->replace('local_ip_list', $localIpList);
@@ -4360,6 +4576,7 @@ class Builder
      * @param string|null $deviceFingerprint
      * @param string|null $deviceId
      * @param bool|null $doNotTrack
+     * @param bool|null $anonymous
      * @param string|null $ip
      * @param string|null $realIp
      * @param string|null $localIpList
@@ -4432,6 +4649,7 @@ class Builder
         $deviceFingerprint = null,
         $deviceId = null,
         $doNotTrack = null,
+        $anonymous = null,
         $ip = null,
         $realIp = null,
         $localIpList = null,
@@ -4608,6 +4826,9 @@ class Builder
         if ($doNotTrack !== null && !is_bool($doNotTrack)) {
             throw new \InvalidArgumentException('Do Not Track must be boolean');
         }
+        if ($anonymous !== null && !is_bool($anonymous)) {
+            throw new \InvalidArgumentException('Anonymous flag must be boolean');
+        }
         if ($ip !== null && !is_string($ip)) {
             throw new \InvalidArgumentException('IP must be string');
         }
@@ -4718,6 +4939,7 @@ class Builder
         $this->replace('device_fingerprint', $deviceFingerprint);
         $this->replace('device_id', $deviceId);
         $this->replace('do_not_track', $doNotTrack);
+        $this->replace('anonymous', $anonymous);
         $this->replace('ip', $ip);
         $this->replace('real_ip', $realIp);
         $this->replace('local_ip_list', $localIpList);
@@ -4737,6 +4959,255 @@ class Builder
         $this->replace('origin_url', $originUrl);
         $this->replace('address_confirmed', $addressConfirmed);
         $this->replace('second_address_confirmed', $secondAddressConfirmed);
+
+        return $this;
+    }
+
+    /**
+     * Provides document information to envelope
+     *
+     * @param string $eventId
+     * @param int $eventTimestamp
+     * @param string $documentType
+     * @param string|null $groupId
+     * @param string|null $documentCountry
+     * @param string|null $documentNumber
+     * @param string|null $fileName
+     * @param string|null $nationality
+     * @param int|null $issueDate
+     * @param int|null $expiryDate
+     * @param string|null $authority
+     * @param string|null $recordNumber
+     * @param string|null $personalNumber
+     * @param string|null $description
+     * @param float|null $productQuantity
+     * @param string|null $paymentMethod
+     * @param float|null $amount
+     * @param float|null $amountConverted
+     * @param string|null $currency
+     * @param string|null $mrzDocumentType
+     * @param string|null $mrzCountry
+     * @param string|null $mrzLastname
+     * @param string|null $mrzFirstname
+     * @param string|null $mrzFullname
+     * @param string|null $mrzDocumentNumber
+     * @param string|null $mrzNationality
+     * @param string|null $mrzPersonalNumber
+     * @param int|null $mrzBirthDate
+     * @param string|null $mrzGender
+     * @param int|null $mrzExpiryDate
+     * @param string|null $mrzRecordNumber
+     * @param bool|null $mrzCheckDigitsValidation
+     * @param string|null $extractedTest
+     * @param array|null $textLanguageDetails
+     * @param string|null $translatedExtractedText
+     * @param string|null $translatedFrom
+     * @param string|null $translatedTo
+     * @return Builder
+     */
+    public function addDocumentEventData(
+        $eventId,
+        $eventTimestamp,
+        $documentType,
+        $groupId = null,
+        $documentCountry = null,
+        $documentNumber = null,
+        $fileName = null,
+        $nationality = null,
+        $issueDate = null,
+        $expiryDate = null,
+        $authority = null,
+        $recordNumber = null,
+        $personalNumber = null,
+        $description = null,
+        $productQuantity = null,
+        $paymentMethod = null,
+        $amount = null,
+        $amountConverted = null,
+        $currency = null,
+        $mrzDocumentType = null,
+        $mrzCountry = null,
+        $mrzLastname = null,
+        $mrzFirstname = null,
+        $mrzFullname = null,
+        $mrzDocumentNumber = null,
+        $mrzNationality = null,
+        $mrzPersonalNumber = null,
+        $mrzBirthDate = null,
+        $mrzGender = null,
+        $mrzExpiryDate = null,
+        $mrzRecordNumber = null,
+        $mrzCheckDigitsValidation = null,
+        $extractedTest = null,
+        $textLanguageDetails = null,
+        $translatedExtractedText = null,
+        $translatedFrom = null,
+        $translatedTo = null
+    ) {
+        if (!is_string($eventId)) {
+            throw new \InvalidArgumentException('Event ID must be string');
+        }
+        if (!is_int($eventTimestamp)) {
+            throw new \InvalidArgumentException('Event timestamp must be int');
+        }
+        if (empty($documentType)) {
+            throw new \InvalidArgumentException('Document Type is empty');
+        }
+        if (!in_array($documentType, DocumentType::getShortList())) {
+            throw new \InvalidArgumentException('Document Type must be one of the types: ' . implode(
+                    ', ',
+                    DocumentType::getShortList()
+                )
+            );
+        }
+        if ($groupId !== null && !is_string($groupId)) {
+            throw new \InvalidArgumentException('Group ID must be string');
+        }
+        if ($documentCountry !== null && !is_string($documentCountry)) {
+            throw new \InvalidArgumentException('Document Country must be string');
+        }
+        if ($documentNumber !== null && !is_string($documentNumber)) {
+            throw new \InvalidArgumentException('Document Number must be string');
+        }
+        if ($fileName !== null && !is_string($fileName)) {
+            throw new \InvalidArgumentException('File Name must be string');
+        }
+        if ($nationality !== null && !is_string($nationality)) {
+            throw new \InvalidArgumentException('Nationality must be string');
+        }
+        if ($issueDate !== null && !is_int($issueDate)) {
+            throw new \InvalidArgumentException('Issue Date must be int');
+        }
+        if ($expiryDate !== null && !is_int($expiryDate)) {
+            throw new \InvalidArgumentException('Expiry Date must be int');
+        }
+        if ($authority !== null && !is_string($authority)) {
+            throw new \InvalidArgumentException('Authority must be string');
+        }
+        if ($recordNumber !== null && !is_string($recordNumber)) {
+            throw new \InvalidArgumentException('Record Number must be string');
+        }
+        if ($personalNumber !== null && !is_string($personalNumber)) {
+            throw new \InvalidArgumentException('Personal Number must be string');
+        }
+        if ($description !== null && !is_string($description)) {
+            throw new \InvalidArgumentException('Description must be string');
+        }
+        if ($productQuantity !== null && !is_float($productQuantity)) {
+            throw new \InvalidArgumentException('Product Quantity must be float');
+        }
+        if ($paymentMethod !== null && !is_string($paymentMethod)) {
+            throw new \InvalidArgumentException('Payment Method must be string');
+        }
+        if ($amount !== null && !is_float($amount)) {
+            throw new \InvalidArgumentException('Amount must be must be  float');
+        }
+        if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
+            throw new \InvalidArgumentException('Amount Converted must be number');
+        }
+        if ($currency !== null && !is_string($currency)) {
+            throw new \InvalidArgumentException('Currency must be string');
+        }
+        if ($mrzDocumentType !== null && !is_string($mrzDocumentType)) {
+            throw new \InvalidArgumentException('Mrz Document Type must be string');
+        }
+        if ($mrzCountry !== null && !is_string($mrzCountry)) {
+            throw new \InvalidArgumentException('Mrz Country must be string');
+        }
+        if ($mrzLastname !== null && !is_string($mrzLastname)) {
+            throw new \InvalidArgumentException('Mrz Lastname must be string');
+        }
+        if ($mrzFirstname !== null && !is_string($mrzFirstname)) {
+            throw new \InvalidArgumentException('Mrz Firstname must be string');
+        }
+        if ($mrzFullname !== null && !is_string($mrzFullname)) {
+            throw new \InvalidArgumentException('Mrz Fullname must be string');
+        }
+        if ($mrzDocumentNumber !== null && !is_string($mrzDocumentNumber)) {
+            throw new \InvalidArgumentException('Mrz Document Number must be string');
+        }
+        if ($mrzNationality !== null && !is_string($mrzNationality)) {
+            throw new \InvalidArgumentException('Mrz Nationality must be string');
+        }
+        if ($mrzPersonalNumber !== null && !is_string($mrzPersonalNumber)) {
+            throw new \InvalidArgumentException('Mrz Personal Number must be string');
+        }
+        if ($mrzBirthDate !== null && !is_int($mrzBirthDate)) {
+            throw new \InvalidArgumentException('Mrz Birth Date must be int');
+        }
+        if ($mrzGender !== null && !is_string($mrzGender)) {
+            throw new \InvalidArgumentException('Mrz Gender must be string');
+        }
+        if ($mrzExpiryDate !== null && !is_int($mrzExpiryDate)) {
+            throw new \InvalidArgumentException('Mrz Expiry Date must be int');
+        }
+        if ($mrzRecordNumber !== null && !is_string($mrzRecordNumber)) {
+            throw new \InvalidArgumentException('Mrz Record Number must be string');
+        }
+        if ($mrzCheckDigitsValidation !== null && !is_bool($mrzCheckDigitsValidation)) {
+            throw new \InvalidArgumentException('Mrz Check Digits Validation enabled flag must be boolean');
+        }
+        if ($extractedTest !== null && !is_string($extractedTest)) {
+            throw new \InvalidArgumentException('Extracted Test must be string');
+        }
+        if ($textLanguageDetails !== null) {
+            if (!is_array($textLanguageDetails)) {
+                throw new \InvalidArgumentException('Text Language Details must be array');
+            }
+
+            foreach ($textLanguageDetails as $detail) {
+                if (!is_string($detail)) {
+                    throw new \InvalidArgumentException('Text Language Details must be list of string');
+                }
+            }
+        }
+        if ($translatedExtractedText !== null && !is_string($translatedExtractedText)) {
+            throw new \InvalidArgumentException('Translated Extracted Text must be string');
+        }
+        if ($translatedFrom !== null && !is_string($translatedFrom)) {
+            throw new \InvalidArgumentException('Translated From must be string');
+        }
+        if ($translatedTo !== null && !is_string($translatedTo)) {
+            throw new \InvalidArgumentException('Translated To must be string');
+        }
+
+        $this->replace('event_id', $eventId);
+        $this->replace('event_timestamp', $eventTimestamp);
+        $this->replace('document_type', $documentType);
+        $this->replace('group_id', $groupId);
+        $this->replace('document_country', $documentCountry);
+        $this->replace('document_number', $documentNumber);
+        $this->replace('file_name', $fileName);
+        $this->replace('nationality', $nationality);
+        $this->replace('issue_date', $issueDate);
+        $this->replace('expiry_date', $expiryDate);
+        $this->replace('authority', $authority);
+        $this->replace('record_number', $recordNumber);
+        $this->replace('personal_number', $personalNumber);
+        $this->replace('description', $description);
+        $this->replace('product_quantity', $productQuantity);
+        $this->replace('payment_method', $paymentMethod);
+        $this->replace('amount', $amount);
+        $this->replace('amount_converted', $amountConverted);
+        $this->replace('currency', $currency);
+        $this->replace('mrz_document_type', $mrzDocumentType);
+        $this->replace('mrz_country', $mrzCountry);
+        $this->replace('mrz_lastname', $mrzLastname);
+        $this->replace('mrz_firstname', $mrzFirstname);
+        $this->replace('mrz_fullname', $mrzFullname);
+        $this->replace('mrz_document_number', $mrzDocumentNumber);
+        $this->replace('mrz_nationality', $mrzNationality);
+        $this->replace('mrz_personal_number', $mrzPersonalNumber);
+        $this->replace('mrz_birth_date', $mrzBirthDate);
+        $this->replace('mrz_gender', $mrzGender);
+        $this->replace('mrz_expiry_date', $mrzExpiryDate);
+        $this->replace('mrz_record_number', $mrzRecordNumber);
+        $this->replace('mrz_check_digits_validation', $mrzCheckDigitsValidation);
+        $this->replace('extracted_text', $extractedTest);
+        $this->replace('text_language_details', $textLanguageDetails);
+        $this->replace('translated_extracted_text', $translatedExtractedText);
+        $this->replace('translated_from', $translatedFrom);
+        $this->replace('translated_to', $translatedTo);
 
         return $this;
     }

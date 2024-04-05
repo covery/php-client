@@ -63,7 +63,7 @@ class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Test curl', $result['user_agent']);
         self::assertSame('group id value', $result['group_id']);
         self::assertSame('links to documents', $result['links_to_documents']);
-        self::assertSame([1, 2], $result['media_id']);
+        self::assertSame([1, 2], $result['document_id']);
         $validator->validate($result);
 
         // Minimal data

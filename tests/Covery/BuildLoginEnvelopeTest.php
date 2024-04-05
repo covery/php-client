@@ -35,7 +35,7 @@ class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertSame('somePassword', $result['password']);
         self::assertSame('email campaign', $result['campaign']);
         self::assertSame('group id value', $result['group_id']);
-        self::assertSame([1, 2], $result['media_id']);
+        self::assertSame([1, 2], $result['document_id']);
 
         self::assertTrue($result['login_failed']);
         $validator->validate($result);

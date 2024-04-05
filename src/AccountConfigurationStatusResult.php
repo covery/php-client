@@ -34,7 +34,7 @@ class AccountConfigurationStatusResult
     /**
      * @var string|null
      */
-    private $mediaStorageWebhookUrl;
+    private $documentStorageWebhookUrl;
     /**
      * @var string|null
      */
@@ -80,7 +80,7 @@ class AccountConfigurationStatusResult
      * @param $decisionCallbackUrl
      * @param $manualDecisionCallbackUrl
      * @param $ongoingMonitoringWebhookUrl
-     * @param $mediaStorageWebhookUrl
+     * @param $documentStorageWebhookUrl
      * @param $fraudAlertCallbackUrl
      * @param $cardIdGeneration
      * @param $deviceFingerprintGeneration
@@ -97,7 +97,7 @@ class AccountConfigurationStatusResult
         $decisionCallbackUrl,
         $manualDecisionCallbackUrl,
         $ongoingMonitoringWebhookUrl,
-        $mediaStorageWebhookUrl,
+        $documentStorageWebhookUrl,
         $fraudAlertCallbackUrl,
         $cardIdGeneration,
         $deviceFingerprintGeneration,
@@ -123,8 +123,8 @@ class AccountConfigurationStatusResult
         if (!empty($ongoingMonitoringWebhookUrl) && !is_string($ongoingMonitoringWebhookUrl)) {
             throw new \InvalidArgumentException("Ongoing Monitoring Webhook Url must be string");
         }
-        if (!empty($mediaStorageWebhookUrl) && !is_string($mediaStorageWebhookUrl)) {
-            throw new \InvalidArgumentException("Media Storage Webhook Url Url must be string");
+        if (!empty($documentStorageWebhookUrl) && !is_string($documentStorageWebhookUrl)) {
+            throw new \InvalidArgumentException("Document Storage Webhook Url Url must be string");
         }
         if (!empty($fraudAlertCallbackUrl) && !is_string($fraudAlertCallbackUrl)) {
             throw new \InvalidArgumentException("Fraud Alert Callback Url must be string");
@@ -159,7 +159,7 @@ class AccountConfigurationStatusResult
         $this->decisionCallbackUrl = $decisionCallbackUrl;
         $this->manualDecisionCallbackUrl = $manualDecisionCallbackUrl;
         $this->ongoingMonitoringWebhookUrl = $ongoingMonitoringWebhookUrl;
-        $this->mediaStorageWebhookUrl = $mediaStorageWebhookUrl;
+        $this->documentStorageWebhookUrl = $documentStorageWebhookUrl;
         $this->fraudAlertCallbackUrl = $fraudAlertCallbackUrl;
         $this->cardIdGeneration = $cardIdGeneration;
         $this->deviceFingerprintGeneration = $deviceFingerprintGeneration;
@@ -214,9 +214,9 @@ class AccountConfigurationStatusResult
     /**
      * @return string
      */
-    public function getMediaStorageWebhookUrl()
+    public function getDocumentStorageWebhookUrl()
     {
-        return $this->mediaStorageWebhookUrl;
+        return $this->documentStorageWebhookUrl;
     }
 
     /**

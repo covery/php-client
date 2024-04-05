@@ -1,15 +1,17 @@
 <?php
 
+use Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+
 class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuild()
     {
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
         // Full data
-        $result = \Covery\Client\Envelopes\Builder::postBackEvent(
+        $result = Builder::postBackEvent(
             123456,
-            "someTransactionId",
             "someTransactionStatus",
             "someCode",
             "someReason",
@@ -18,31 +20,23 @@ class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
             "someCvvResult",
             "somePspCode",
             "somePspReason",
+            "someMerchantAdviceCode",
+            "someMerchantAdviceText",
             "someArn"
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
-        self::assertSame('postback', $result->getType());
+        self::assertSame(Builder::EVENT_POSTBACK, $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('', $result->getSequenceId());
-        self::assertCount(11, $result);
+        self::assertCount(12, $result);
         $validator->validate($result);
-
 
         // Minimal data with request id
-        $result = \Covery\Client\Envelopes\Builder::postBackEvent(22222)->build();
-        self::assertSame('postback', $result->getType());
+        $result = Builder::postBackEvent(22222)->build();
+        self::assertSame(Builder::EVENT_POSTBACK, $result->getType());
         self::assertCount(0, $result->getIdentities());
         self::assertSame('', $result->getSequenceId());
         self::assertCount(1, $result);
         $validator->validate($result);
-
-        // Minimal data with transaction id
-        $result = \Covery\Client\Envelopes\Builder::postBackEvent(null, "transactionId")->build();
-        self::assertSame('postback', $result->getType());
-        self::assertCount(0, $result->getIdentities());
-        self::assertSame('', $result->getSequenceId());
-        self::assertCount(1, $result);
-        $validator->validate($result);
-
     }
 }
