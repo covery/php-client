@@ -88,7 +88,6 @@ class BuildProfileUpdateEventTest extends \PHPUnit_Framework_TestCase
             "profileUpdateDeviceFingerprint",
             "profileUpdateDeviceId",
             true,
-            false,
             "profileUpdateIp",
             "profileUpdateRealIp",
             "profileUpdateLocalIpList",
@@ -107,7 +106,8 @@ class BuildProfileUpdateEventTest extends \PHPUnit_Framework_TestCase
             "profileUpdateRefererUrl",
             "profileUpdateOriginUrl",
             "linksToDocuments",
-            [1, 2]
+            [1, 2],
+            false
         )->build();
 
 

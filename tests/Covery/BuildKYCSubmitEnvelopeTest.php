@@ -63,7 +63,6 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
             'KycSubmitDeviceFingerPrint',
             'KycSubmitDeviceId',
             false,
-            true,
             'KycSubmitIp',
             'KycSubmitRealIp',
             'KycSubmitLocalIpList',
@@ -82,6 +81,7 @@ class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
             'KycSubmitRefererUrl',
             'KycSubmitOriginUrl',
             [1, 2],
+            true,
             true,
             true
 

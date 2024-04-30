@@ -70,13 +70,13 @@ class BuildOrderSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
             true,
             false,
             true,
-            true,
             "deviceId",
             "ipList",
             "plugins",
             "refererUrl",
             "originUrl",
-            "clientResolution"
+            "clientResolution",
+            true
         )->build();
 
         self::assertSame('order_submit', $result->getType());

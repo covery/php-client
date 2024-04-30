@@ -1041,7 +1041,6 @@ class Builder
      * @param null $deviceFingerprint
      * @param null $deviceId
      * @param null $doNotTrack
-     * @param null $anonymous
      * @param null $ip
      * @param null $realIp
      * @param null $localIpList
@@ -1061,6 +1060,7 @@ class Builder
      * @param null $originUrl
      * @param string|null $linksToDocuments
      * @param array|null $documentId
+     * @param null $anonymous
      * @return static
      */
     public static function profileUpdateEvent(
@@ -1141,7 +1141,6 @@ class Builder
         $deviceFingerprint = null,
         $deviceId = null,
         $doNotTrack = null,
-        $anonymous = null,
         $ip = null,
         $realIp = null,
         $localIpList = null,
@@ -1160,7 +1159,8 @@ class Builder
         $refererUrl = null,
         $originUrl = null,
         $linksToDocuments = null,
-        $documentId = null
+        $documentId = null,
+        $anonymous = null
     ) {
         $builder = new self(self::EVENT_PROFILE_UPDATE, $sequenceId);
 
@@ -1242,7 +1242,6 @@ class Builder
                 $deviceFingerprint,
                 $deviceId,
                 $doNotTrack,
-                $anonymous,
                 $ip,
                 $realIp,
                 $localIpList,
@@ -1259,7 +1258,8 @@ class Builder
                 $userAgent,
                 $plugins,
                 $refererUrl,
-                $originUrl
+                $originUrl,
+                $anonymous
             )
             ->addLinksToDocuments($linksToDocuments)
             ->addDocumentData($documentId);
@@ -1343,7 +1343,6 @@ class Builder
         $deviceFingerprint = null,
         $deviceId = null,
         $doNotTrack = null,
-        $anonymous = null,
         $ip = null,
         $realIp = null,
         $localIpList = null,
@@ -1363,7 +1362,8 @@ class Builder
         $originUrl = null,
         $documentId = null,
         $addressConfirmed = null,
-        $secondAddressConfirmed = null
+        $secondAddressConfirmed = null,
+        $anonymous = null
     ) {
         $builder = new self('kyc_submit', $sequenceId);
         if ($eventTimestamp === null) {
@@ -1423,7 +1423,6 @@ class Builder
                 $deviceFingerprint,
                 $deviceId,
                 $doNotTrack,
-                $anonymous,
                 $ip,
                 $realIp,
                 $localIpList,
@@ -1442,7 +1441,8 @@ class Builder
                 $refererUrl,
                 $originUrl,
                 $addressConfirmed,
-                $secondAddressConfirmed
+                $secondAddressConfirmed,
+                $anonymous
             )
             ->addUserData(
                 null,
@@ -1972,10 +1972,10 @@ class Builder
         $cvvResult = null,
         $pspCode = null,
         $pspReason = null,
-        $merchantAdviceCode = null,
-        $merchantAdviceText = null,
         $arn = null,
-        $paymentAccountId = null
+        $paymentAccountId = null,
+        $merchantAdviceCode = null,
+        $merchantAdviceText = null
     ) {
         $builder = new self(self::EVENT_POSTBACK, '');
         return $builder->addPostBackData(
@@ -1988,10 +1988,10 @@ class Builder
             $cvvResult,
             $pspCode,
             $pspReason,
-            $merchantAdviceCode,
-            $merchantAdviceText,
             $arn,
-            $paymentAccountId
+            $paymentAccountId,
+            $merchantAdviceCode,
+            $merchantAdviceText
        );
     }
 
@@ -2320,7 +2320,6 @@ class Builder
      * @param string|null $languageSystem
      * @param bool|null $cookieEnabled
      * @param bool|null $doNotTrack
-     * @param bool|null $anonymous
      * @param bool|null $ajaxValidation
      * @param string|null $deviceId
      * @param string|null $ipList
@@ -2328,6 +2327,7 @@ class Builder
      * @param string|null $refererUrl
      * @param string|null $originUrl
      * @param string|null $clientResolution
+     * @param bool|null $anonymous
      * @return $this
      */
     public function addBrowserData(
@@ -2345,14 +2345,14 @@ class Builder
         $languageSystem = '',
         $cookieEnabled = null,
         $doNotTrack = null,
-        $anonymous = null,
         $ajaxValidation = null,
         $deviceId = '',
         $ipList = null,
         $plugins = null,
         $refererUrl = null,
         $originUrl = null,
-        $clientResolution = null
+        $clientResolution = null,
+        $anonymous = null
     ) {
         if ($deviceFingerprint !== null && !is_string($deviceFingerprint)) {
             throw new \InvalidArgumentException('Device fingerprint must be string');
@@ -3777,10 +3777,10 @@ class Builder
      * @param string|null $cvvResult
      * @param string|null $pspCode
      * @param string|null $pspReason
-     * @param string|null $merchantAdviceCode
-     * @param string|null $merchantAdviceText
      * @param string|null $arn
      * @param string|null $paymentAccountId
+     * @param string|null $merchantAdviceCode
+     * @param string|null $merchantAdviceText
      * @return $this
      */
     public function addPostbackData(
@@ -3793,10 +3793,10 @@ class Builder
         $cvvResult = null,
         $pspCode = null,
         $pspReason = null,
-        $merchantAdviceCode = null,
-        $merchantAdviceText = null,
         $arn = null,
-        $paymentAccountId = null
+        $paymentAccountId = null,
+        $merchantAdviceCode = null,
+        $merchantAdviceText = null
     ) {
         if (!is_int($requestId)) {
             throw new \InvalidArgumentException('Request ID must be integer');
@@ -3847,10 +3847,10 @@ class Builder
         $this->replace('cvv_result', $cvvResult);
         $this->replace('psp_code', $pspCode);
         $this->replace('psp_reason', $pspReason);
-        $this->replace('merchant_advice_code', $merchantAdviceCode);
-        $this->replace('merchant_advice_text', $merchantAdviceText);
         $this->replace('arn', $arn);
         $this->replace('payment_account_id', $paymentAccountId);
+        $this->replace('merchant_advice_code', $merchantAdviceCode);
+        $this->replace('merchant_advice_text', $merchantAdviceText);
 
         return $this;
     }
@@ -4029,8 +4029,7 @@ class Builder
         $cpuClass = null,
         $deviceFingerprint = null,
         $deviceId = null,
-        $doNotTrack = null, 
-        $anonymous = null,
+        $doNotTrack = null,
         $ip = null,
         $realIp = null,
         $localIpList = null,
@@ -4047,7 +4046,8 @@ class Builder
         $userAgent = null,
         $plugins = null,
         $refererUrl = null,
-        $originUrl = null
+        $originUrl = null,
+        $anonymous = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -4576,7 +4576,6 @@ class Builder
      * @param string|null $deviceFingerprint
      * @param string|null $deviceId
      * @param bool|null $doNotTrack
-     * @param bool|null $anonymous
      * @param string|null $ip
      * @param string|null $realIp
      * @param string|null $localIpList
@@ -4594,6 +4593,7 @@ class Builder
      * @param string|null $plugins
      * @param string|null $refererUrl
      * @param string|null $originUrl
+     * @param bool|null $anonymous
      * @return $this
      */
     public function addKycSubmitData(
@@ -4649,7 +4649,6 @@ class Builder
         $deviceFingerprint = null,
         $deviceId = null,
         $doNotTrack = null,
-        $anonymous = null,
         $ip = null,
         $realIp = null,
         $localIpList = null,
@@ -4668,7 +4667,8 @@ class Builder
         $refererUrl = null,
         $originUrl = null,
         $addressConfirmed = null,
-        $secondAddressConfirmed = null
+        $secondAddressConfirmed = null,
+        $anonymous = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');

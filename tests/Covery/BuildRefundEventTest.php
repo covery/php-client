@@ -43,14 +43,14 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
             'langSystem',
             true,
             true,
-            false,
             true,
             "id",
             "ipList",
             "plugins",
             "refUrl",
             "originUrl",
-            "clientResolution"
+            "clientResolution",
+            false
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('refund', $result->getType());

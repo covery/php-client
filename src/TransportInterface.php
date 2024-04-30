@@ -7,8 +7,8 @@ use Psr\Http\Message\ResponseInterface;
 
 interface TransportInterface
 {
-    const DEFAULT_HOST = "127.0.0.1:8221";
-    const DEFAULT_SCHEME = "http";
+    const DEFAULT_HOST = "api.covery.ai";
+    const DEFAULT_SCHEME = "https";
 
     /**
      * Sends request

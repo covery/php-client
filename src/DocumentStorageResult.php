@@ -12,7 +12,7 @@ namespace Covery\Client;
 class DocumentStorageResult
 {
     /**
-     * @var string
+     * @var string[]
      */
     private $uploadUrl;
 
@@ -44,7 +44,7 @@ class DocumentStorageResult
 
         foreach ($uploadUrl as $url) {
             if (!is_string($url)) {
-                throw new \InvalidArgumentException('Upload URL must be list of int');
+                throw new \InvalidArgumentException('Upload URL must be list of string');
             }
         }
         if (!is_int($documentId)) {
@@ -62,7 +62,7 @@ class DocumentStorageResult
 
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getUploadUrl()
     {
