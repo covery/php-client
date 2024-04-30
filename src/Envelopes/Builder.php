@@ -3768,7 +3768,6 @@ class Builder
      * Provides postback information to envelope
      *
      * @param int $requestId
-     * @param string|null $transactionId
      * @param string|null $transactionStatus
      * @param string|null $code
      * @param string|null $reason

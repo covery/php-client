@@ -230,11 +230,15 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
-* `1.4.0` Rename MediaStorage method to DocumentMethod. Rename MediaConnection method to DocumentConnection. Rename UploadMediaFile method to DocumentMediaFile.
-  * Rename `media_id` field to `document_id`
-  * Added optional `merchant_advice_code` and `merchant_advice_text` fields for postback request
+* `1.4.0` 
+  * **Removed transaction_id field from postback event** 
+  * Renamed MediaStorage method to DocumentMethod
+  * Renamed MediaConnection method to DocumentConnection
+  * Renamed UploadMediaFile method to DocumentMediaFile.
+  * Renamed `media_id` field to `document_id`
+  * Added optional `merchant_advice_code` and `merchant_advice_text` fields for postback event
   * Added optional `anonymous` field for kyc_submit, profile_update events
-  * Change length field `plugins` to `8192`
+  * Changed length field `plugins` to `8192`
   * New `document` event introduced
   * Old tests modified
 * `1.3.14` Added MediaStorage method. Added MediaConnection method. Added UploadMediaFile method.
