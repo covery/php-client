@@ -53,7 +53,7 @@ class ValidatorV1
         'transaction_type' => 'string(255)',
         'user_agent' => 'string(2048)',
         'local_ip_list' => 'string(1024)',
-        'plugins' => 'string(1024)',
+        'plugins' => 'string(8192)',
         'referer_url' => 'string(2048)',
         'origin_url' => 'string(2048)',
         'client_resolution' => 'string(255)',
@@ -81,6 +81,7 @@ class ValidatorV1
         'ajax_validation' => 'bool',
         'cookie_enabled' => 'bool',
         'do_not_track' => 'bool',
+        'anonymous' => 'bool',
         'email_confirmed' => 'bool',
         'login_failed' => 'bool',
         'phone_confirmed' => 'bool',
@@ -144,6 +145,8 @@ class ValidatorV1
         'cvv_result' => 'string(255)',
         'psp_code' => 'string(255)',
         'psp_reason' => 'string(255)',
+        'merchant_advice_code'  => 'string(255)',
+        'merchant_advice_text'  => 'string(255)',
         'arn' => 'string(255)',
         'password' => 'string(255)',
         'iban' => 'string(255)',
@@ -241,7 +244,32 @@ class ValidatorV1
         'active_features' => 'string(1024)',
         'promotions' => 'string(1024)',
         'links_to_documents' => 'string(2048)',
-        'media_id' => 'array_int',
+        'type' => 'string(255)',
+        'document_id' => 'array_int',
+        'document_type' => 'string(225)',
+        'document_number' => 'string(225)',
+        'file_name' => 'string(225)',
+        'authority' => 'string(225)',
+        'record_number' => 'string(225)',
+        'personal_number' => 'string(225)',
+        'mrz_document_type' => 'string(225)',
+        'mrz_country' => 'string(225)',
+        'mrz_lastname' => 'string(225)',
+        'mrz_firstname' => 'string(225)',
+        'mrz_fullname' => 'string(225)',
+        'mrz_document_number' => 'string(225)',
+        'mrz_nationality' => 'string(225)',
+        'mrz_personal_number' => 'string(225)',
+        'mrz_birth_date' => 'int',
+        'mrz_gender' => 'string(225)',
+        'mrz_expiry_date' => 'int',
+        'mrz_record_number' => 'string(225)',
+        'mrz_check_digits_validation' => 'bool',
+        'extracted_text' => 'string(225)',
+        'text_language_details' => 'array_string',
+        'translated_extracted_text' => 'string(225)',
+        'translated_from' => 'string(225)',
+        'translated_to' => 'string(225)'
     );
 
     private static $sharedOptional = array(
@@ -251,6 +279,7 @@ class ValidatorV1
         'device_fingerprint',
         'device_id',
         'do_not_track',
+        'anonymous',
         'ip',
         'language',
         'language_browser',
@@ -273,7 +302,7 @@ class ValidatorV1
     private static $types = array(
         'confirmation' => array(
             'mandatory' => array('confirmation_timestamp', 'user_merchant_id'),
-            'optional' => array('email_confirmed', 'phone_confirmed', 'email', 'phone', "group_id", "media_id"),
+            'optional' => array('email_confirmed', 'phone_confirmed', 'email', 'phone', "group_id", "document_id"),
         ),
         'login' => array(
             'mandatory' => array('login_timestamp', 'user_merchant_id'),
@@ -287,7 +316,7 @@ class ValidatorV1
                 'password',
                 'campaign',
                 "group_id",
-                "media_id",
+                "document_id",
             )
         ),
         'registration' => array(
@@ -308,7 +337,7 @@ class ValidatorV1
                 'password',
                 'campaign',
                 "group_id",
-                "media_id",
+                "document_id",
             ),
         ),
         'transaction' => array(
@@ -361,7 +390,7 @@ class ValidatorV1
                 'acquirer_merchant_id',
                 'group_id',
                 'links_to_documents',
-                'media_id',
+                'document_id',
             )
         ),
         'payout' => array(
@@ -390,7 +419,7 @@ class ValidatorV1
                 'payout_expiration_year',
                 'group_id',
                 'links_to_documents',
-                'media_id',
+                'document_id',
             )
         ),
         'install' => array(
@@ -405,7 +434,7 @@ class ValidatorV1
                 'affiliate_id',
                 'campaign',
                 "group_id",
-                "media_id",
+                "document_id",
             )
         ),
         'refund' => array(
@@ -430,7 +459,7 @@ class ValidatorV1
                 'user_merchant_id',
                 'group_id',
                 'links_to_documents',
-                'media_id',
+                'document_id',
             )
         ),
         'transfer' => array(
@@ -482,14 +511,13 @@ class ValidatorV1
                 'account_id',
                 'second_account_id',
                 'links_to_documents',
-                'media_id',
+                'document_id',
             )
         ),
         'postback' => array(
             'mandatory' => array(),
             'optional' => array(
                 'request_id',
-                'transaction_id',
                 'transaction_status',
                 'code',
                 'reason',
@@ -498,6 +526,8 @@ class ValidatorV1
                 'cvv_result',
                 'psp_code',
                 'psp_reason',
+                'merchant_advice_code',
+                'merchant_advice_text',
                 'arn',
                 'payment_account_id',
             )
@@ -555,7 +585,7 @@ class ValidatorV1
                 'expiry_date',
                 'gender',
                 'links_to_documents',
-                'media_id',
+                'document_id',
                 'address_confirmed',
                 'second_address_confirmed',
             )
@@ -618,6 +648,7 @@ class ValidatorV1
                 'device_fingerprint',
                 'device_id',
                 'do_not_track',
+                'anonymous',
                 'ip',
                 'real_ip',
                 'local_ip_list',
@@ -635,7 +666,7 @@ class ValidatorV1
                 'plugins',
                 'referer_url',
                 'origin_url',
-                'media_id',
+                'document_id',
                 'address_confirmed',
                 'second_address_confirmed',
             )
@@ -727,7 +758,7 @@ class ValidatorV1
                 "product_image_url",
                 "carrier_url",
                 "carrier_phone",
-                'media_id',
+                'document_id',
             )
         ),
         'order_submit' => array(
@@ -778,7 +809,7 @@ class ValidatorV1
                 "product_image_url",
                 "carrier_url",
                 "carrier_phone",
-                'media_id',
+                'document_id',
             )
         ),
         'profile_update' => array(
@@ -862,6 +893,7 @@ class ValidatorV1
                 "device_fingerprint",
                 "device_id",
                 "do_not_track",
+                "anonymous",
                 "ip",
                 "real_ip",
                 "local_ip_list",
@@ -880,7 +912,65 @@ class ValidatorV1
                 "referer_url",
                 "origin_url",
                 "links_to_documents",
-                "media_id",
+                "document_id",
+            )
+        ),
+        'document' => array(
+            'mandatory' => array(
+                "event_id",
+                "event_timestamp",
+                "user_merchant_id",
+                "document_type",
+            ),
+            'optional' => array(
+                "sequence_id",
+                "group_id",
+                "operation",
+                "document_country",
+                "document_number",
+                "file_name",
+                "email",
+                "firstname",
+                "lastname",
+                "fullname",
+                "birth_date",
+                "age",
+                "gender",
+                "nationality",
+                "country",
+                "state",
+                "city",
+                "zip",
+                "address",
+                "issue_date",
+                "expiry_date",
+                "authority",
+                "record_number",
+                "personal_number",
+                "description",
+                "product_quantity",
+                "payment_method",
+                "amount",
+                "amount_converted",
+                "currency",
+                "mrz_document_type",
+                "mrz_country",
+                "mrz_lastname",
+                "mrz_firstname",
+                "mrz_fullname",
+                "mrz_document_number",
+                "mrz_nationality",
+                "mrz_personal_number",
+                "mrz_birth_date",
+                "mrz_gender",
+                "mrz_expiry_date",
+                "mrz_record_number",
+                "mrz_check_digits_validation",
+                "extracted_text",
+                "text_language_details",
+                "translated_extracted_text",
+                "translated_from",
+                "translated_to",
             )
         ),
     );
@@ -1058,6 +1148,26 @@ class ValidatorV1
                                     }
                                 }
                                 break;
+                            case 'array_string':
+                                if (!is_array($value)) {
+                                    $details[] = sprintf(
+                                        'Field "%s" must be array, but %s provided',
+                                        $key,
+                                        $value === null ? 'null' : gettype($value)
+                                    );
+                                }
+                                if (is_array($value)) {
+                                    foreach ($value as $id) {
+                                        if (!is_string($id)) {
+                                            $details[] = sprintf(
+                                                'ID: "%s" must be string, but %s provided',
+                                                $id,
+                                                $id === null ? 'null' : gettype($id)
+                                            );
+                                        }
+                                    }
+                                }
+                                break;
                             default:
                                 $details[] = sprintf('Unknown type for "%s"', $key);
                         }
@@ -1081,17 +1191,7 @@ class ValidatorV1
      */
     public function validate(EnvelopeInterface $envelope)
     {
-        if ($envelope->getType() === 'postback') {
-            $details = array_merge(
-                $this->analyzeTypeAndMandatoryFields($envelope),
-                $this->analyzeFieldTypes($envelope)
-            );
-        } elseif ($envelope->getType() === 'kyc_proof') {
-            $details = array_merge(
-                $this->analyzeTypeAndMandatoryFields($envelope),
-                $this->analyzeFieldTypes($envelope)
-            );
-        } elseif ($envelope->getType() === Builder::EVENT_PROFILE_UPDATE) {
+        if (in_array($envelope->getType(), Builder::LIMITED_VALIDATION_EVENTS)) {
             $details = array_merge(
                 $this->analyzeTypeAndMandatoryFields($envelope),
                 $this->analyzeFieldTypes($envelope)

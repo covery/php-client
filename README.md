@@ -77,7 +77,7 @@ Postback event example:
 use Covery\Client\Envelopes\Builder;
 use Covery\Client\Facade;
 
-$event = Builder::postbackEvent($requestId, null, 'code', 'reason')->build(); //postbcak for event with id $requestId
+$event = Builder::postbackEvent($requestId, null, 'code', 'reason')->build(); //postback for event with id $requestId
 $postbackRequestId = Facade::sendPostback($event);
 ```
 
@@ -100,45 +100,45 @@ $event = Builder::cardIdEvent('curdNumber')->build();
 $result = Facade::sendCardId($event);
 ```
 
-Media Storage event example:
+Document Storage event example:
 ```php
-use Covery\Client\MediaStorage\Builder;
+use Covery\Client\DocumentStorage\Builder;
 use Covery\Client\Facade;
 
-$event = Builder::mediaStorageEvent(\Covery\Client\ContentType::JPEG, \Covery\Client\ContentDescription::GENERAL_DOCUMENT, null, false)->build();
-$result = Facade::sendMediaStorage($event);
+$event = Builder::documentStorageEvent(\Covery\Client\ContentType::JPEG, \Covery\Client\ContentDescription::GENERAL_DOCUMENT, null, false)->build();
+$result = Facade::sendDocumentStorage($event);
 ```
 
-Attach media connection event example:
+Attach document connection event example:
 ```php
-use Covery\Client\MediaConnection\Builder;
+use Covery\Client\DocumentConnection\Builder;
 use Covery\Client\Facade;
 
-$event = Builder::mediaConnectionEvent(1, [1])->build();
-$result = Facade::attachMediaConnection($event);
+$event = Builder::documentConnectionEvent(1, [1])->build();
+$result = Facade::attachDocumentConnection($event);
 ```
 
-Detach media connection event example:
+Detach document connection event example:
 ```php
-use Covery\Client\MediaConnection\Builder;
+use Covery\Client\DocumentConnection\Builder;
 use Covery\Client\Facade;
 
-$event = Builder::mediaConnectionEvent(1, [1])->build();
-$result = Facade::detachMediaConnection($event);
+$event = Builder::documentConnectionEvent(1, [1])->build();
+$result = Facade::detachDocumentConnection($event);
 ```
 
-Media file upload example:
+Document file upload example:
 ```php
 use Covery\Client\Facade;
 
 $stream = fopen('PATH_TO_FILE', 'r');
-$mediaUrl = 'UPLOAD_URL'; //URL from Covery
-$mediaFileUploader = \Covery\Client\MediaFileUploader\Builder::mediaFileUploaderEvent(
-    $mediaUrl,
+$documentUrl = 'UPLOAD_URL'; //URL from Covery
+$documentFileUploader = \Covery\Client\DocumentFileUploader\Builder::documentFileUploaderEvent(
+    $documentUrl,
     $stream
 )->build();
 
-$result = \Covery\Client\Facade::uploadMediaFile($mediaFileUploader);
+$result = \Covery\Client\Facade::uploadDocumentFile($documentFileUploader);
 ```
 
 Account Configuration Status event example:
@@ -192,6 +192,7 @@ Methods `sendEvent` and `makeDecision` require envelope as argument. Envelope is
   * `kyc_submit` - kyc submit event
   * `order_item` - order item event
   * `order_submit` - order submit event
+  * `document` - document event
   
 Envelope specifications are bundled in `Covery\Client\EnvelopeInterface`.
 
@@ -229,6 +230,17 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.4.0` 
+  * **Removed transaction_id field from postback event** 
+  * Renamed MediaStorage method to DocumentMethod
+  * Renamed MediaConnection method to DocumentConnection
+  * Renamed UploadMediaFile method to DocumentMediaFile.
+  * Renamed `media_id` field to `document_id`
+  * Added optional `merchant_advice_code` and `merchant_advice_text` fields for postback event
+  * Added optional `anonymous` field for kyc_submit, profile_update events
+  * Changed length field `plugins` to `8192`
+  * New `document` event introduced
+  * Old tests modified
 * `1.3.14` Added MediaStorage method. Added MediaConnection method. Added UploadMediaFile method.
   * Added optional `media_id` field for events: install, registration, confirmation, login, order-item, order-submit, transaction, refund, payout, transfer, profile-update, kyc-profile, kyc-submit.
   * Added optional address_confirmed, second_address_confirmed fields for KYC profile and KYC submit events.

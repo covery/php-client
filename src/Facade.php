@@ -143,55 +143,55 @@ class Facade
     }
 
     /**
-     * Send Media Storage data and return upload URL
+     * Send Document Storage data and return upload URL
      *
-     * @param MediaStorageInterface $mediaStorage
-     * @return MediaStorageResult
+     * @param DocumentStorageInterface $documentStorage
+     * @return DocumentStorageResult
      * @throws Exception
      * @throws IoException
      */
-    public static function sendMediaStorage(MediaStorageInterface $mediaStorage)
+    public static function sendDocumentStorage(DocumentStorageInterface $documentStorage)
     {
-        return self::getClient()->sendMediaStorage($mediaStorage);
+        return self::getClient()->sendDocumentStorage($documentStorage);
     }
 
     /**
-     * Attach media connection and return status code
+     * Attach document connection and return status code
      *
-     * @param MediaConnectionInterface $mediaConnection
+     * @param DocumentConnectionInterface $documentConnection
      * @return int
      * @throws Exception
      * @throws IoException
      */
-    public static function attachMediaConnection(MediaConnectionInterface $mediaConnection)
+    public static function attachDocumentConnection(DocumentConnectionInterface $documentConnection)
     {
-        return self::getClient()->attachMediaConnection($mediaConnection);
+        return self::getClient()->attachDocumentConnection($documentConnection);
     }
 
     /**
-     * Detach media connection and return status code
+     * Detach document connection and return status code
      *
-     * @param MediaConnectionInterface $mediaConnection
+     * @param DocumentConnectionInterface $documentConnection
      * @return int
      * @throws Exception
      * @throws IoException
      */
-    public static function detachMediaConnection(MediaConnectionInterface $mediaConnection)
+    public static function detachDocumentConnection(DocumentConnectionInterface $documentConnection)
     {
-        return self::getClient()->detachMediaConnection($mediaConnection);
+        return self::getClient()->detachDocumentConnection($documentConnection);
     }
 
     /**
-     * Upload Media file and returns status code
+     * Upload Document file and returns status code
      *
-     * @param MediaFileUploaderInterface $mediaFileUploader
+     * @param DocumentFileUploaderInterface $documentFileUploader
      * @return int
      * @throws Exception
      * @throws IoException
      */
-    public static function uploadMediaFile(MediaFileUploaderInterface $mediaFileUploader)
+    public static function uploadDocumentFile(DocumentFileUploaderInterface $documentFileUploader)
     {
-        return self::getClient()->uploadMediaFile($mediaFileUploader);
+        return self::getClient()->uploadDocumentFile($documentFileUploader);
     }
 
     /**

@@ -1,15 +1,18 @@
 <?php
 
+use \Covery\Client\Envelopes\Builder;
+use Covery\Client\Envelopes\ValidatorV1;
+
 class BuildKycProofEventTest extends \PHPUnit_Framework_TestCase
 {
     public function testBuild()
     {
         $kycStartId = 1234567890;
-        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $validator = new ValidatorV1();
 
-        $result = \Covery\Client\Envelopes\Builder::kycProofEvent($kycStartId)->build();
+        $result = Builder::kycProofEvent($kycStartId)->build();
 
-        self::assertSame('kyc_proof', $result->getType());
+        self::assertSame(Builder::EVENT_KYC_PROOF, $result->getType());
         self::assertCount(1, $result);
         self::assertSame($kycStartId, $result['kyc_start_id']);
         $validator->validate($result);

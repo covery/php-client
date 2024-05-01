@@ -113,7 +113,7 @@ class BuildTransactionEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('acquirer merchant id value', $result['acquirer_merchant_id']);
         self::assertSame('group id value', $result['group_id']);
         self::assertSame('links to documents', $result['links_to_documents']);
-        self::assertSame([1, 2], $result['media_id']);
+        self::assertSame([1, 2], $result['document_id']);
 
         $validator->validate($result);
 

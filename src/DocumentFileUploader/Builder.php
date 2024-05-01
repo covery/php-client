@@ -1,6 +1,6 @@
 <?php
 
-namespace Covery\Client\MediaFileUploader;
+namespace Covery\Client\DocumentFileUploader;
 
 use Psr\Http\Message\StreamInterface;
 
@@ -12,18 +12,18 @@ class Builder
     private $data = [];
 
     /**
-     * Returns builder for media request
+     * Returns builder for document request
      *
      * @param $url
      * @param $file
      * @return Builder
      */
-    public static function mediaFileUploaderEvent($url, $file)
+    public static function documentFileUploaderEvent($url, $file)
     {
         $builder = new self();
 
         return $builder
-            ->addMediaFileUploaderData($url, $file);
+            ->addDocumentFileUploaderData($url, $file);
     }
 
     /**
@@ -33,7 +33,7 @@ class Builder
      * @param $file
      * @return Builder
      */
-    public function addMediaFileUploaderData($url, $file)
+    public function addDocumentFileUploaderData($url, $file)
     {
         if (!is_string($url)) {
             throw new \InvalidArgumentException('Url must be string');
@@ -53,13 +53,13 @@ class Builder
     }
 
     /**
-     * Returns built MediaFileUploader
+     * Returns built DocumentFileUploader
      *
-     * @return MediaFileUploader
+     * @return DocumentFileUploader
      */
     public function build()
     {
-        return new MediaFileUploader(
+        return new DocumentFileUploader(
             array_filter($this->data, function ($data) {
                 return $data !== null;
             })

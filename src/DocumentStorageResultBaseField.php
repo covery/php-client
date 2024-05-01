@@ -6,9 +6,9 @@ namespace Covery\Client;
  * Class CardIdResultBaseField
  * @package Covery\Client
  */
-class MediaStorageResultBaseField
+class DocumentStorageResultBaseField
 {
     const UPLOAD_URL = 'uploadUrl';
-    const MEDIA_ID = 'mediaId';
+    const DOCUMENT_ID = 'documentId';
     const CREATED_AT = 'createdAt';
 }

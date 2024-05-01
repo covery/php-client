@@ -49,13 +49,14 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
             "plugins",
             "refUrl",
             "originUrl",
-            "clientResolution"
+            "clientResolution",
+            false
         )->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('refund', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(40, $result);
+        self::assertCount(41, $result);
         self::assertSame('refundLargeId', $result['refund_id']);
         self::assertSame(0.12, $result['refund_amount']);
         self::assertSame('GBP', $result['refund_currency']);
@@ -77,6 +78,7 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('88889', $result['device_fingerprint']);
         self::assertSame('id', $result['device_id']);
         self::assertSame(true, $result['do_not_track']);
+        self::assertSame(false, $result['anonymous']);
         self::assertSame('lang', $result['language']);
         self::assertSame('langBrowser', $result['language_browser']);
         self::assertSame('langSystem', $result['language_system']);
@@ -94,7 +96,7 @@ class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame('clientResolution', $result['client_resolution']);
         self::assertSame('group id value', $result['group_id']);
         self::assertSame('links to documents', $result['links_to_documents']);
-        self::assertSame([1, 2], $result['media_id']);
+        self::assertSame([1, 2], $result['document_id']);
         $validator->validate($result);
 
         // Minimal data

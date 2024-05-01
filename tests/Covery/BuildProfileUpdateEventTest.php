@@ -106,11 +106,12 @@ class BuildProfileUpdateEventTest extends \PHPUnit_Framework_TestCase
             "profileUpdateRefererUrl",
             "profileUpdateOriginUrl",
             "linksToDocuments",
-            [1, 2]
+            [1, 2],
+            false
         )->build();
 
 
-        self::assertCount(95, $result);
+        self::assertCount(96, $result);
         self::assertSame(Builder::EVENT_PROFILE_UPDATE, $result->getType());
         self::assertSame('profileUpdateSequenceId', $result->getSequenceId());
         self::assertSame('profileUpdateEventId', $result['event_id']);
@@ -191,6 +192,7 @@ class BuildProfileUpdateEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame("profileUpdateDeviceFingerprint", $result['device_fingerprint']);
         self::assertSame("profileUpdateDeviceId", $result['device_id']);
         self::assertSame(true, $result['do_not_track']);
+        self::assertSame(false, $result['anonymous']);
         self::assertSame("profileUpdateIp", $result['ip']);
         self::assertSame("profileUpdateRealIp", $result['real_ip']);
         self::assertSame("profileUpdateLocalIpList", $result['local_ip_list']);
@@ -209,7 +211,7 @@ class BuildProfileUpdateEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame("profileUpdateRefererUrl", $result['referer_url']);
         self::assertSame("profileUpdateOriginUrl", $result['origin_url']);
         self::assertSame("linksToDocuments", $result['links_to_documents']);
-        self::assertSame([1, 2], $result['media_id']);
+        self::assertSame([1, 2], $result['document_id']);
 
         $validator->validate($result);
 

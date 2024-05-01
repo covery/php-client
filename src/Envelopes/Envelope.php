@@ -37,7 +37,7 @@ class Envelope implements EnvelopeInterface
             throw new \InvalidArgumentException('Envelope type must be string');
         }
 
-        if ($type == Builder::EVENT_PROFILE_UPDATE) {
+        if ($type == Builder::EVENT_PROFILE_UPDATE || $type == Builder::EVENT_DOCUMENT) {
             if (!is_null($sequenceId) && !is_string($sequenceId)) {
                 throw new \InvalidArgumentException('Sequence ID must be string or null');
             }

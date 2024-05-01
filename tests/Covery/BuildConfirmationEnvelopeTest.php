@@ -30,7 +30,7 @@ class BuildConfirmationEnvelopeTest extends \PHPUnit_Framework_TestCase
         self::assertArrayNotHasKey('email', $result);
         self::assertArrayNotHasKey('phone', $result);
         self::assertSame('group id value', $result['group_id']);
-        self::assertSame([1, 2], $result['media_id']);
+        self::assertSame([1, 2], $result['document_id']);
         $validator->validate($result);
 
         // Minimal data

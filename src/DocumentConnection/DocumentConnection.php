@@ -1,10 +1,10 @@
 <?php
 
-namespace Covery\Client\MediaFileUploader;
+namespace Covery\Client\DocumentConnection;
 
-use Covery\Client\MediaFileUploaderInterface;
+use Covery\Client\DocumentConnectionInterface;
 
-class MediaFileUploader implements MediaFileUploaderInterface
+class DocumentConnection implements DocumentConnectionInterface
 {
     /**
      * @var array
@@ -12,7 +12,7 @@ class MediaFileUploader implements MediaFileUploaderInterface
     private $data;
 
     /**
-     * MediaConnection constructor.
+     * DocumentConnection constructor.
      */
     public function __construct($data = [])
     {

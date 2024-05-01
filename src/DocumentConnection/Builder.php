@@ -1,6 +1,6 @@
 <?php
 
-namespace Covery\Client\MediaConnection;
+namespace Covery\Client\DocumentConnection;
 
 class Builder
 {
@@ -10,28 +10,28 @@ class Builder
     private $data = [];
 
     /**
-     * Returns builder for media request
+     * Returns builder for document request
      *
      * @param $requestId
-     * @param $mediaId
+     * @param $documentId
      * @return Builder
      */
-    public static function mediaConnectionEvent($requestId, $mediaId)
+    public static function documentConnectionEvent($requestId, $documentId)
     {
         $builder = new self();
 
         return $builder
-            ->addConnectionData($requestId, $mediaId);
+            ->addConnectionData($requestId, $documentId);
     }
 
     /**
-     * Provides MediaConnection value
+     * Provides DocumentConnection value
      *
      * @param $requestId
-     * @param $mediaId
+     * @param $documentId
      * @return Builder
      */
-    public function addConnectionData($requestId, $mediaId)
+    public function addConnectionData($requestId, $documentId)
     {
         if (!is_int($requestId)) {
             throw new \InvalidArgumentException('Request Id must be integer');
@@ -39,27 +39,27 @@ class Builder
         if ($requestId <= 0) {
             throw new \InvalidArgumentException('Request Id must be positive integer');
         }
-        if (!is_array($mediaId)) {
-            throw new \InvalidArgumentException('Media Id must be array');
+        if (!is_array($documentId)) {
+            throw new \InvalidArgumentException('Document Id must be array');
         }
-        if (!$this->isListOfPositiveInt($mediaId)) {
-            throw new \InvalidArgumentException('Media Id must be list of positive int');
+        if (!$this->isListOfPositiveInt($documentId)) {
+            throw new \InvalidArgumentException('Document Id must be list of positive int');
         }
 
         $this->replace('request_id', $requestId);
-        $this->replace('media_id', $mediaId);
+        $this->replace('document_id', $documentId);
 
         return $this;
     }
 
     /**
-     * Returns built MediaConnection
+     * Returns built DocumentConnection
      *
-     * @return MediaConnection
+     * @return DocumentConnection
      */
     public function build()
     {
-        return new MediaConnection(
+        return new DocumentConnection(
             array_filter($this->data, function ($data) {
                 return $data !== null;
             })

@@ -13,7 +13,7 @@ class AccountConfigurationStatusResultBaseField
     const DECISION_CALLBACK_URL = 'decisionCallbackUrl';
     const MANUAL_DECISION_CALLBACK_URL = 'manualDecisionCallbackUrl';
     const ONGOING_MONITORING_WEBHOOK_URL = 'ongoingMonitoringWebhookUrl';
-    const MEDIA_STORAGE_WEBHOOK_URL = 'mediaStorageWebhookUrl';
+    const DOCUMENT_STORAGE_WEBHOOK_URL = 'documentStorageWebhookUrl';
     const FRAUD_ALERT_CALLBACK_URL = 'fraudAlertCallbackUrl';
     const CARD_ID_GENERATION = 'cardIdGeneration';
     const DEVICE_FINGERPRINT_GENERATION = 'deviceFingerprintGeneration';
