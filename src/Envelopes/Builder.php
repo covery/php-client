@@ -2043,6 +2043,8 @@ class Builder
      * @param int|null $mrzExpiryDate
      * @param string|null $mrzRecordNumber
      * @param bool|null $mrzCheckDigitsValidation
+     * @param string|null $mrzAuthority
+     * @param int|null $mrzIssueDate
      * @param string|null $extractedTest
      * @param array|null $textLanguageDetails
      * @param string|null $translatedExtractedText
@@ -2097,6 +2099,8 @@ class Builder
         $mrzExpiryDate = null,
         $mrzRecordNumber = null,
         $mrzCheckDigitsValidation = null,
+        $mrzAuthority = null,
+        $mrzIssueDate = null,
         $extractedTest = null,
         $textLanguageDetails = null,
         $translatedExtractedText = null,
@@ -2142,6 +2146,8 @@ class Builder
                 $mrzExpiryDate,
                 $mrzRecordNumber,
                 $mrzCheckDigitsValidation,
+                $mrzAuthority,
+                $mrzIssueDate,
                 $extractedTest,
                 $textLanguageDetails,
                 $translatedExtractedText,
@@ -4997,6 +5003,8 @@ class Builder
      * @param int|null $mrzExpiryDate
      * @param string|null $mrzRecordNumber
      * @param bool|null $mrzCheckDigitsValidation
+     * @param string|null $mrzAuthority
+     * @param int|null $mrzIssueDate
      * @param string|null $extractedTest
      * @param array|null $textLanguageDetails
      * @param string|null $translatedExtractedText
@@ -5037,6 +5045,8 @@ class Builder
         $mrzExpiryDate = null,
         $mrzRecordNumber = null,
         $mrzCheckDigitsValidation = null,
+        $mrzAuthority = null,
+        $mrzIssueDate = null,
         $extractedTest = null,
         $textLanguageDetails = null,
         $translatedExtractedText = null,
@@ -5146,6 +5156,12 @@ class Builder
         if ($mrzCheckDigitsValidation !== null && !is_bool($mrzCheckDigitsValidation)) {
             throw new \InvalidArgumentException('Mrz Check Digits Validation enabled flag must be boolean');
         }
+        if ($mrzAuthority !== null && !is_string($mrzAuthority)) {
+            throw new \InvalidArgumentException('Mrz Authority must be string');
+        }
+        if ($mrzIssueDate !== null && !is_int($mrzIssueDate)) {
+            throw new \InvalidArgumentException('Mrz Issue Date must be int');
+        }
         if ($extractedTest !== null && !is_string($extractedTest)) {
             throw new \InvalidArgumentException('Extracted Test must be string');
         }
@@ -5202,6 +5218,8 @@ class Builder
         $this->replace('mrz_expiry_date', $mrzExpiryDate);
         $this->replace('mrz_record_number', $mrzRecordNumber);
         $this->replace('mrz_check_digits_validation', $mrzCheckDigitsValidation);
+        $this->replace('mrz_authority', $mrzAuthority);
+        $this->replace('mrz_issue_date', $mrzIssueDate);
         $this->replace('extracted_text', $extractedTest);
         $this->replace('text_language_details', $textLanguageDetails);
         $this->replace('translated_extracted_text', $translatedExtractedText);

@@ -56,6 +56,8 @@ class BuildDocumentEventTest extends \PHPUnit_Framework_TestCase
             123456,
             'testMrzRecordNumber',
             false,
+            'tempMrzAuthority',
+            123456,
             'testExtractedText',
             ['en'],
             'testTranslatedExtractedText',
@@ -63,7 +65,7 @@ class BuildDocumentEventTest extends \PHPUnit_Framework_TestCase
             'testTranslatedTo'
         )->build();
 
-        self::assertCount(49, $result);
+        self::assertCount(51, $result);
         self::assertSame(Builder::EVENT_DOCUMENT, $result->getType());
         self::assertSame('tempSequenceId', $result->getSequenceId());
         self::assertSame('tempEventId', $result['event_id']);
@@ -110,6 +112,8 @@ class BuildDocumentEventTest extends \PHPUnit_Framework_TestCase
         self::assertSame(123456, $result['mrz_expiry_date']);
         self::assertSame("testMrzRecordNumber", $result['mrz_record_number']);
         self::assertSame(false, $result['mrz_check_digits_validation']);
+        self::assertSame("tempMrzAuthority", $result['mrz_authority']);
+        self::assertSame(123456, $result['mrz_issue_date']);
         self::assertSame("testExtractedText", $result['extracted_text']);
         self::assertSame(['en'], $result['text_language_details']);
         self::assertSame("testTranslatedExtractedText", $result['translated_extracted_text']);
