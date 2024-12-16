@@ -232,7 +232,6 @@ You may provide the following as envelopes:
 ## Changelog
 * `1.4.1`
   * Added optional `mrz_authority` and `mrz_issue_date` fields for document event
-  * Added validation for double data type
 * `1.4.0` 
   * **Removed transaction_id field from postback event** 
   * Renamed MediaStorage method to DocumentMethod

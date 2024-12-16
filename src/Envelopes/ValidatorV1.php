@@ -76,8 +76,8 @@ class ValidatorV1
         'timezone_offset' => 'int',
         'transaction_timestamp' => 'int',
         'product_quantity' => 'float',
-        'transaction_amount' => 'double',
-        'transaction_amount_converted' => 'double',
+        'transaction_amount' => 'float',
+        'transaction_amount_converted' => 'float',
         'ajax_validation' => 'bool',
         'cookie_enabled' => 'bool',
         'do_not_track' => 'bool',
@@ -91,12 +91,12 @@ class ValidatorV1
         'payout_timestamp' => 'int',
         'payout_account_id' => 'string(255)',
         'payout_card_id' => 'string(255)',
-        'payout_amount' => 'double',
+        'payout_amount' => 'float',
         'payout_currency' => 'string(255)',
         'payout_method' => 'string(255)',
         'payout_system' => 'string(255)',
         'payout_mid' => 'string(255)',
-        'payout_amount_converted' => 'double',
+        'payout_amount_converted' => 'float',
         'payout_card_bin' => 'int',
         'payout_card_last4' => 'string(4)',
         'payout_expiration_month' => 'int',
@@ -104,9 +104,9 @@ class ValidatorV1
         'install_timestamp' => 'int',
         'refund_timestamp' => 'int',
         'refund_id' => 'string(255)',
-        'refund_amount' => 'double',
+        'refund_amount' => 'float',
         'refund_currency' => 'string(255)',
-        'refund_amount_converted' => 'double',
+        'refund_amount_converted' => 'float',
         'refund_source' => 'string(255)',
         'refund_type' => 'string(255)',
         'refund_code' => 'string(255)',
@@ -116,8 +116,8 @@ class ValidatorV1
         'refund_mid' => 'string(255)',
         'event_id' => 'string(255)',
         'event_timestamp' => 'int',
-        'amount' => 'double',
-        'amount_converted' => 'double',
+        'amount' => 'float',
+        'amount_converted' => 'float',
         'currency' => 'string(255)',
         'account_id' => 'string(255)',
         'account_system' => 'string(255)',
@@ -182,17 +182,17 @@ class ValidatorV1
         "shipping_city" => 'string(255)',
         "shipping_country" => 'string(255)',
         "shipping_currency" => 'string(255)',
-        "shipping_fee" => 'double',
-        "shipping_fee_converted" => 'double',
+        "shipping_fee" => 'float',
+        "shipping_fee_converted" => 'float',
         "shipping_state" => 'string(255)',
         "shipping_zip" => 'string(255)',
         "order_source" => 'string(255)',
-        "source_fee" => 'double',
+        "source_fee" => 'float',
         "source_fee_currency" => 'string(255)',
-        "source_fee_converted" => 'double',
+        "source_fee_converted" => 'float',
         "tax_currency" => 'string(255)',
-        "tax_fee" => 'double',
-        "tax_fee_converted" => 'double',
+        "tax_fee" => 'float',
+        "tax_fee_converted" => 'float',
         "product_url" => 'string(255)',
         "product_image_url" => 'string(255)',
         "carrier_url" => 'string(255)',
@@ -236,11 +236,11 @@ class ValidatorV1
         'document_country' => 'string(255)',
         'document_confirmed' => 'bool',
         'purpose_to_open_account' => 'string(255)',
-        'one_operation_limit' => 'double',
-        'daily_limit' => 'double',
-        'weekly_limit' => 'double',
-        'monthly_limit' => 'double',
-        'annual_limit' => 'double',
+        'one_operation_limit' => 'float',
+        'daily_limit' => 'float',
+        'weekly_limit' => 'float',
+        'monthly_limit' => 'float',
+        'annual_limit' => 'float',
         'active_features' => 'string(1024)',
         'promotions' => 'string(1024)',
         'links_to_documents' => 'string(2048)',
@@ -1121,28 +1121,6 @@ class ValidatorV1
                                         $key,
                                         $value === null ? 'null' : gettype($value)
                                     );
-                                }
-                                break;
-                            case 'double':
-                                if (!is_float($value) && !is_int($value)) {
-                                    $details[] = sprintf(
-                                        'Field "%s" must be float/double, but %s provided',
-                                        $key,
-                                        $value === null ? 'null' : gettype($value)
-                                    );
-                                } else {
-                                    $valueStr = var_export($value, true);
-                                    if (strpos($valueStr, 'e') == false) {
-                                        $parts = explode('.', $valueStr);
-                                        $integerPart = $parts[0];
-                                        $decimalPart = $parts[1] ?? '';
-                                        if (strlen($integerPart) > 14 || strlen($decimalPart) > 12) {
-                                            $details[] = sprintf(
-                                                'Field "%s" has too long value',
-                                                $key
-                                            );
-                                        }
-                                    }
                                 }
                                 break;
                             case 'bool':
