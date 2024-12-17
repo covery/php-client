@@ -230,6 +230,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.4.1`
+  * Added optional `mrz_authority` and `mrz_issue_date` fields for document event
 * `1.4.0` 
   * **Removed transaction_id field from postback event** 
   * Renamed MediaStorage method to DocumentMethod
