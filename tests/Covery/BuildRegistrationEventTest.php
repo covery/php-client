@@ -1,6 +1,8 @@
 <?php
 
-class BuildRegistrationEventTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildRegistrationEventTest extends TestCase
 {
     public function testBuild()
     {

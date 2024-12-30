@@ -1,6 +1,8 @@
 <?php
 
-class BuildKYCSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildKYCSubmitEnvelopeTest extends TestCase
 {
     public function testBuild()
     {

@@ -1,23 +1,27 @@
 <?php
 
-class CredentialsSha256Test extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class CredentialsSha256Test extends TestCase
 {
     public function invalidTokens() {
         return array(
-            array(null, null),
-            array("12345678901234567890123456789012", null),
-            array(null, "12345678901234567890123456789012"),
-            array("12345678901234567890123456789012", "12345"),
-            array("12345", "12345678901234567890123456789012"),
+            array(null, null, "Token must be string"),
+            array("12345678901234567890123456789012", null, "Secret must be string"),
+            array(null, "12345678901234567890123456789012", "Token must be string"),
+            array("12345678901234567890123456789012", "12345", "Secret must be exact 32 characters long"),
+            array("12345", "12345678901234567890123456789012", "Token must be exact 32 characters long"),
         );
     }
 
     /**
      * @dataProvider invalidTokens
-     * @expectedException \InvalidArgumentException
      */
-    public function testInvalidCredentials($token, $secret)
+    public function testInvalidCredentials($token, $secret, $expectedMessage)
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($expectedMessage);
+
         new \Covery\Client\Credentials\Sha256($token, $secret);
     }
 

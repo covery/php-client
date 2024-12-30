@@ -1,6 +1,8 @@
 <?php
 
-class BuildKYCProfileEnvelopeTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildKYCProfileEnvelopeTest extends TestCase
 {
     public function testBuild()
     {

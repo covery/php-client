@@ -1,6 +1,8 @@
 <?php
 
-class Psr7RequestsTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class Psr7RequestsTest extends TestCase
 {
     public function testEvent()
     {

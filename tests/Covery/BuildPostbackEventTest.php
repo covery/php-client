@@ -2,8 +2,9 @@
 
 use Covery\Client\Envelopes\Builder;
 use Covery\Client\Envelopes\ValidatorV1;
+use PHPUnit\Framework\TestCase;
 
-class BuildPostbackEventTest extends \PHPUnit_Framework_TestCase
+class BuildPostbackEventTest extends TestCase
 {
     public function testBuild()
     {

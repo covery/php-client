@@ -1,12 +1,14 @@
 <?php
 
-class BuildAccountConfigurationStatusTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildAccountConfigurationStatusTest extends TestCase
 {
     public function testRequest()
     {
         $request = new \Covery\Client\Requests\AccountConfigurationStatus();
 
         self::assertEquals('GET', $request->getMethod());
-        self::assertContains($request->getUri()->getPath(), '/api/accountConfigurationStatus');
+        self::assertStringContainsString($request->getUri()->getPath(), '/api/accountConfigurationStatus');
     }
 }

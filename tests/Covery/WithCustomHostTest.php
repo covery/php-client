@@ -1,6 +1,8 @@
 <?php
 
-class WithCustomHostTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class WithCustomHostTest extends TestCase
 {
     public function testWithCustomUrl()
     {

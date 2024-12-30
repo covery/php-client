@@ -1,6 +1,8 @@
 <?php
 
-class BuildOrderSubmitEnvelopeTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildOrderSubmitEnvelopeTest extends TestCase
 {
     public function testBuild()
     {

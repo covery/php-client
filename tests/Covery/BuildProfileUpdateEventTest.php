@@ -2,8 +2,9 @@
 
 use \Covery\Client\Envelopes\ValidatorV1;
 use \Covery\Client\Envelopes\Builder;
+use PHPUnit\Framework\TestCase;
 
-class BuildProfileUpdateEventTest extends \PHPUnit_Framework_TestCase
+class BuildProfileUpdateEventTest extends TestCase
 {
     public function testBuild()
     {
