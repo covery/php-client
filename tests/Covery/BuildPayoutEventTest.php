@@ -1,6 +1,8 @@
 <?php
 
-class BuildPayoutEventTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildPayoutEventTest extends TestCase
 {
     public function testBuild()
     {

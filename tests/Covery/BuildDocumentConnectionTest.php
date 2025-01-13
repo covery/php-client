@@ -1,6 +1,8 @@
 <?php
 
-class BuildDocumentConnectionTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildDocumentConnectionTest extends TestCase
 {
     public function testBuild()
     {
@@ -14,7 +16,7 @@ class BuildDocumentConnectionTest extends \PHPUnit_Framework_TestCase
 
         $request = new \Covery\Client\Requests\DocumentConnection($documentConnectionResult);
         self::assertEquals('PUT', $request->getMethod());
-        self::assertContains($request->getUri()->getPath(), '/api/documentConnection');
+        self::assertStringContainsString($request->getUri()->getPath(), '/api/documentConnection');
         self::assertInstanceOf('Psr\Http\Message\RequestInterface', $request);
         self::assertCount(2, $documentConnectionResult);
         self::assertSame($documentId, $documentConnectionResult['document_id']);
@@ -22,24 +24,52 @@ class BuildDocumentConnectionTest extends \PHPUnit_Framework_TestCase
         self::assertJson($request->getBody()->getContents());
     }
 
-    public function testEventExpectsInvalidArgumentException()
+    public function testEventExpectInvalidArgumentExceptionForRequestId()
     {
         $requestId = -1;
         $documentId = -1;
 
-        self::setExpectedException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Request Id must be positive integer');
         \Covery\Client\DocumentConnection\Builder::documentConnectionEvent(
             $requestId,
             $documentId
         )->build();
     }
 
-    public function testEventExpectsInvalidArgumentExceptionCheckZeroFields()
+    public function testEventExpectsInvalidArgumentExceptionCheckZeroFieldsForRequestId()
     {
         $requestId = 0;
         $documentId = [1, 0, -1];
 
-        self::setExpectedException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Request Id must be positive integer');
+        \Covery\Client\DocumentConnection\Builder::documentConnectionEvent(
+            $requestId,
+            $documentId
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForDocumentId()
+    {
+        $requestId = 1;
+        $documentId = -1;
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Document Id must be array');
+        \Covery\Client\DocumentConnection\Builder::documentConnectionEvent(
+            $requestId,
+            $documentId
+        )->build();
+    }
+
+    public function testEventExpectsInvalidArgumentExceptionCheckZeroFieldsForDocumentId()
+    {
+        $requestId = 1;
+        $documentId = [1, 0, -1];
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Document Id must be list of positive int');
         \Covery\Client\DocumentConnection\Builder::documentConnectionEvent(
             $requestId,
             $documentId

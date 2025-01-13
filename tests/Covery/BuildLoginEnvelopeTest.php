@@ -1,6 +1,8 @@
 <?php
 
-class BuildLoginEnvelopeTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildLoginEnvelopeTest extends TestCase
 {
     public function testBuild()
     {

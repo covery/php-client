@@ -230,6 +230,10 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.5.0`
+  * The minimum PHP version has been changed from 5.4 to 7.3.
+  * Packages have been updated.
+  * Old tests modified
 * `1.4.1`
   * Added optional `mrz_authority` and `mrz_issue_date` fields for document event
 * `1.4.0` 

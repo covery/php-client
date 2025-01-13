@@ -30,7 +30,7 @@ class DocumentStorage implements DocumentStorageInterface
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
@@ -38,7 +38,7 @@ class DocumentStorage implements DocumentStorageInterface
     /**
      * @inheritDoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->data);
     }
@@ -46,7 +46,7 @@ class DocumentStorage implements DocumentStorageInterface
     /**
      * @inheritDoc
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (!$this->offsetExists($offset)) {
             throw new \OutOfBoundsException("No offset {$offset}");
@@ -58,7 +58,7 @@ class DocumentStorage implements DocumentStorageInterface
     /**
      * @inheritDoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->data[$offset] = $value;
     }
@@ -66,7 +66,7 @@ class DocumentStorage implements DocumentStorageInterface
     /**
      * @inheritDoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if ($this->offsetExists($offset)) {
             unset($this->data[$offset]);

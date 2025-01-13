@@ -1,6 +1,8 @@
 <?php
 
-class BuildRefundEventTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildRefundEventTest extends TestCase
 {
     public function testBuild()
     {

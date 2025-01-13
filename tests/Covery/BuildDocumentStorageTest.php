@@ -1,6 +1,8 @@
 <?php
 
-class BuildDocumentStorageTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BuildDocumentStorageTest extends TestCase
 {
     public function testBuild()
     {
@@ -20,7 +22,7 @@ class BuildDocumentStorageTest extends \PHPUnit_Framework_TestCase
         $request = new \Covery\Client\Requests\DocumentStorage($documentStorageResult);
 
         self::assertEquals('POST', $request->getMethod());
-        self::assertContains($request->getUri()->getPath(), '/api/documentStorage');
+        self::assertStringContainsString($request->getUri()->getPath(), '/api/documentStorage');
         self::assertInstanceOf('Psr\Http\Message\RequestInterface', $request);
         self::assertCount(10, $documentStorageResult);
         self::assertSame("documentStorageUserMerchantId", $documentStorageResult['user_merchant_id']);
@@ -38,7 +40,8 @@ class BuildDocumentStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testEventExpectsInvalidArgumentException()
     {
-        self::setExpectedException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Document Type must be a string');
         $documentStorage = \Covery\Client\DocumentStorage\Builder::documentStorageEvent(
             "documentStorageUserMerchantId",
             null,
@@ -55,7 +58,8 @@ class BuildDocumentStorageTest extends \PHPUnit_Framework_TestCase
 
     public function testEventExpectsInvalidDocumentType()
     {
-        self::setExpectedException('InvalidArgumentException');
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Document Type must be one of the types: international_passport, national_passport, id_card, residence_permit, drivers_license, bank_statement, tax_declaration, invoice, receipt, utility_bill, personal_photo, other');
         $documentStorage = \Covery\Client\DocumentStorage\Builder::documentStorageEvent(
             "documentStorageUserMerchantId",
             "regional_password",
