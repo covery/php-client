@@ -5,6 +5,7 @@ namespace Covery\Client\Envelopes;
 use Covery\Client\DocumentType;
 use Covery\Client\EnvelopeInterface;
 use Covery\Client\IdentityNodeInterface;
+use SebastianBergmann\Type\TrueType;
 
 class Builder
 {
@@ -1633,7 +1634,7 @@ class Builder
      * @param string|null $phone
      * @param string|null $productDescription
      * @param string|null $productName
-     * @param int|null $productQuantity
+     * @param float|null $productQuantity
      * @param string|null $shippingAddress
      * @param string|null $shippingCity
      * @param string|null $shippingCountry
@@ -2229,9 +2230,13 @@ class Builder
      * @param string $key
      * @param string|int|float|bool|null $value
      */
-    private function replace($key, $value)
+    private function replace($key, $value, $allowedZero = false)
     {
-        if ($value !== null && $value !== '' && $value !== 0 && $value !== 0.0) {
+        if (
+            $value !== null &&
+            $value !== '' &&
+            ($allowedZero || ($value !== 0 && $value !== 0.0))
+        ) {
             $this->data[$key] = $value;
         }
     }
@@ -2687,8 +2692,14 @@ class Builder
         if ($transactionTimestamp !== null && !is_int($transactionTimestamp)) {
             throw new \InvalidArgumentException('Transaction timestamp must be integer');
         }
-        if ($transactionAmount !== null && !is_int($transactionAmount) && !is_float($transactionAmount)) {
-            throw new \InvalidArgumentException('Transaction amount must be float');
+        if ($transactionAmount !== null) {
+            if (!is_int($transactionAmount) && !is_float($transactionAmount)) {
+                throw new \InvalidArgumentException('Transaction amount must be float');
+            }
+        
+            if ($transactionAmount < 0) {
+                throw new \InvalidArgumentException('Transaction amount cannot be negative');
+            }
         }
         if ($transactionCurrency !== null && !is_string($transactionCurrency)) {
             throw new \InvalidArgumentException('Transaction currency must be string');
@@ -2705,10 +2716,15 @@ class Builder
         if ($paymentAccountId !== null && !is_string($paymentAccountId)) {
             throw new \InvalidArgumentException('Payment account id must be string');
         }
-        if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
-            throw new \InvalidArgumentException('Transaction amount converted must be float');
+        if ($amountConverted !== null) {
+            if (!is_int($amountConverted) && !is_float($amountConverted)) {
+                throw new \InvalidArgumentException('Transaction amount converted must be float');
+            }
+        
+            if ($amountConverted < 0) {
+                throw new \InvalidArgumentException('Transaction amount converted cannot be negative');
+            }
         }
-
         if ($merchantCountry !== null && !is_string($merchantCountry)) {
             throw new \InvalidArgumentException('Merchant country must be string');
         }
@@ -2723,8 +2739,16 @@ class Builder
         $this->replace('transaction_type', $transactionType);
         $this->replace('transaction_mode', $transactionMode);
         $this->replace('transaction_timestamp', $transactionTimestamp);
-        $this->replace('transaction_amount', floatval($transactionAmount));
-        $this->replace('transaction_amount_converted', floatval($amountConverted));
+        $this->replace(
+            'transaction_amount',
+            !is_null($transactionAmount) ? floatval($transactionAmount) : null,
+            true
+        );
+        $this->replace(
+            'transaction_amount_converted',
+            !is_null($amountConverted) ? floatval($amountConverted) : null,
+            true
+        );
         $this->replace('transaction_currency', $transactionCurrency);
         $this->replace('payment_method', $paymentMethod);
         $this->replace('payment_system', $paymentSystem);
@@ -2917,6 +2941,9 @@ class Builder
         if (!is_float($payoutAmount) && !is_int($payoutAmount)) {
             throw new \InvalidArgumentException('Amount must be number');
         }
+        if ($payoutAmount < 0) {
+            throw new \InvalidArgumentException('Amount cannot be negative');
+        }
         if (!is_string($payoutCurrency)) {
             throw new \InvalidArgumentException('Payout currency must be string');
         }
@@ -2935,8 +2962,14 @@ class Builder
         if ($payoutMid !== null && !is_string($payoutMid)) {
             throw new \InvalidArgumentException('Payout MID must be string');
         }
-        if ($amountConverted !== null && !is_float($amountConverted) && !is_int($amountConverted)) {
-            throw new \InvalidArgumentException('Payout converted amount must be number');
+        if ($amountConverted !== null) {
+            if (!is_int($amountConverted) && !is_float($amountConverted)) {
+                throw new \InvalidArgumentException('Payout amount converted must be float');
+            }
+        
+            if ($amountConverted < 0) {
+                throw new \InvalidArgumentException('Payout amount converted cannot be negative');
+            }
         }
         if ($payoutCardBin !== null && !is_int($payoutCardBin)) {
             throw new \InvalidArgumentException('Payout card BIN must be integer');
@@ -2955,12 +2988,20 @@ class Builder
         $this->replace('payout_timestamp', $payoutTimestamp);
         $this->replace('payout_card_id', $payoutCardId);
         $this->replace('payout_account_id', $payoutAccountId);
-        $this->replace('payout_amount', (float) $payoutAmount);
+        $this->replace(
+            'payout_amount',
+            !is_null($payoutAmount) ? (float) $payoutAmount : null,
+            true
+        );
         $this->replace('payout_currency', $payoutCurrency);
         $this->replace('payout_method', $payoutMethod);
         $this->replace('payout_system', $payoutSystem);
         $this->replace('payout_mid', $payoutMid);
-        $this->replace('payout_amount_converted', (float) $amountConverted);
+        $this->replace(
+            'payout_amount_converted',
+            !is_null($amountConverted) ? (float) $amountConverted : null,
+            true
+        );
         $this->replace('payout_card_bin', $payoutCardBin);
         $this->replace('payout_card_last4', $payoutCardLast4);
         $this->replace('payout_expiration_month', $payoutExpirationMonth);
@@ -3030,11 +3071,20 @@ class Builder
         if (!is_float($refundAmount) && !is_int($refundAmount)) {
             throw new \InvalidArgumentException('Amount must be number');
         }
+        if ($refundAmount < 0) {
+            throw new \InvalidArgumentException('Amount cannot be negative');
+        }
         if (!is_string($refundCurrency)) {
             throw new \InvalidArgumentException('Refund currency must be string');
         }
-        if ($refundAmountConverted !== null && !is_float($refundAmountConverted) && !is_int($refundAmountConverted)) {
-            throw new \InvalidArgumentException('Refund converted amount must be number');
+        if ($refundAmountConverted !== null) {
+            if (!is_int($refundAmountConverted) && !is_float($refundAmountConverted)) {
+                throw new \InvalidArgumentException('Refund amount converted must be float');
+            }
+        
+            if ($refundAmountConverted < 0) {
+                throw new \InvalidArgumentException('Refund amount converted cannot be negative');
+            }
         }
         if ($refundSource !== null && !is_string($refundSource)) {
             throw new \InvalidArgumentException('Refund source must be string');
@@ -3063,9 +3113,9 @@ class Builder
 
         $this->replace('refund_id', $refundId);
         $this->replace('refund_timestamp', $refundTimestamp);
-        $this->replace('refund_amount', $refundAmount);
+        $this->replace('refund_amount', $refundAmount, true);
         $this->replace('refund_currency', $refundCurrency);
-        $this->replace('refund_amount_converted', $refundAmountConverted);
+        $this->replace('refund_amount_converted', $refundAmountConverted, true);
         $this->replace('refund_source', $refundSource);
         $this->replace('refund_type', $refundType);
         $this->replace('refund_code', $refundCode);
@@ -3149,6 +3199,9 @@ class Builder
         if (!is_int($amount) && !is_float($amount)) {
             throw new \InvalidArgumentException('Amount must be number');
         }
+        if ($amount < 0) {
+            throw new \InvalidArgumentException('Amount cannot be negative');
+        }
         if (!is_string($currency)) {
             throw new \InvalidArgumentException('Currency must be string');
         }
@@ -3161,8 +3214,13 @@ class Builder
         if ($accountSystem !== null && !is_string($accountSystem)) {
             throw new \InvalidArgumentException('Account system must be string');
         }
-        if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
-            throw new \InvalidArgumentException('Amount converted must be number');
+        if ($amountConverted !== null) {
+            if (!is_int($amountConverted) && !is_float($amountConverted)) {
+                throw new \InvalidArgumentException('Amount Converted must be number');
+            }
+            if ($amountConverted < 0) {
+                throw new \InvalidArgumentException('Amount Converted cannot be negative');
+            }
         }
         if ($method !== null && !is_string($method)) {
             throw new \InvalidArgumentException('Method must be string');
@@ -3224,12 +3282,12 @@ class Builder
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
-        $this->replace('amount', $amount);
+        $this->replace('amount', $amount, true);
         $this->replace('currency', $currency);
         $this->replace('account_id', $accountId);
         $this->replace('second_account_id', $secondAccountId);
         $this->replace('account_system', $accountSystem);
-        $this->replace('amount_converted', $amountConverted);
+        $this->replace('amount_converted', $amountConverted, true);
         $this->replace('method', $method);
         $this->replace('operation', $operation);
         $this->replace('second_email', $secondEmail);
@@ -3618,6 +3676,9 @@ class Builder
         if (!is_int($amount) && !is_float($amount)) {
             throw new \InvalidArgumentException('Amount must be number');
         }
+        if ($amount < 0) {
+            throw new \InvalidArgumentException('Amount cannot be negative');
+        }
         if (!is_string($currency)) {
             throw new \InvalidArgumentException('Currency must be string');
         }
@@ -3639,8 +3700,13 @@ class Builder
         if ($groupId !== null && !is_string($groupId)) {
             throw new \InvalidArgumentException('Group id must be string');
         }
-        if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
-            throw new \InvalidArgumentException('Amount converted must be number');
+        if ($amountConverted !== null) {
+            if (!is_int($amountConverted) && !is_float($amountConverted)) {
+                throw new \InvalidArgumentException('Amount Converted must be number');
+            }
+            if ($amountConverted < 0) {
+                throw new \InvalidArgumentException('Amount Converted cannot be negative');
+            }
         }
         if ($campaign !== null && !is_string($campaign)) {
             throw new \InvalidArgumentException('Campaign must be string');
@@ -3687,11 +3753,21 @@ class Builder
         if ($shippingCurrency !== null && !is_string($shippingCurrency)) {
             throw new \InvalidArgumentException('Shipping currency must be string');
         }
-        if ($shippingFee !== null && !is_int($shippingFee) && !is_float($shippingFee)) {
-            throw new \InvalidArgumentException('Shipping fee must be number');
+        if ($shippingFee !== null) {
+            if (!is_int($shippingFee) && !is_float($shippingFee)) {
+                throw new \InvalidArgumentException('Shipping fee must be number');
+            }
+            if ($shippingFee < 0) {
+                throw new \InvalidArgumentException('Shipping fee cannot be negative');
+            }
         }
-        if ($shippingFeeConverted !== null && !is_int($shippingFeeConverted) && !is_float($shippingFeeConverted)) {
-            throw new \InvalidArgumentException('Shipping fee converted must be number');
+        if ($shippingFeeConverted !== null) {
+            if (!is_int($shippingFeeConverted) && !is_float($shippingFeeConverted)) {
+                throw new \InvalidArgumentException('Shipping fee converted must be number');
+            }
+            if ($shippingFeeConverted < 0) {
+                throw new \InvalidArgumentException('Shipping fee converted cannot be negative');
+            }
         }
         if ($shippingState !== null && !is_string($shippingState)) {
             throw new \InvalidArgumentException('Shipping state must be string');
@@ -3705,8 +3781,21 @@ class Builder
         if ($sourceFee !== null && !is_int($sourceFee) && !is_float($sourceFee)) {
             throw new \InvalidArgumentException('Source fee must be number');
         }
-        if ($sourceFeeConverted !== null && !is_int($sourceFeeConverted) && !is_float($sourceFeeConverted)) {
-            throw new \InvalidArgumentException('Source fee converted must be number');
+        if ($sourceFee !== null) {
+            if (!is_int($sourceFee) && !is_float($sourceFee)) {
+                throw new \InvalidArgumentException('Source fee must be number');
+            }
+            if ($sourceFee < 0) {
+                throw new \InvalidArgumentException('Source fee cannot be negative');
+            }
+        }
+        if ($sourceFeeConverted !== null) {
+            if (!is_int($sourceFeeConverted) && !is_float($sourceFeeConverted)) {
+                throw new \InvalidArgumentException('Source fee converted must be number');
+            }
+            if ($sourceFeeConverted < 0) {
+                throw new \InvalidArgumentException('Source fee converted cannot be negative');
+            }
         }
         if ($sourceFeeCurrency !== null && !is_string($sourceFeeCurrency)) {
             throw new \InvalidArgumentException('Source fee currency must be string');
@@ -3714,11 +3803,21 @@ class Builder
         if ($taxCurrency !== null && !is_string($taxCurrency)) {
             throw new \InvalidArgumentException('Tax currency must be string');
         }
-        if ($taxFee !== null && !is_int($taxFee) && !is_float($taxFee)) {
-            throw new \InvalidArgumentException('Tax fee must be number');
+        if ($taxFee !== null) {
+            if (!is_int($taxFee) && !is_float($taxFee)) {
+                throw new \InvalidArgumentException('Tax fee must be number');
+            }
+            if ($taxFee < 0) {
+                throw new \InvalidArgumentException('Tax fee cannot be negative');
+            }
         }
-        if ($taxFeeConverted !== null && !is_int($taxFeeConverted) && !is_float($taxFeeConverted)) {
-            throw new \InvalidArgumentException('Tax fee converted must be number');
+        if ($taxFeeConverted !== null) {
+            if (!is_int($taxFeeConverted) && !is_float($taxFeeConverted)) {
+                throw new \InvalidArgumentException('Tax fee converted must be number');
+            }
+            if ($taxFeeConverted < 0) {
+                throw new \InvalidArgumentException('Tax fee converted cannot be negative');
+            }
         }
         if ($productUrl !== null && !is_string($productUrl)) {
             throw new \InvalidArgumentException('Product url must be string');
@@ -3729,7 +3828,7 @@ class Builder
         if ($productImageUrl !== null && !is_string($productImageUrl)) {
             throw new \InvalidArgumentException('Product image url must be string');
         }
-        $this->replace('amount', $amount);
+        $this->replace('amount', $amount, true);
         $this->replace('currency', $currency);
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -3737,7 +3836,7 @@ class Builder
         $this->replace('order_type', $orderType);
         $this->replace('transaction_id', $transactionId);
         $this->replace('group_id', $groupId);
-        $this->replace('amount_converted', $amountConverted);
+        $this->replace('amount_converted', $amountConverted, true);
         $this->replace('campaign', $campaign);
         $this->replace('carrier', $carrier);
         $this->replace('carrier_shipping_id', $carrierShippingId);
@@ -3753,17 +3852,17 @@ class Builder
         $this->replace('shipping_city', $shippingCity);
         $this->replace('shipping_country', $shippingCountry);
         $this->replace('shipping_currency', $shippingCurrency);
-        $this->replace('shipping_fee', $shippingFee);
-        $this->replace('shipping_fee_converted', $shippingFeeConverted);
+        $this->replace('shipping_fee', $shippingFee, true);
+        $this->replace('shipping_fee_converted', $shippingFeeConverted, true);
         $this->replace('shipping_state', $shippingState);
         $this->replace('shipping_zip', $shippingZip);
         $this->replace('order_source', $source);
-        $this->replace('source_fee', $sourceFee);
+        $this->replace('source_fee', $sourceFee, true);
         $this->replace('source_fee_currency', $sourceFeeCurrency);
-        $this->replace('source_fee_converted', $sourceFeeConverted);
+        $this->replace('source_fee_converted', $sourceFeeConverted, true);
         $this->replace('tax_currency', $taxCurrency);
-        $this->replace('tax_fee', $taxFee);
-        $this->replace('tax_fee_converted', $taxFeeConverted);
+        $this->replace('tax_fee', $taxFee, true);
+        $this->replace('tax_fee_converted', $taxFeeConverted, true);
         $this->replace('product_url', $productUrl);
         $this->replace('product_image_url', $productImageUrl);
 
@@ -4306,24 +4405,49 @@ class Builder
             throw new \InvalidArgumentException('Purpose To Open Account must be string');
         }
 
-        if ($oneOperationLimit !== null && !is_float($oneOperationLimit)) {
-            throw new \InvalidArgumentException('One Operation Limit must be float');
+        if ($oneOperationLimit !== null) {
+            if (!is_float($oneOperationLimit)) {
+                throw new \InvalidArgumentException('One Operation Limit must be float');
+            }
+            if ($oneOperationLimit < 0) {
+                throw new \InvalidArgumentException('One Operation Limit cannot be negative');
+            }
         }
 
-        if ($dailyLimit !== null && !is_float($dailyLimit)) {
-            throw new \InvalidArgumentException('Daily Limit must be float');
+        if ($dailyLimit !== null) {
+            if (!is_float($dailyLimit)) {
+                throw new \InvalidArgumentException('Daily Limit must be float');
+            }
+            if ($dailyLimit < 0) {
+                throw new \InvalidArgumentException('Daily Limit cannot be negative');
+            }
         }
 
-        if ($weeklyLimit !== null && !is_float($weeklyLimit)) {
-            throw new \InvalidArgumentException('Weekly Limit must be float');
+        if ($weeklyLimit !== null) {
+            if (!is_float($weeklyLimit)) {
+                throw new \InvalidArgumentException('Weekly Limit must be float');
+            }
+            if ($weeklyLimit < 0) {
+                throw new \InvalidArgumentException('Weekly Limit cannot be negative');
+            }
         }
 
-        if ($monthlyLimit !== null && !is_float($monthlyLimit)) {
-            throw new \InvalidArgumentException('Monthly Limit must be float');
+        if ($monthlyLimit !== null) {
+            if (!is_float($monthlyLimit)) {
+                throw new \InvalidArgumentException('Monthly Limit must be float');
+            }
+            if ($monthlyLimit < 0) {
+                throw new \InvalidArgumentException('Monthly Limit cannot be negative');
+            }
         }
 
-        if ($annualLimit !== null && !is_float($annualLimit)) {
-            throw new \InvalidArgumentException('Annual Limit must be float');
+        if ($annualLimit !== null) {
+            if (!is_float($annualLimit)) {
+                throw new \InvalidArgumentException('Annual Limit must be float');
+            }
+            if ($annualLimit < 0) {
+                throw new \InvalidArgumentException('Annual Limit cannot be negative');
+            }
         }
 
         if ($activeFeatures !== null && !is_string($activeFeatures)) {
@@ -4493,11 +4617,11 @@ class Builder
         $this->replace('reg_number', $regNumber);
         $this->replace('vat_number', $vatNumber);
         $this->replace('purpose_to_open_account', $purposeToOpenAccount);
-        $this->replace('one_operation_limit', $oneOperationLimit);
-        $this->replace('daily_limit', $dailyLimit);
-        $this->replace('weekly_limit', $weeklyLimit);
-        $this->replace('monthly_limit', $monthlyLimit);
-        $this->replace('annual_limit', $annualLimit);
+        $this->replace('one_operation_limit', $oneOperationLimit, true);
+        $this->replace('daily_limit', $dailyLimit, true);
+        $this->replace('weekly_limit', $weeklyLimit, true);
+        $this->replace('monthly_limit', $monthlyLimit, true);
+        $this->replace('annual_limit', $annualLimit, true);
         $this->replace('active_features', $activeFeatures);
         $this->replace('promotions', $promotions);
         $this->replace('ajax_validation', $ajaxValidation);
@@ -5108,11 +5232,21 @@ class Builder
         if ($paymentMethod !== null && !is_string($paymentMethod)) {
             throw new \InvalidArgumentException('Payment Method must be string');
         }
-        if ($amount !== null && !is_float($amount)) {
-            throw new \InvalidArgumentException('Amount must be must be  float');
+        if ($amount !== null) {
+            if (!is_float($amount)) {
+                throw new \InvalidArgumentException('Amount must be must be float');
+            }
+            if ($amount < 0) {
+                throw new \InvalidArgumentException('Amount cannot be negative');
+            }
         }
-        if ($amountConverted !== null && !is_int($amountConverted) && !is_float($amountConverted)) {
-            throw new \InvalidArgumentException('Amount Converted must be number');
+        if ($amountConverted !== null) {
+            if (!is_int($amountConverted) && !is_float($amountConverted)) {
+                throw new \InvalidArgumentException('Amount Converted must be number');
+            }
+            if ($amountConverted < 0) {
+                throw new \InvalidArgumentException('Amount Converted cannot be negative');
+            }
         }
         if ($currency !== null && !is_string($currency)) {
             throw new \InvalidArgumentException('Currency must be string');
@@ -5202,8 +5336,8 @@ class Builder
         $this->replace('description', $description);
         $this->replace('product_quantity', $productQuantity);
         $this->replace('payment_method', $paymentMethod);
-        $this->replace('amount', $amount);
-        $this->replace('amount_converted', $amountConverted);
+        $this->replace('amount', $amount, true);
+        $this->replace('amount_converted', $amountConverted, true);
         $this->replace('currency', $currency);
         $this->replace('mrz_document_type', $mrzDocumentType);
         $this->replace('mrz_country', $mrzCountry);

@@ -230,6 +230,15 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.5.1`
+  * Change the data type of the field `language_browser` from `string(255)` to `string(1024)`
+  * Change the data type of the field `product_quantity` from `int` to `float` for the "Order Item" event
+  * Add the possibility to send zero in the following fields:
+    `amount`, `amount_converted`, `shipping_fee`, `shipping_fee_converted`,  
+    `source_fee`, `source_fee_converted`, `tax_fee`, `tax_fee_converted`,  
+    `transaction_amount`, `transaction_amount_converted`, `refund_amount`, `refund_amount_converted`,  
+    `payout_amount`, `payout_amount_converted`, `one_operation_limit`,  
+    `daily_limit`, `weekly_limit`, `monthly_limit`, `annual_limit`
 * `1.5.0`
   * The minimum PHP version has been changed from 5.4 to 7.3.
   * Packages have been updated.

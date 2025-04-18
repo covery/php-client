@@ -137,4 +137,90 @@ class BuildTransactionEventTest extends TestCase
         self::assertSame('GBP', $result['transaction_currency']);
         $validator->validate($result);
     }
+
+    public function testZeroValueForAmountAndAmountConverted()
+    {
+        // Transaction Amount and Transaction Amount Converted with 0
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $result = \Covery\Client\Envelopes\Builder::transactionEvent(
+            'someSequenceId',
+            'fooUserId',
+            'transactionId',
+            0,
+            'GBP',
+            123456,
+            'mode',
+            'type',
+            444444,
+            'qwef53f12e1s121sd34f',
+            '1234',
+            12,
+            2017,
+            21,
+            'ukr',
+            'test@test.com',
+            'male',
+            'John',
+            'Snow',
+            '380501234567',
+            'Lord of north',
+            'z1234fcdfd23',
+            'method',
+            'mid',
+            'system',
+            0
+        )->build();
+        self::assertSame(0.0, $result['transaction_amount']);
+        self::assertSame(0.0, $result['transaction_amount_converted']);
+        $validator->validate($result);
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmount()
+    {
+        // Transaction Amount negative
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Transaction amount cannot be negative");
+        \Covery\Client\Envelopes\Builder::transactionEvent(
+            'someSequenceId',
+            'fooUserId',
+            'transactionId',
+            -1.4,
+            'GBP'
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmountConverted()
+    {
+        // Transaction Amount Converted negative
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Transaction amount converted cannot be negative");
+        \Covery\Client\Envelopes\Builder::transactionEvent(
+            'someSequenceId',
+            'fooUserId',
+            'transactionId',
+            2,
+            'GBP',
+            123456,
+            'mode',
+            'type',
+            444444,
+            'qwef53f12e1s121sd34f',
+            '1234',
+            12,
+            2017,
+            21,
+            'ukr',
+            'test@test.com',
+            'male',
+            'John',
+            'Snow',
+            '380501234567',
+            'Lord of north',
+            'z1234fcdfd23',
+            'method',
+            'mid',
+            'system',
+            -2.3
+        )->build();
+    }
 }

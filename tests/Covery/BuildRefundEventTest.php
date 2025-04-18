@@ -117,4 +117,60 @@ class BuildRefundEventTest extends TestCase
         self::assertSame('GBP', $result['refund_currency']);
         $validator->validate($result);
     }
+
+    public function testZeroValueForAmountAndAmountConverted()
+    {
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $result = \Covery\Client\Envelopes\Builder::refundEvent(
+            'someSequenceId',
+            'refundLargeId',
+            0,
+            'GBP',
+            123456,
+            0,
+            'source',
+            'type',
+            '1234',
+            'reason',
+            'someAgentId1234',
+            'someMethod',
+            'someSystem',
+            'someMid',
+            'someEmail',
+            'somePhone',
+            'someUid',
+            "group id value",
+            'links to documents',
+            [1, 2]
+        )->build();
+        self::assertSame(0, $result['refund_amount']);
+        self::assertSame(0, $result['refund_amount_converted']);
+        $validator->validate($result);
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmount()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Amount cannot be negative");
+        \Covery\Client\Envelopes\Builder::refundEvent(
+            'someSequenceId',
+            'refundLargeId',
+            -0.12,
+            'GBP'
+        );
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmountConverted()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Refund amount converted cannot be negative");
+        \Covery\Client\Envelopes\Builder::refundEvent(
+            'someSequenceId',
+            'refundLargeId',
+            0,
+            'GBP',
+            123456,
+            -0.18,
+        )->build();
+    }
 }
