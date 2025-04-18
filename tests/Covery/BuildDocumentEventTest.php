@@ -223,7 +223,7 @@ class BuildDocumentEventTest extends TestCase
     public function testEventExpectInvalidArgumentExceptionForNegativeAmountConverted()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Amount Converted cannot be negative");
+        $this->expectExceptionMessage("Amount converted cannot be negative");
         Builder::documentEvent(
             'tempEventId',
             123456,

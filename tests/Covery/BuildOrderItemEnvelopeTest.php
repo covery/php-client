@@ -259,7 +259,7 @@ class BuildOrderItemEnvelopeTest extends TestCase
     public function testEventExpectInvalidArgumentExceptionForNegativeAmountConverted()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Amount Converted cannot be negative");
+        $this->expectExceptionMessage("Amount converted cannot be negative");
         \Covery\Client\Envelopes\Builder::orderItemEvent(
             "sequenceId",
             123.456,

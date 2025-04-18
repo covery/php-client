@@ -5,7 +5,6 @@ namespace Covery\Client\Envelopes;
 use Covery\Client\DocumentType;
 use Covery\Client\EnvelopeInterface;
 use Covery\Client\IdentityNodeInterface;
-use SebastianBergmann\Type\TrueType;
 
 class Builder
 {
@@ -3216,10 +3215,10 @@ class Builder
         }
         if ($amountConverted !== null) {
             if (!is_int($amountConverted) && !is_float($amountConverted)) {
-                throw new \InvalidArgumentException('Amount Converted must be number');
+                throw new \InvalidArgumentException('Amount converted must be number');
             }
             if ($amountConverted < 0) {
-                throw new \InvalidArgumentException('Amount Converted cannot be negative');
+                throw new \InvalidArgumentException('Amount converted cannot be negative');
             }
         }
         if ($method !== null && !is_string($method)) {
@@ -3702,10 +3701,10 @@ class Builder
         }
         if ($amountConverted !== null) {
             if (!is_int($amountConverted) && !is_float($amountConverted)) {
-                throw new \InvalidArgumentException('Amount Converted must be number');
+                throw new \InvalidArgumentException('Amount converted must be number');
             }
             if ($amountConverted < 0) {
-                throw new \InvalidArgumentException('Amount Converted cannot be negative');
+                throw new \InvalidArgumentException('Amount converted cannot be negative');
             }
         }
         if ($campaign !== null && !is_string($campaign)) {
@@ -5242,10 +5241,10 @@ class Builder
         }
         if ($amountConverted !== null) {
             if (!is_int($amountConverted) && !is_float($amountConverted)) {
-                throw new \InvalidArgumentException('Amount Converted must be number');
+                throw new \InvalidArgumentException('Amount converted must be number');
             }
             if ($amountConverted < 0) {
-                throw new \InvalidArgumentException('Amount Converted cannot be negative');
+                throw new \InvalidArgumentException('Amount converted cannot be negative');
             }
         }
         if ($currency !== null && !is_string($currency)) {
