@@ -2229,15 +2229,34 @@ class Builder
      * @param string $key
      * @param string|int|float|bool|null $value
      */
-    private function replace($key, $value, $allowedZero = false)
+    private function replace($key, $value)
     {
-        if (
-            $value !== null &&
-            $value !== '' &&
-            ($allowedZero || ($value !== 0 && $value !== 0.0))
-        ) {
+        if ($this->isNotNullAndNotEmptyString($value) && $value !== 0 && $value !== 0.0) {
             $this->data[$key] = $value;
         }
+    }
+
+    /**
+     * Replaces the value in the internal array if the provided value is not null, not an empty string, and positive
+     *
+     * @param string $key
+     * @param string|int|float|bool|null $value
+     */
+    private function replaceZeroAllowed($key, $value)
+    {
+        if ($this->isNotNullAndNotEmptyString($value) && $value >= 0) {
+            $this->data[$key] = $value;
+        }
+    }
+
+    /**
+     * Check if the value is not null and not an empty string
+     *
+     * @param string|int|float|bool|null $value
+     */
+    private function isNotNullAndNotEmptyString($value)
+    {
+        return $value !== null && $value !== '';
     }
 
     /**
@@ -2738,15 +2757,13 @@ class Builder
         $this->replace('transaction_type', $transactionType);
         $this->replace('transaction_mode', $transactionMode);
         $this->replace('transaction_timestamp', $transactionTimestamp);
-        $this->replace(
+        $this->replaceZeroAllowed(
             'transaction_amount',
-            !is_null($transactionAmount) ? floatval($transactionAmount) : null,
-            true
+            !is_null($transactionAmount) ? floatval($transactionAmount) : null
         );
-        $this->replace(
+        $this->replaceZeroAllowed(
             'transaction_amount_converted',
-            !is_null($amountConverted) ? floatval($amountConverted) : null,
-            true
+            !is_null($amountConverted) ? floatval($amountConverted) : null
         );
         $this->replace('transaction_currency', $transactionCurrency);
         $this->replace('payment_method', $paymentMethod);
@@ -2987,19 +3004,17 @@ class Builder
         $this->replace('payout_timestamp', $payoutTimestamp);
         $this->replace('payout_card_id', $payoutCardId);
         $this->replace('payout_account_id', $payoutAccountId);
-        $this->replace(
+        $this->replaceZeroAllowed(
             'payout_amount',
-            !is_null($payoutAmount) ? (float) $payoutAmount : null,
-            true
+            !is_null($payoutAmount) ? (float) $payoutAmount : null
         );
         $this->replace('payout_currency', $payoutCurrency);
         $this->replace('payout_method', $payoutMethod);
         $this->replace('payout_system', $payoutSystem);
         $this->replace('payout_mid', $payoutMid);
-        $this->replace(
+        $this->replaceZeroAllowed(
             'payout_amount_converted',
-            !is_null($amountConverted) ? (float) $amountConverted : null,
-            true
+            !is_null($amountConverted) ? (float) $amountConverted : null
         );
         $this->replace('payout_card_bin', $payoutCardBin);
         $this->replace('payout_card_last4', $payoutCardLast4);
@@ -3112,9 +3127,9 @@ class Builder
 
         $this->replace('refund_id', $refundId);
         $this->replace('refund_timestamp', $refundTimestamp);
-        $this->replace('refund_amount', $refundAmount, true);
+        $this->replaceZeroAllowed('refund_amount', $refundAmount);
         $this->replace('refund_currency', $refundCurrency);
-        $this->replace('refund_amount_converted', $refundAmountConverted, true);
+        $this->replaceZeroAllowed('refund_amount_converted', $refundAmountConverted);
         $this->replace('refund_source', $refundSource);
         $this->replace('refund_type', $refundType);
         $this->replace('refund_code', $refundCode);
@@ -3281,12 +3296,12 @@ class Builder
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
-        $this->replace('amount', $amount, true);
+        $this->replaceZeroAllowed('amount', $amount);
         $this->replace('currency', $currency);
         $this->replace('account_id', $accountId);
         $this->replace('second_account_id', $secondAccountId);
         $this->replace('account_system', $accountSystem);
-        $this->replace('amount_converted', $amountConverted, true);
+        $this->replaceZeroAllowed('amount_converted', $amountConverted);
         $this->replace('method', $method);
         $this->replace('operation', $operation);
         $this->replace('second_email', $secondEmail);
@@ -3827,7 +3842,7 @@ class Builder
         if ($productImageUrl !== null && !is_string($productImageUrl)) {
             throw new \InvalidArgumentException('Product image url must be string');
         }
-        $this->replace('amount', $amount, true);
+        $this->replaceZeroAllowed('amount', $amount);
         $this->replace('currency', $currency);
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -3835,7 +3850,7 @@ class Builder
         $this->replace('order_type', $orderType);
         $this->replace('transaction_id', $transactionId);
         $this->replace('group_id', $groupId);
-        $this->replace('amount_converted', $amountConverted, true);
+        $this->replaceZeroAllowed('amount_converted', $amountConverted);
         $this->replace('campaign', $campaign);
         $this->replace('carrier', $carrier);
         $this->replace('carrier_shipping_id', $carrierShippingId);
@@ -3851,17 +3866,17 @@ class Builder
         $this->replace('shipping_city', $shippingCity);
         $this->replace('shipping_country', $shippingCountry);
         $this->replace('shipping_currency', $shippingCurrency);
-        $this->replace('shipping_fee', $shippingFee, true);
-        $this->replace('shipping_fee_converted', $shippingFeeConverted, true);
+        $this->replaceZeroAllowed('shipping_fee', $shippingFee);
+        $this->replaceZeroAllowed('shipping_fee_converted', $shippingFeeConverted);
         $this->replace('shipping_state', $shippingState);
         $this->replace('shipping_zip', $shippingZip);
         $this->replace('order_source', $source);
-        $this->replace('source_fee', $sourceFee, true);
+        $this->replaceZeroAllowed('source_fee', $sourceFee);
         $this->replace('source_fee_currency', $sourceFeeCurrency);
-        $this->replace('source_fee_converted', $sourceFeeConverted, true);
+        $this->replaceZeroAllowed('source_fee_converted', $sourceFeeConverted);
         $this->replace('tax_currency', $taxCurrency);
-        $this->replace('tax_fee', $taxFee, true);
-        $this->replace('tax_fee_converted', $taxFeeConverted, true);
+        $this->replaceZeroAllowed('tax_fee', $taxFee);
+        $this->replaceZeroAllowed('tax_fee_converted', $taxFeeConverted);
         $this->replace('product_url', $productUrl);
         $this->replace('product_image_url', $productImageUrl);
 
@@ -4616,11 +4631,11 @@ class Builder
         $this->replace('reg_number', $regNumber);
         $this->replace('vat_number', $vatNumber);
         $this->replace('purpose_to_open_account', $purposeToOpenAccount);
-        $this->replace('one_operation_limit', $oneOperationLimit, true);
-        $this->replace('daily_limit', $dailyLimit, true);
-        $this->replace('weekly_limit', $weeklyLimit, true);
-        $this->replace('monthly_limit', $monthlyLimit, true);
-        $this->replace('annual_limit', $annualLimit, true);
+        $this->replaceZeroAllowed('one_operation_limit', $oneOperationLimit);
+        $this->replaceZeroAllowed('daily_limit', $dailyLimit);
+        $this->replaceZeroAllowed('weekly_limit', $weeklyLimit);
+        $this->replaceZeroAllowed('monthly_limit', $monthlyLimit);
+        $this->replaceZeroAllowed('annual_limit', $annualLimit);
         $this->replace('active_features', $activeFeatures);
         $this->replace('promotions', $promotions);
         $this->replace('ajax_validation', $ajaxValidation);
@@ -5335,8 +5350,8 @@ class Builder
         $this->replace('description', $description);
         $this->replace('product_quantity', $productQuantity);
         $this->replace('payment_method', $paymentMethod);
-        $this->replace('amount', $amount, true);
-        $this->replace('amount_converted', $amountConverted, true);
+        $this->replaceZeroAllowed('amount', $amount);
+        $this->replaceZeroAllowed('amount_converted', $amountConverted);
         $this->replace('currency', $currency);
         $this->replace('mrz_document_type', $mrzDocumentType);
         $this->replace('mrz_country', $mrzCountry);

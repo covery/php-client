@@ -274,7 +274,7 @@ class ValidatorV1
         'translated_to' => 'string(225)'
     );
 
-    private static $typeWithZeroAllowed = array(
+    private static $fieldWithZeroAllowed = array(
         'amount',
         'amount_converted',
         'shipping_fee',
@@ -1064,20 +1064,9 @@ class ValidatorV1
 
             // Mandatory fields check
             foreach ($typeInfo['mandatory'] as $name) {
-                if (!isset($envelope[$name]) ||
-                    (
-                        (
-                            in_array($name, self::$typeWithZeroAllowed) &&
-                            (
-                                is_null($envelope[$name]) ||
-                                $envelope[$name] == ''
-                            )
-                        ) ||
-                        (
-                            !in_array($name, self::$typeWithZeroAllowed) &&
-                            empty($envelope[$name])
-                        )
-                    )
+                if (
+                    !isset($envelope[$name]) ||
+                    $this->emptyConditionForMandatoryField($envelope, $name)
                 ) {
                     $details[] = sprintf(
                         'Field "%s" is mandatory for "%s", but not provided',
@@ -1259,5 +1248,14 @@ class ValidatorV1
     public function isCustom($key)
     {
         return is_string($key) && strlen($key) >= 7 && substr($key, 0, 7) === 'custom_';
+    }
+
+    private function emptyConditionForMandatoryField(EnvelopeInterface $envelope, $name)
+    {
+        if (in_array($name, self::$fieldWithZeroAllowed)) {
+            return is_null($envelope[$name]) || $envelope[$name] == '';
+        } else {
+            return empty($envelope[$name]);
+        }
     }
 }
