@@ -87,4 +87,74 @@ class BuildPayoutEventTest extends TestCase
         self::assertSame('GBP', $result['payout_currency']);
         $validator->validate($result);
     }
+
+    public function testZeroValueForAmountAndAmountConverted()
+    {
+        // Payout Amount and Payout Amount Converted with 0
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $result = \Covery\Client\Envelopes\Builder::payoutEvent(
+            'someSequenceId',
+            'fooUserId',
+            'payoutLargeId',
+            'GBP',
+            0,
+            5566,
+            'someCard0001',
+            'someAccountId',
+            'mtd',
+            'sts',
+            'midnight',
+            0,
+            'tony',
+            'hawk',
+            'zimbabwe',
+            'jjj@xx.zzz',
+            '+323423234',
+            123456,
+            '4445',
+            11,
+            22,
+            "group id value",
+            'links to documents',
+            [1, 2]
+        )->build();
+        self::assertSame(0.0, $result['payout_amount']);
+        self::assertSame(0.0, $result['payout_amount_converted']);
+        $validator->validate($result);
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmount()
+    {
+        // Payout Amount negative
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Amount cannot be negative");
+        \Covery\Client\Envelopes\Builder::payoutEvent(
+            'someSequenceId',
+            'fooUserId',
+            'payoutLargeId',
+            'GBP',
+            -1
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmountConverted()
+    {
+        // Payout Amount Converted negative
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Payout amount converted cannot be negative");
+        \Covery\Client\Envelopes\Builder::payoutEvent(
+            'someSequenceId',
+            'fooUserId',
+            'payoutLargeId',
+            'GBP',
+            0.12,
+            5566,
+            'someCard0001',
+            'someAccountId',
+            'mtd',
+            'sts',
+            'midnight',
+            -2
+        )->build();
+    }
 }

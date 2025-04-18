@@ -136,4 +136,57 @@ class BuildTransferEventTest extends TestCase
         self::assertSame('uid42', $result['user_merchant_id']);
         $validator->validate($result);
     }
+
+    public function testZeroValueForFloatWithAllowedZero()
+    {
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $result = \Covery\Client\Envelopes\Builder::transferEvent(
+            'someSequenceId',
+            'someEventId',
+            0.0,
+            'GBP',
+            'uid42',
+            "accountId",
+            'secondAccountId',
+            'paypal',
+            'foo',
+            123123,
+            0.0
+        )->build();
+        self::assertSame(0.0, $result['amount']);
+        self::assertSame(0.0, $result['amount_converted']);
+        $validator->validate($result);
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmount()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Amount cannot be negative");
+        \Covery\Client\Envelopes\Builder::transferEvent(
+            'someSequenceId',
+            'someEventId',
+            -0.42,
+            'GBP',
+            'uid42'
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmountConverted()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Amount converted cannot be negative");
+        \Covery\Client\Envelopes\Builder::transferEvent(
+            'someSequenceId',
+            'someEventId',
+            0.42,
+            'GBP',
+            'uid42',
+            "accountId",
+            'secondAccountId',
+            'paypal',
+            'foo',
+            123123,
+            -42.5
+        )->build();
+    }
 }

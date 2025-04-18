@@ -175,4 +175,359 @@ class BuildOrderSubmitEnvelopeTest extends TestCase
         self::assertSame(123456, $result["event_timestamp"]);
         self::assertSame(222, $result["items_quantity"]);
     }
+
+    public function testZeroValueForFloatWithAllowedZero()
+    {
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $result = \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            0.0,
+            "currency",
+            "eventId",
+            123456,
+            111,
+            "transactionId",
+            "groupId",
+            "affiliateId",
+            0.0,
+            "campaign",
+            "carrier",
+            "carrierShippingId",
+            "carrierUrl",
+            "carrierPhone",
+            2,
+            4,
+            "couponId",
+            "couponName",
+            "customerComment",
+            126,
+            "email",
+            "firstName",
+            "lastName",
+            "phone",
+            "shippingAddress",
+            "shippingCity",
+            "shippingCountry",
+            "shippingCurrency",
+            0.0,
+            0.0,
+            "shippingState",
+            "shippingZip",
+            "socialType",
+            "source",
+            "sourceFeeCurrency",
+            0.0,
+            0.0,
+            "taxCurrency",
+            0.0,
+            0.0
+        )->build();
+        self::assertSame(0.0, $result['amount']);
+        self::assertSame(0.0, $result['amount_converted']);
+        self::assertSame(0.0, $result['shipping_fee']);
+        self::assertSame(0.0, $result['shipping_fee_converted']);
+        self::assertSame(0.0, $result['source_fee']);
+        self::assertSame(0.0, $result['source_fee_converted']);
+        self::assertSame(0.0, $result['tax_fee']);
+        self::assertSame(0.0, $result['tax_fee_converted']);
+        $validator->validate($result);
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmount()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Amount cannot be negative");
+        \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            -2.4,
+            "currency",
+            "eventId",
+            123456,
+            111
+        )->build();
+    }
+    
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmountConverted()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Amount converted cannot be negative");
+        \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            2.0,
+            "currency",
+            "eventId",
+            123456,
+            111,
+            "transactionId",
+            "groupId",
+            "affiliateId",
+            -3.5,
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeShippingFee()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Shipping fee cannot be negative");
+        \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            123.456,
+            "currency",
+            "eventId",
+            123456,
+            111,
+            "transactionId",
+            "groupId",
+            "affiliateId",
+            123,
+            "campaign",
+            "carrier",
+            "carrierShippingId",
+            "carrierUrl",
+            "carrierPhone",
+            2,
+            4,
+            "couponId",
+            "couponName",
+            "customerComment",
+            126,
+            "email",
+            "firstName",
+            "lastName",
+            "phone",
+            "shippingAddress",
+            "shippingCity",
+            "shippingCountry",
+            "shippingCurrency",
+            -2.2,
+            3,
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeShippingFeeConverted()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Shipping fee converted cannot be negative");
+        \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            123.456,
+            "currency",
+            "eventId",
+            123456,
+            111,
+            "transactionId",
+            "groupId",
+            "affiliateId",
+            123,
+            "campaign",
+            "carrier",
+            "carrierShippingId",
+            "carrierUrl",
+            "carrierPhone",
+            2,
+            4,
+            "couponId",
+            "couponName",
+            "customerComment",
+            126,
+            "email",
+            "firstName",
+            "lastName",
+            "phone",
+            "shippingAddress",
+            "shippingCity",
+            "shippingCountry",
+            "shippingCurrency",
+            2.2,
+            -0.3,
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeSourceFee()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Source fee cannot be negative");
+        \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            123.456,
+            "currency",
+            "eventId",
+            123456,
+            111,
+            "transactionId",
+            "groupId",
+            "affiliateId",
+            123,
+            "campaign",
+            "carrier",
+            "carrierShippingId",
+            "carrierUrl",
+            "carrierPhone",
+            2,
+            4,
+            "couponId",
+            "couponName",
+            "customerComment",
+            126,
+            "email",
+            "firstName",
+            "lastName",
+            "phone",
+            "shippingAddress",
+            "shippingCity",
+            "shippingCountry",
+            "shippingCurrency",
+            2.2,
+            3,
+            "shippingState",
+            "shippingZip",
+            "socialType",
+            "source",
+            "sourceFeeCurrency",
+            -0.3
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeSourceFeeConverted()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Source fee converted cannot be negative");
+        \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            123.456,
+            "currency",
+            "eventId",
+            123456,
+            111,
+            "transactionId",
+            "groupId",
+            "affiliateId",
+            123,
+            "campaign",
+            "carrier",
+            "carrierShippingId",
+            "carrierUrl",
+            "carrierPhone",
+            2,
+            4,
+            "couponId",
+            "couponName",
+            "customerComment",
+            126,
+            "email",
+            "firstName",
+            "lastName",
+            "phone",
+            "shippingAddress",
+            "shippingCity",
+            "shippingCountry",
+            "shippingCurrency",
+            2.2,
+            0.3,
+            "shippingState",
+            "shippingZip",
+            "socialType",
+            "source",
+            "sourceFeeCurrency",
+            0.0,
+            -1.2
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeTaxFee()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Tax fee cannot be negative");
+        \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            123.456,
+            "currency",
+            "eventId",
+            123456,
+            111,
+            "transactionId",
+            "groupId",
+            "affiliateId",
+            123,
+            "campaign",
+            "carrier",
+            "carrierShippingId",
+            "carrierUrl",
+            "carrierPhone",
+            2,
+            4,
+            "couponId",
+            "couponName",
+            "customerComment",
+            126,
+            "email",
+            "firstName",
+            "lastName",
+            "phone",
+            "shippingAddress",
+            "shippingCity",
+            "shippingCountry",
+            "shippingCurrency",
+            2.2,
+            3,
+            "shippingState",
+            "shippingZip",
+            "socialType",
+            "source",
+            "sourceFeeCurrency",
+            1.0,
+            1.0,
+            "taxCurrency",
+            -1.1
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeTaxFeeConverted()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Tax fee converted cannot be negative");
+        \Covery\Client\Envelopes\Builder::orderSubmitEvent(
+            "sequenceId",
+            123.456,
+            "currency",
+            "eventId",
+            123456,
+            111,
+            "transactionId",
+            "groupId",
+            "affiliateId",
+            123,
+            "campaign",
+            "carrier",
+            "carrierShippingId",
+            "carrierUrl",
+            "carrierPhone",
+            2,
+            4,
+            "couponId",
+            "couponName",
+            "customerComment",
+            126,
+            "email",
+            "firstName",
+            "lastName",
+            "phone",
+            "shippingAddress",
+            "shippingCity",
+            "shippingCountry",
+            "shippingCurrency",
+            2.2,
+            0.3,
+            "shippingState",
+            "shippingZip",
+            "socialType",
+            "source",
+            "sourceFeeCurrency",
+            1.0,
+            1.0,
+            "taxCurrency",
+            1.0,
+            -0.7
+        )->build();
+    }
 }

@@ -140,4 +140,122 @@ class BuildDocumentEventTest extends TestCase
 
         $validator->validate($result);
     }
+
+    public function testZeroValueForFloatWithAllowedZero()
+    {
+        $validator = new ValidatorV1();
+        $result = Builder::documentEvent(
+            'tempEventId',
+            123456,
+            'tempUserId',
+            \Covery\Client\DocumentType::INTERNATIONAL_PASSPORT,
+            'tempSequenceId',
+            'tempGroupId',
+            'tempDocumentCountry',
+            'tempDocumentNumber',
+            'tempFileName',
+            'tempEmail',
+            'tempFirstName',
+            'tempLastName',
+            'tempFullname',
+            123456,
+            18,
+            'tempGender',
+            'tempNationality',
+            'tempCountry',
+            'tempCity',
+            'tempZip',
+            'tempAddress',
+            123456,
+            123456,
+            'tempAuthority',
+            'testRecordNumber',
+            'testPersonalNumber',
+            'testDescription',
+            10.4,
+            'testPaymentMethod',
+            0.0,
+            0.0
+        )->build();
+        self::assertSame(0.0, $result['amount']);
+        self::assertSame(0.0, $result['amount_converted']);
+        $validator->validate($result);
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmount()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Amount cannot be negative");
+        Builder::documentEvent(
+            'tempEventId',
+            123456,
+            'tempUserId',
+            \Covery\Client\DocumentType::INTERNATIONAL_PASSPORT,
+            'tempSequenceId',
+            'tempGroupId',
+            'tempDocumentCountry',
+            'tempDocumentNumber',
+            'tempFileName',
+            'tempEmail',
+            'tempFirstName',
+            'tempLastName',
+            'tempFullname',
+            123456,
+            18,
+            'tempGender',
+            'tempNationality',
+            'tempCountry',
+            'tempCity',
+            'tempZip',
+            'tempAddress',
+            123456,
+            123456,
+            'tempAuthority',
+            'testRecordNumber',
+            'testPersonalNumber',
+            'testDescription',
+            10.4,
+            'testPaymentMethod',
+            -23.6
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeAmountConverted()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Amount converted cannot be negative");
+        Builder::documentEvent(
+            'tempEventId',
+            123456,
+            'tempUserId',
+            \Covery\Client\DocumentType::INTERNATIONAL_PASSPORT,
+            'tempSequenceId',
+            'tempGroupId',
+            'tempDocumentCountry',
+            'tempDocumentNumber',
+            'tempFileName',
+            'tempEmail',
+            'tempFirstName',
+            'tempLastName',
+            'tempFullname',
+            123456,
+            18,
+            'tempGender',
+            'tempNationality',
+            'tempCountry',
+            'tempCity',
+            'tempZip',
+            'tempAddress',
+            123456,
+            123456,
+            'tempAuthority',
+            'testRecordNumber',
+            'testPersonalNumber',
+            'testDescription',
+            10.4,
+            'testPaymentMethod',
+            23.6,
+            -34.5
+        )->build();
+    }
 }

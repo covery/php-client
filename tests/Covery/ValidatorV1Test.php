@@ -47,6 +47,21 @@ class ValidatorV1Test extends TestCase
         self::assertCount(2, $result);
         self::assertSame('Field "user_merchant_id" is mandatory for "login", but not provided', $result[0]);
         self::assertSame('Field "foo" not found in "login"', $result[1]);
+
+        $env = new \Covery\Client\Envelopes\Envelope(
+            "transaction",
+            "123456",
+            array(),
+            array(
+                'transaction_amount' => 0.0,
+                'transaction_currency' => 'usd',
+                'transaction_id' => 'transactionId',
+                'transaction_timestamp' => 12122234,
+                'user_merchant_id' => "23223232"
+            )
+        );
+        $result = $this->validator->analyzeTypeAndMandatoryFields($env);
+        self::assertCount(0, $result);
     }
 
     public function testAnalyzeOptionalFieldsWithShared()

@@ -26,7 +26,7 @@ class ValidatorV1
         'firstname' => 'string(255)',
         'gender' => 'string(255)',
         'language' => 'string(255)',
-        'language_browser' => 'string(255)',
+        'language_browser' => 'string(1024)',
         'language_system' => 'string(255)',
         'language_user' => 'string(255)',
         'languages' => 'string(1024)',
@@ -272,6 +272,28 @@ class ValidatorV1
         'translated_extracted_text' => 'string(225)',
         'translated_from' => 'string(225)',
         'translated_to' => 'string(225)'
+    );
+
+    private static $fieldWithZeroAllowed = array(
+        'amount',
+        'amount_converted',
+        'shipping_fee',
+        'shipping_fee_converted',
+        'source_fee',
+        'source_fee_converted',
+        'tax_fee',
+        'tax_fee_converted',
+        'transaction_amount',
+        'transaction_amount_converted',
+        'refund_amount',
+        'refund_amount_converted',
+        'payout_amount',
+        'payout_amount_converted',
+        'one_operation_limit',
+        'daily_limit',
+        'weekly_limit',
+        'monthly_limit',
+        'annual_limit'
     );
 
     private static $sharedOptional = array(
@@ -1042,7 +1064,10 @@ class ValidatorV1
 
             // Mandatory fields check
             foreach ($typeInfo['mandatory'] as $name) {
-                if (!isset($envelope[$name]) || empty($envelope[$name])) {
+                if (
+                    !isset($envelope[$name]) ||
+                    $this->emptyConditionForMandatoryField($envelope, $name)
+                ) {
                     $details[] = sprintf(
                         'Field "%s" is mandatory for "%s", but not provided',
                         $name,
@@ -1223,5 +1248,14 @@ class ValidatorV1
     public function isCustom($key)
     {
         return is_string($key) && strlen($key) >= 7 && substr($key, 0, 7) === 'custom_';
+    }
+
+    private function emptyConditionForMandatoryField(EnvelopeInterface $envelope, $name)
+    {
+        if (in_array($name, self::$fieldWithZeroAllowed)) {
+            return is_null($envelope[$name]) || $envelope[$name] == '';
+        } else {
+            return empty($envelope[$name]);
+        }
     }
 }
