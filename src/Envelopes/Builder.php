@@ -3290,7 +3290,7 @@ class Builder
         if ($source !== null && !is_string($source)) {
             throw new \InvalidArgumentException('Transfer source must be string');
         }
-        if ($source !== null && !is_string($secondUserMerchantId)) {
+        if ($secondUserMerchantId !== null && !is_string($secondUserMerchantId)) {
             throw new \InvalidArgumentException('Transfer second user merchant id must be string');
         }
 
