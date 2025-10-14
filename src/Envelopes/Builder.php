@@ -2050,6 +2050,8 @@ class Builder
      * @param string|null $translatedExtractedText
      * @param string|null $translatedFrom
      * @param string|null $translatedTo
+     * @param string|null $deepfake
+     * @param string|null $deepfakeConfidence
      *
      * @return Builder
      */
@@ -2105,7 +2107,9 @@ class Builder
         $textLanguageDetails = null,
         $translatedExtractedText = null,
         $translatedFrom = null,
-        $translatedTo = null
+        $translatedTo = null,
+        $deepfake = null,
+        $deepfakeConfidence = null
     ) {
         $sequenceId = $sequenceId ?? '';
         $builder = new self(self::EVENT_DOCUMENT, $sequenceId);
@@ -2152,7 +2156,9 @@ class Builder
                 $textLanguageDetails,
                 $translatedExtractedText,
                 $translatedFrom,
-                $translatedTo
+                $translatedTo,
+                $deepfake,
+                $deepfakeConfidence
             )
             ->addUserData(
                 $email,
@@ -5148,6 +5154,8 @@ class Builder
      * @param string|null $translatedExtractedText
      * @param string|null $translatedFrom
      * @param string|null $translatedTo
+     * @param string|null $deepfake
+     * @param string|null $deepfakeConfidence
      * @return Builder
      */
     public function addDocumentEventData(
@@ -5189,7 +5197,9 @@ class Builder
         $textLanguageDetails = null,
         $translatedExtractedText = null,
         $translatedFrom = null,
-        $translatedTo = null
+        $translatedTo = null,
+        $deepfake = null,
+        $deepfakeConfidence = null
     ) {
         if (!is_string($eventId)) {
             throw new \InvalidArgumentException('Event ID must be string');
@@ -5248,7 +5258,7 @@ class Builder
         }
         if ($amount !== null) {
             if (!is_float($amount)) {
-                throw new \InvalidArgumentException('Amount must be must be float');
+                throw new \InvalidArgumentException('Amount must be float');
             }
             if ($amount < 0) {
                 throw new \InvalidArgumentException('Amount cannot be negative');
@@ -5333,6 +5343,20 @@ class Builder
         if ($translatedTo !== null && !is_string($translatedTo)) {
             throw new \InvalidArgumentException('Translated To must be string');
         }
+        if ($deepfake !== null && !is_bool($deepfake)) {
+            throw new \InvalidArgumentException('Deepfake enabled flag must be boolean');
+        }
+        if ($deepfakeConfidence !== null) {
+            if (!is_int($deepfakeConfidence) && !is_float($deepfakeConfidence)) {
+                throw new \InvalidArgumentException('Deepfake confidence must be number');
+            }
+            if ($deepfakeConfidence < 0) {
+                throw new \InvalidArgumentException('Deepfake confidence cannot be negative');
+            }
+            if ($deepfakeConfidence > 1) {
+                throw new \InvalidArgumentException('Deepfake confidence cannot be greater than 1');
+            }
+        }
 
         $this->replace('event_id', $eventId);
         $this->replace('event_timestamp', $eventTimestamp);
@@ -5373,6 +5397,8 @@ class Builder
         $this->replace('translated_extracted_text', $translatedExtractedText);
         $this->replace('translated_from', $translatedFrom);
         $this->replace('translated_to', $translatedTo);
+        $this->replace('deepfake', $deepfake);
+        $this->replaceZeroAllowed('deepfake_confidence', $deepfakeConfidence);
 
         return $this;
     }
