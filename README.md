@@ -230,6 +230,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.5.2`
+  * Fixed validation of `second_user_merchant_id` field for the "Transfer" event
 * `1.5.1`
   * Change the data type of the field `language_browser` from `string(255)` to `string(1024)`
   * Change the data type of the field `product_quantity` from `int` to `float` for the "Order Item" event
