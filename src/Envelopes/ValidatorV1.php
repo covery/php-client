@@ -271,7 +271,8 @@ class ValidatorV1
         'text_language_details' => 'array_string',
         'translated_extracted_text' => 'string(225)',
         'translated_from' => 'string(225)',
-        'translated_to' => 'string(225)'
+        'translated_to' => 'string(225)',
+        'card_pan' => 'int'
     );
 
     private static $fieldWithZeroAllowed = array(
@@ -322,6 +323,8 @@ class ValidatorV1
         'origin_url',
         'client_resolution'
     );
+
+    private static $cardPanKey = 'card_pan';
 
     private static $types = array(
         'confirmation' => array(
@@ -415,6 +418,7 @@ class ValidatorV1
                 'group_id',
                 'links_to_documents',
                 'document_id',
+                'card_pan',
             )
         ),
         'payout' => array(
@@ -444,6 +448,7 @@ class ValidatorV1
                 'group_id',
                 'links_to_documents',
                 'document_id',
+                'card_pan',
             )
         ),
         'install' => array(
@@ -1213,6 +1218,69 @@ class ValidatorV1
     }
 
     /**
+     * Analyzes card pan
+     *
+     * @param int|null $cardPan
+     * @return array
+     */
+    public function analyzeCardPan(int $cardPan = null)
+    {
+        $details = array();
+        if (!empty($cardPan)) {
+            $numberStr = (string)$cardPan;
+
+            $length = strlen($numberStr);
+            if ($length < 14) {
+                $details[] = sprintf(
+                    'Field "%s" must contain at least 14 digits, but only %d provided (%s)',
+                    self::$cardPanKey,
+                    $length,
+                    $numberStr
+                );
+            }
+            
+            if ($length > 19) {
+                $details[] = sprintf(
+                    'Field "%s" must not exceed 19 digits, but %d provided (%s)',
+                    self::$cardPanKey,
+                    $length,
+                    $numberStr
+                );
+            }
+
+            if (!empty($details)) {
+                return $details;
+            }
+
+            $sum = 0;
+            $alt = false;
+
+            for ($i = $length - 1; $i >= 0; $i--) {
+                $n = (int)$numberStr[$i];
+                if ($alt) {
+                    $n *= 2;
+                    if ($n > 9) {
+                        $n -= 9;
+                    }
+                }
+                $sum += $n;
+                $alt = !$alt;
+            }
+
+            if ($sum % 10 !== 0) {
+                $details[] = sprintf(
+                    'Field "%s" failed Luhn validation (sum mod 10 = %d)',
+                    self::$cardPanKey,
+                    $sum % 10
+                );
+            }
+            return $details;
+        }
+
+        return array();
+    }
+
+    /**
      * Checks envelope validity and throws an exception on error
      *
      * @param EnvelopeInterface $envelope
@@ -1230,7 +1298,8 @@ class ValidatorV1
                 $this->analyzeSequenceId($envelope->getSequenceId()),
                 $this->analyzeIdentities($envelope->getIdentities()),
                 $this->analyzeTypeAndMandatoryFields($envelope),
-                $this->analyzeFieldTypes($envelope)
+                $this->analyzeFieldTypes($envelope),
+                $this->analyzeCardPan(!empty($envelope[self::$cardPanKey]) ? $envelope[self::$cardPanKey] : null)
             );
         }
 

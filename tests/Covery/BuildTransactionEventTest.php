@@ -57,7 +57,8 @@ class BuildTransactionEventTest extends TestCase
             "acquirer merchant id value",
             "group id value",
             'links to documents',
-            [1, 2]
+            [1, 2],
+            5555555555554444
         )
             ->addBrowserData('88889', 'Test curl')
             ->addIdentity(new \Covery\Client\Identities\Stub())
@@ -67,7 +68,7 @@ class BuildTransactionEventTest extends TestCase
         self::assertSame('transaction', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(50, $result);
+        self::assertCount(51, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame('transactionId', $result['transaction_id']);
         self::assertSame(0.12, $result['transaction_amount']);
@@ -116,6 +117,7 @@ class BuildTransactionEventTest extends TestCase
         self::assertSame('group id value', $result['group_id']);
         self::assertSame('links to documents', $result['links_to_documents']);
         self::assertSame([1, 2], $result['document_id']);
+        self::assertSame(5555555555554444, $result['card_pan']);
 
         $validator->validate($result);
 
@@ -222,5 +224,125 @@ class BuildTransactionEventTest extends TestCase
             'system',
             -2.3
         )->build();
+    }
+
+    public function testAnalyzeCardPanThrowsForTooShortCardPan()
+    {
+        // Card Pan to short
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $this->expectException(\Covery\Client\EnvelopeValidationException::class);
+        $this->expectExceptionMessage("Field \"card_pan\" must contain at least 14 digits, but only 8 provided (55555555)");
+        $result = \Covery\Client\Envelopes\Builder::transactionEvent(
+            'someSequenceId',
+            'fooUserId',
+            'transactionId',
+            0.12,
+            'GBP',
+            123456,
+            'mode',
+            'type',
+            444444,
+            'qwef53f12e1s121sd34f',
+            '1234',
+            12,
+            2017,
+            21,
+            'ukr',
+            'test@test.com',
+            'male',
+            'John',
+            'Snow',
+            '380501234567',
+            'Lord of north',
+            'z1234fcdfd23',
+            'method',
+            'mid',
+            'system',
+            0.22,
+            'source',
+            'castle',
+            'Winterfell',
+            'Westeros',
+            'John',
+            'Targarien',
+            'John Targarien',
+            'north',
+            '123',
+            'Rusted swords',
+            'Sword',
+            1000,
+            'http://example.com',
+            '127.0.0.1',
+            'affiliateId',
+            'email campaign',
+            "merchant country value",
+            "mcc value",
+            "acquirer merchant id value",
+            "group id value",
+            'links to documents',
+            [1, 2],
+            55555555
+        )->build();
+        $validator->validate($result);
+    }
+
+    public function testAnalyzeCardPanThrowsForBadChecksum()
+    {
+        // Card Pan bad checksum
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $this->expectException(\Covery\Client\EnvelopeValidationException::class);
+        $this->expectExceptionMessage("Field \"card_pan\" failed Luhn validation (sum mod 10 = 9)");
+        $result = \Covery\Client\Envelopes\Builder::transactionEvent(
+            'someSequenceId',
+            'fooUserId',
+            'transactionId',
+            0.12,
+            'GBP',
+            123456,
+            'mode',
+            'type',
+            444444,
+            'qwef53f12e1s121sd34f',
+            '1234',
+            12,
+            2017,
+            21,
+            'ukr',
+            'test@test.com',
+            'male',
+            'John',
+            'Snow',
+            '380501234567',
+            'Lord of north',
+            'z1234fcdfd23',
+            'method',
+            'mid',
+            'system',
+            0.22,
+            'source',
+            'castle',
+            'Winterfell',
+            'Westeros',
+            'John',
+            'Targarien',
+            'John Targarien',
+            'north',
+            '123',
+            'Rusted swords',
+            'Sword',
+            1000,
+            'http://example.com',
+            '127.0.0.1',
+            'affiliateId',
+            'email campaign',
+            "merchant country value",
+            "mcc value",
+            "acquirer merchant id value",
+            "group id value",
+            'links to documents',
+            [1, 2],
+            5555555555554443
+        )->build();
+        $validator->validate($result);
     }
 }
