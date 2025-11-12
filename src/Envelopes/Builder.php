@@ -272,6 +272,7 @@ class Builder
      * @param string|null $groupId
      * @param string|null $linksToDocuments
      * @param array|null $documentId
+     * @param int|null $cardPan
      *
      * @return Builder
      */
@@ -299,7 +300,8 @@ class Builder
         $cardExpirationYear = null,
         $groupId = null,
         $linksToDocuments = null,
-        $documentId = null
+        $documentId = null,
+        $cardPan = null
     ) {
         $builder = new self('payout', $sequenceId);
         if ($payoutTimestamp === null) {
@@ -325,7 +327,8 @@ class Builder
             ->addShortUserData($email, $userId, $phone, $firstName, $lastName, $country)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addDocumentData($documentId);
+            ->addDocumentData($documentId)
+            ->addCardPan($cardPan);
     }
 
     /**
@@ -379,6 +382,7 @@ class Builder
      * @param string|null $groupId
      * @param string|null $linksToDocuments
      * @param array|null $documentId
+     * @param int|null $cardPan
      *
      * @return Builder
      */
@@ -430,7 +434,8 @@ class Builder
         $acquirerMerchantId = null,
         $groupId = null,
         $linksToDocuments = null,
-        $documentId = null
+        $documentId = null,
+        $cardPan = null
     ) {
         $builder = new self('transaction', $sequenceId);
         if ($transactionTimestamp === null) {
@@ -482,8 +487,8 @@ class Builder
             ->addIpData(null, null, $merchantIp)
             ->addGroupId($groupId)
             ->addLinksToDocuments($linksToDocuments)
-            ->addDocumentData($documentId);
-
+            ->addDocumentData($documentId)
+            ->addCardPan($cardPan);
     }
 
     /**
@@ -4040,6 +4045,22 @@ class Builder
             }
         }
         $this->replace('document_id', $documentId);
+
+        return $this;
+    }
+
+    /**
+     * Provides card pan value to envelope
+     *
+     * @param int|null $cardPan
+     * @return $this
+     */
+    public function addCardPan($cardPan = null)
+    {
+        if ($cardPan !== null && !is_int($cardPan)) {
+            throw new \InvalidArgumentException('Card Pan must be int');
+        }
+        $this->replace('card_pan', $cardPan);
 
         return $this;
     }

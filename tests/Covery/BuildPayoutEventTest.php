@@ -33,13 +33,14 @@ class BuildPayoutEventTest extends TestCase
             22,
             "group id value",
             'links to documents',
-            [1, 2]
+            [1, 2],
+            5555555555554444
         )->addBrowserData('88889', 'Test curl')->addIdentity(new \Covery\Client\Identities\Stub())->build();
 
         self::assertSame('payout', $result->getType());
         self::assertCount(1, $result->getIdentities());
         self::assertSame('someSequenceId', $result->getSequenceId());
-        self::assertCount(25, $result);
+        self::assertCount(26, $result);
         self::assertSame('fooUserId', $result['user_merchant_id']);
         self::assertSame(5566, $result['payout_timestamp']);
         self::assertSame('payoutLargeId', $result['payout_id']);
@@ -156,5 +157,77 @@ class BuildPayoutEventTest extends TestCase
             'midnight',
             -2
         )->build();
+    }
+
+    public function testAnalyzeCardPanThrowsForTooShortCardPan()
+    {
+        // Card Pan to short
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $this->expectException(\Covery\Client\EnvelopeValidationException::class);
+        $this->expectExceptionMessage("Field \"card_pan\" must contain at least 14 digits, but only 8 provided (55555555)");
+        $result = \Covery\Client\Envelopes\Builder::payoutEvent(
+            'someSequenceId',
+            'fooUserId',
+            'payoutLargeId',
+            'GBP',
+            0.12,
+            5566,
+            'someCard0001',
+            'someAccountId',
+            'mtd',
+            'sts',
+            'midnight',
+            23,
+            'tony',
+            'hawk',
+            'zimbabwe',
+            'jjj@xx.zzz',
+            '+323423234',
+            123456,
+            '4445',
+            11,
+            22,
+            "group id value",
+            'links to documents',
+            [1, 2],
+            55555555
+        )->build();
+        $validator->validate($result);
+    }
+
+    public function testAnalyzeCardPanThrowsForBadChecksum()
+    {
+        // Card Pan bad checksum
+        $validator = new \Covery\Client\Envelopes\ValidatorV1();
+        $this->expectException(\Covery\Client\EnvelopeValidationException::class);
+        $this->expectExceptionMessage("Field \"card_pan\" failed Luhn validation (sum mod 10 = 9)");
+        $result = \Covery\Client\Envelopes\Builder::payoutEvent(
+            'someSequenceId',
+            'fooUserId',
+            'payoutLargeId',
+            'GBP',
+            0.12,
+            5566,
+            'someCard0001',
+            'someAccountId',
+            'mtd',
+            'sts',
+            'midnight',
+            23,
+            'tony',
+            'hawk',
+            'zimbabwe',
+            'jjj@xx.zzz',
+            '+323423234',
+            123456,
+            '4445',
+            11,
+            22,
+            "group id value",
+            'links to documents',
+            [1, 2],
+            5555555555554443
+        )->build();
+        $validator->validate($result);
     }
 }
