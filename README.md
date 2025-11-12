@@ -232,7 +232,6 @@ You may provide the following as envelopes:
 ## Changelog
 * `1.5.4`
   * Added optional `card_pan` field for transaction, payout events
-* `1.5.2`
 * `1.5.3`
   * Added optional `deepfake` and `deepfake_confidence` fields for document event
 * `1.5.2`
