@@ -272,7 +272,9 @@ class ValidatorV1
         'translated_extracted_text' => 'string(225)',
         'translated_from' => 'string(225)',
         'translated_to' => 'string(225)',
-        'card_pan' => 'int'
+        'card_pan' => 'int',
+        'deepfake' => 'bool',
+        'deepfake_confidence' => 'float'
     );
 
     private static $fieldWithZeroAllowed = array(
@@ -1002,6 +1004,8 @@ class ValidatorV1
                 "translated_extracted_text",
                 "translated_from",
                 "translated_to",
+                "deepfake",
+                "deepfake_confidence",
             )
         ),
     );

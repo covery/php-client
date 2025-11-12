@@ -63,10 +63,12 @@ class BuildDocumentEventTest extends TestCase
             ['en'],
             'testTranslatedExtractedText',
             'testTranslatedFrom',
-            'testTranslatedTo'
+            'testTranslatedTo',
+            false,
+            0.12
         )->build();
 
-        self::assertCount(51, $result);
+        self::assertCount(53, $result);
         self::assertSame(Builder::EVENT_DOCUMENT, $result->getType());
         self::assertSame('tempSequenceId', $result->getSequenceId());
         self::assertSame('tempEventId', $result['event_id']);
@@ -119,7 +121,8 @@ class BuildDocumentEventTest extends TestCase
         self::assertSame(['en'], $result['text_language_details']);
         self::assertSame("testTranslatedExtractedText", $result['translated_extracted_text']);
         self::assertSame("testTranslatedFrom", $result['translated_from']);
-        self::assertSame("testTranslatedTo", $result['translated_to']);
+        self::assertSame(false, $result['deepfake']);
+        self::assertSame(0.12, $result['deepfake_confidence']);
 
         $validator->validate($result);
 
@@ -256,6 +259,130 @@ class BuildDocumentEventTest extends TestCase
             'testPaymentMethod',
             23.6,
             -34.5
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForNegativeDeepfakeConfidence()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Deepfake confidence cannot be negative");
+        Builder::documentEvent(
+            'tempEventId',
+            123456,
+            'tempUserId',
+            \Covery\Client\DocumentType::INTERNATIONAL_PASSPORT,
+            'tempSequenceId',
+            'tempGroupId',
+            'tempDocumentCountry',
+            'tempDocumentNumber',
+            'tempFileName',
+            'tempEmail',
+            'tempFirstName',
+            'tempLastName',
+            'tempFullname',
+            123456,
+            18,
+            'tempGender',
+            'tempNationality',
+            'tempCountry',
+            'tempCity',
+            'tempZip',
+            'tempAddress',
+            123456,
+            123456,
+            'tempAuthority',
+            'testRecordNumber',
+            'testPersonalNumber',
+            'testDescription',
+            10.4,
+            'testPaymentMethod',
+            23.6,
+            34.5,
+            'testCurrency',
+            'testMrzDocumentType',
+            'testMrzCountry',
+            'testMrzLastname',
+            'testMrzFirstname',
+            'testMrzFullname',
+            'testMrzDocumentNumber',
+            'testMrzNationality',
+            'testMrzPersonalNumber',
+            123456,
+            'testMrzGender',
+            123456,
+            'testMrzRecordNumber',
+            false,
+            'tempMrzAuthority',
+            123456,
+            'testExtractedText',
+            ['en'],
+            'testTranslatedExtractedText',
+            'testTranslatedFrom',
+            'testTranslatedTo',
+            false,
+            -0.12
+        )->build();
+    }
+
+    public function testEventExpectInvalidArgumentExceptionForGreaterThanOneDeepfakeConfidence()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Deepfake confidence cannot be greater than 1");
+        Builder::documentEvent(
+            'tempEventId',
+            123456,
+            'tempUserId',
+            \Covery\Client\DocumentType::INTERNATIONAL_PASSPORT,
+            'tempSequenceId',
+            'tempGroupId',
+            'tempDocumentCountry',
+            'tempDocumentNumber',
+            'tempFileName',
+            'tempEmail',
+            'tempFirstName',
+            'tempLastName',
+            'tempFullname',
+            123456,
+            18,
+            'tempGender',
+            'tempNationality',
+            'tempCountry',
+            'tempCity',
+            'tempZip',
+            'tempAddress',
+            123456,
+            123456,
+            'tempAuthority',
+            'testRecordNumber',
+            'testPersonalNumber',
+            'testDescription',
+            10.4,
+            'testPaymentMethod',
+            23.6,
+            34.5,
+            'testCurrency',
+            'testMrzDocumentType',
+            'testMrzCountry',
+            'testMrzLastname',
+            'testMrzFirstname',
+            'testMrzFullname',
+            'testMrzDocumentNumber',
+            'testMrzNationality',
+            'testMrzPersonalNumber',
+            123456,
+            'testMrzGender',
+            123456,
+            'testMrzRecordNumber',
+            false,
+            'tempMrzAuthority',
+            123456,
+            'testExtractedText',
+            ['en'],
+            'testTranslatedExtractedText',
+            'testTranslatedFrom',
+            'testTranslatedTo',
+            false,
+            1.12
         )->build();
     }
 }
