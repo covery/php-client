@@ -3,6 +3,7 @@
 namespace Covery\Client\Loggers;
 
 use \Psr\Log\AbstractLogger;
+use Stringable;
 
 /**
  * Simple var dump logger
@@ -15,7 +16,7 @@ class VarDumpLogger extends AbstractLogger
      * @param array $context
      * @return void
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         var_dump([
             'level' => $level,
