@@ -230,6 +230,10 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.6.0`
+  * The minimum PHP version has been changed from 7.3 to 8.0.
+  * Updated package psr/log to 3.0.
+  * Updated package symfony/yaml to ^5.4 || ^6.4 to support both Symfony 5.4 and 6.4 branches.
 * `1.5.3`
   * Added optional `deepfake` and `deepfake_confidence` fields for document event
 * `1.5.2`
