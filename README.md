@@ -1,9 +1,7 @@
 # Covery Client
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/covery/client.svg?style=flat-square)](https://packagist.org/packages/covery/client)
-[![Build Status](https://img.shields.io/travis/covery/php-client.svg?style=flat-square)](https://travis-ci.org/covery/php-client)
-[![Code Quality](https://img.shields.io/scrutinizer/g/covery/php-client.svg?style=flat-square)](https://scrutinizer-ci.com/g/covery/php-client/)
-[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D5.4-blue.svg?style=flat-square)](http://php.net/)
+[![PHP Version Require](https://img.shields.io/packagist/php-v/covery/client?style=flat-square)](https://packagist.org/packages/covery/client)
 
 Official PHP Covery Client
 
@@ -230,8 +228,12 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
-* `1.5.4`
+* `1.6.1`
   * Added optional `card_pan` field for transaction, payout events
+* `1.6.0`
+  * The minimum PHP version has been changed from 7.3 to 8.0.
+  * Updated package psr/log to 3.0.
+  * Updated package symfony/yaml to ^5.4 || ^6.4 to support both Symfony 5.4 and 6.4 branches.
 * `1.5.3`
   * Added optional `deepfake` and `deepfake_confidence` fields for document event
 * `1.5.2`

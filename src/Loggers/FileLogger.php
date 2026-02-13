@@ -4,6 +4,7 @@ namespace Covery\Client\Loggers;
 
 use Covery\Client\Exception;
 use Psr\Log\AbstractLogger;
+use Stringable;
 
 class FileLogger extends AbstractLogger
 {
@@ -27,7 +28,7 @@ class FileLogger extends AbstractLogger
      * @return void
      * @throws Exception
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, string|Stringable $message, array $context = []): void
     {
         $this->writeLog($level, $message, $context);
     }
@@ -39,7 +40,7 @@ class FileLogger extends AbstractLogger
      * @return void
      * @throws Exception
      */
-    private function writeLog($level, $message, array $context = array())
+    private function writeLog($level, string|Stringable $message, array $context = []): void
     {
         if (empty($this->filePath)) {
             throw new Exception('file path not set');
@@ -56,7 +57,7 @@ class FileLogger extends AbstractLogger
      * @param array $context
      * @return string
      */
-    private function formatLogEntry($level, $message, array $context)
+    private function formatLogEntry($level, string|Stringable $message, array $context): string
     {
         return date('Y-m-d H:i:s')
             . " Level: " . $level . PHP_EOL
