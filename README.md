@@ -146,6 +146,74 @@ use Covery\Client\Facade;
 $accountConfigurationStatus = Facade::getAccountConfigurationStatus();
 ```
 
+Client Management individual profile example:
+```php
+use Covery\Client\Facade;
+use Covery\Client\IndividualProfile\Builder;
+
+// Create a new individual profile (POST). sequence_id is mandatory.
+$profile = Builder::createIndividualProfileEvent('sequenceId', 'userMerchantId')->build();
+$result = Facade::createIndividualProfile($profile);
+$clientProfileId = $result->getClientProfileId();
+
+// Update an existing individual profile (PUT). client_profile_id is mandatory.
+// PUT replaces all data: any field not passed is sent as null and cleared on Covery side.
+$profile = Builder::updateIndividualProfileEvent($clientProfileId, 'userMerchantId')->build();
+$result = Facade::updateIndividualProfile($profile);
+```
+
+Client Management entity profile example:
+```php
+use Covery\Client\Facade;
+use Covery\Client\EntityProfile\Builder;
+
+// Create a new entity profile (POST). sequence_id is mandatory.
+$profile = Builder::createEntityProfileEvent('sequenceId', 'userMerchantId')->build();
+$result = Facade::createEntityProfile($profile);
+$clientProfileId = $result->getClientProfileId();
+
+// Update an existing entity profile (PUT). client_profile_id is mandatory.
+// PUT replaces all data: any field not passed is sent as null and cleared on Covery side.
+$profile = Builder::updateEntityProfileEvent($clientProfileId, 'userMerchantId')->build();
+$result = Facade::updateEntityProfile($profile);
+```
+
+Client Management relationships example:
+```php
+use Covery\Client\Facade;
+use Covery\Client\Relationships\Builder;
+use Covery\Client\RelationshipType;
+
+$relationships = Builder::create()
+    ->addRelationship($receiverProfileId, $providerProfileId, RelationshipType::OWNER_COMPANY)
+    ->addRelationship($receiverProfileId, $providerProfileId, RelationshipType::RELATED_PERSON, 'role', 100.00)
+    ->build();
+
+// Create or change relationships (PUT)
+$statusCode = Facade::putRelationships($relationships);
+
+// Delete relationships (DELETE)
+$statusCode = Facade::deleteRelationships($relationships);
+
+// Review relationships (POST) - by receiver and/or provider
+$query = Builder::reviewQuery($receiverProfileId, $providerProfileId);
+$result = Facade::getRelationships($query);
+foreach ($result->getRelationships() as $relationship) {
+    $type = $relationship->getRelationshipType();
+}
+```
+
+Client Management client profile fetch example:
+```php
+use Covery\Client\Facade;
+use Covery\Client\ClientProfile\Builder;
+
+// Fetch a full client profile (POST) by client_profile_id
+$profile = Builder::clientProfileEvent($clientProfileId)->build();
+$result = Facade::getClientProfile($profile);
+$email = $result->getEmail();
+```
+
 # Tech Details
 
 <a name="facade"></a>
@@ -228,6 +296,14 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.7.0`
+  * Added Client Management individual profile endpoint (`POST`/`PUT` `api/clientManagement/individualProfile`) via `createIndividualProfile` and `updateIndividualProfile` methods
+  * Added Client Management entity profile endpoint (`POST`/`PUT` `api/clientManagement/entityProfile`) via `createEntityProfile` and `updateEntityProfile` methods
+  * Added Client Management client profile fetch endpoint (`POST` `api/clientManagement/clientProfile`) via `getClientProfile` method
+  * Added Client Management relationships endpoint (`PUT`/`DELETE` `api/clientManagement/relationships`) via `putRelationships` and `deleteRelationships` methods
+  * Added Client Management relationships review endpoint (`POST` `api/clientManagement/relationships`) via `getRelationships` method
+  * Removed `transaction_status` field from postback event
+  * `Transport\WithCustomHost` now accepts a host with a port (e.g. `localhost:8083`) and applies the port via a proper URI component, so it keeps working with stricter host validation in newer `guzzlehttp/psr7` versions
 * `1.6.0`
   * The minimum PHP version has been changed from 7.3 to 8.0.
   * Updated package psr/log to 3.0.

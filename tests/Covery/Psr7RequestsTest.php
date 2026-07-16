@@ -119,4 +119,92 @@ class Psr7RequestsTest extends TestCase
         self::assertFalse($req->hasHeader('X-Auth-Nonce'));
         self::assertSame('/api/kycProof', strval($req->getUri()));
     }
+
+    public function testIndividualProfile()
+    {
+        $profile = \Covery\Client\IndividualProfile\Builder::createIndividualProfileEvent('sequence123', null, null, null, null, null, 'foo@bar.com')
+            ->build();
+
+        // POST (create) - default method
+        $req = new \Covery\Client\Requests\IndividualProfile($profile);
+        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        self::assertSame('{"sequence_id":"sequence123","email":"foo@bar.com"}', $req->getBody()->getContents());
+        self::assertSame('POST', $req->getMethod());
+        self::assertFalse($req->hasHeader('X-Auth-Token'));
+        self::assertFalse($req->hasHeader('X-Auth-Signature'));
+        self::assertFalse($req->hasHeader('X-Auth-Nonce'));
+        self::assertSame('/api/clientManagement/individualProfile', strval($req->getUri()));
+
+        // PUT (update)
+        // PUT sends the full field set (null for unset) so the server overwrites omitted fields with NULL
+        $updateProfile = \Covery\Client\IndividualProfile\Builder::updateIndividualProfileEvent(777)->build();
+        $req = new \Covery\Client\Requests\IndividualProfile($updateProfile, 'PUT');
+        $body = json_decode($req->getBody()->getContents(), true);
+        self::assertSame(777, $body['client_profile_id']);
+        self::assertArrayHasKey('fullname', $body);
+        self::assertNull($body['fullname']);
+        self::assertSame('PUT', $req->getMethod());
+        self::assertSame('/api/clientManagement/individualProfile', strval($req->getUri()));
+    }
+
+    public function testClientProfile()
+    {
+        $profile = \Covery\Client\ClientProfile\Builder::clientProfileEvent(12345)->build();
+
+        $req = new \Covery\Client\Requests\ClientProfile($profile);
+        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        self::assertSame('{"client_profile_id":12345}', $req->getBody()->getContents());
+        self::assertSame('POST', $req->getMethod());
+        self::assertFalse($req->hasHeader('X-Auth-Token'));
+        self::assertFalse($req->hasHeader('X-Auth-Signature'));
+        self::assertFalse($req->hasHeader('X-Auth-Nonce'));
+        self::assertSame('/api/clientManagement/clientProfile', strval($req->getUri()));
+    }
+
+    public function testEntityProfile()
+    {
+        $profile = \Covery\Client\EntityProfile\Builder::createEntityProfileEvent('sequence123', null, null, null, null, null, null, null, null, null, 'ACME Ltd')
+            ->build();
+
+        // POST (create) - default method
+        $req = new \Covery\Client\Requests\EntityProfile($profile);
+        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        self::assertSame('{"sequence_id":"sequence123","company_name":"ACME Ltd"}', $req->getBody()->getContents());
+        self::assertSame('POST', $req->getMethod());
+        self::assertFalse($req->hasHeader('X-Auth-Token'));
+        self::assertSame('/api/clientManagement/entityProfile', strval($req->getUri()));
+
+        // PUT sends the full field set (null for unset) so the server overwrites omitted fields with NULL
+        $updateProfile = \Covery\Client\EntityProfile\Builder::updateEntityProfileEvent(777)->build();
+        $req = new \Covery\Client\Requests\EntityProfile($updateProfile, 'PUT');
+        $body = json_decode($req->getBody()->getContents(), true);
+        self::assertSame(777, $body['client_profile_id']);
+        self::assertArrayHasKey('company_name', $body);
+        self::assertNull($body['company_name']);
+        self::assertSame('PUT', $req->getMethod());
+        self::assertSame('/api/clientManagement/entityProfile', strval($req->getUri()));
+    }
+
+    public function testRelationships()
+    {
+        $relationships = \Covery\Client\Relationships\Builder::create()
+            ->addRelationship(1449049571, 1449049572, \Covery\Client\RelationshipType::OWNER_COMPANY, 'KKK', 100.0)
+            ->build();
+
+        // PUT (create/change) - default method
+        $req = new \Covery\Client\Requests\Relationships($relationships);
+        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        self::assertSame(
+            '{"relationships":[{"relationship_receiver":1449049571,"relationship_provider":1449049572,"relationship_type":"owner_company","provider_role":"KKK","provider_share_of_ownership":100}]}',
+            $req->getBody()->getContents()
+        );
+        self::assertSame('PUT', $req->getMethod());
+        self::assertFalse($req->hasHeader('X-Auth-Token'));
+        self::assertSame('/api/clientManagement/relationships', strval($req->getUri()));
+
+        // DELETE
+        $req = new \Covery\Client\Requests\Relationships($relationships, 'DELETE');
+        self::assertSame('DELETE', $req->getMethod());
+        self::assertSame('/api/clientManagement/relationships', strval($req->getUri()));
+    }
 }

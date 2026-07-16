@@ -420,6 +420,240 @@ class PublicAPIClient
     }
 
     /**
+     * Creates client management individual profile (POST) and returns result
+     *
+     * @param IndividualProfileInterface $profile
+     * @return IndividualProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function createIndividualProfile(IndividualProfileInterface $profile)
+    {
+        return $this->sendIndividualProfile($profile, 'POST');
+    }
+
+    /**
+     * Updates client management individual profile (PUT) and returns result
+     *
+     * @param IndividualProfileInterface $profile
+     * @return IndividualProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function updateIndividualProfile(IndividualProfileInterface $profile)
+    {
+        return $this->sendIndividualProfile($profile, 'PUT');
+    }
+
+    /**
+     * Sends individual profile with given HTTP method and parses the result
+     *
+     * @param IndividualProfileInterface $profile
+     * @param string $method
+     * @return IndividualProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    private function sendIndividualProfile(IndividualProfileInterface $profile, $method)
+    {
+        $data = $this->readJson($this->send(new \Covery\Client\Requests\IndividualProfile($profile, $method)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new IndividualProfileResult(
+            $data[IndividualProfileResultBaseField::CLIENT_PROFILE_ID],
+            $data[IndividualProfileResultBaseField::PROFILE_TYPE],
+            $data[IndividualProfileResultBaseField::CREATED_AT]
+        );
+    }
+
+    /**
+     * Fetches current relationships (POST) for a given receiver and/or provider
+     *
+     * @param RelationshipsInterface $query Built via Relationships\Builder::reviewQuery()
+     * @return RelationshipsResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function getRelationships(RelationshipsInterface $query)
+    {
+        $data = $this->readJson($this->send(new \Covery\Client\Requests\Relationships($query, 'POST')));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        try {
+            return new RelationshipsResult($data);
+        } catch (\Exception $error) {
+            throw new Exception('Malformed response', 0, $error);
+        }
+    }
+
+    /**
+     * Creates or changes relationships between client profiles (PUT)
+     *
+     * @param RelationshipsInterface $relationships
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function putRelationships(RelationshipsInterface $relationships)
+    {
+        return $this->sendRelationships($relationships, 'PUT');
+    }
+
+    /**
+     * Deletes relationships between client profiles (DELETE)
+     *
+     * @param RelationshipsInterface $relationships
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function deleteRelationships(RelationshipsInterface $relationships)
+    {
+        return $this->sendRelationships($relationships, 'DELETE');
+    }
+
+    /**
+     * Sends relationships with given HTTP method and returns status code
+     *
+     * @param RelationshipsInterface $relationships
+     * @param string $method
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    private function sendRelationships(RelationshipsInterface $relationships, $method)
+    {
+        $this->readJson($this->send(new \Covery\Client\Requests\Relationships($relationships, $method)));
+        if ($this->responseStatusCode >= 300) {
+            throw new Exception("Malformed response");
+        }
+
+        return $this->responseStatusCode;
+    }
+
+    /**
+     * Creates client management entity profile (POST) and returns result
+     *
+     * @param EntityProfileInterface $profile
+     * @return EntityProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function createEntityProfile(EntityProfileInterface $profile)
+    {
+        return $this->sendEntityProfile($profile, 'POST');
+    }
+
+    /**
+     * Updates client management entity profile (PUT) and returns result
+     *
+     * @param EntityProfileInterface $profile
+     * @return EntityProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function updateEntityProfile(EntityProfileInterface $profile)
+    {
+        return $this->sendEntityProfile($profile, 'PUT');
+    }
+
+    /**
+     * Sends entity profile with given HTTP method and parses the result
+     *
+     * @param EntityProfileInterface $profile
+     * @param string $method
+     * @return EntityProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    private function sendEntityProfile(EntityProfileInterface $profile, $method)
+    {
+        $data = $this->readJson($this->send(new \Covery\Client\Requests\EntityProfile($profile, $method)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new EntityProfileResult(
+            $data[EntityProfileResultBaseField::CLIENT_PROFILE_ID],
+            $data[EntityProfileResultBaseField::PROFILE_TYPE],
+            $data[EntityProfileResultBaseField::CREATED_AT]
+        );
+    }
+
+    /**
+     * Fetches client management client profile (POST) by client_profile_id
+     *
+     * @param ClientProfileInterface $profile
+     * @return ClientProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function getClientProfile(ClientProfileInterface $profile)
+    {
+        $data = $this->readJson($this->send(new \Covery\Client\Requests\ClientProfile($profile)));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        return new ClientProfileResult(
+            $data[ClientProfileResultBaseField::CLIENT_PROFILE_ID],
+            isset($data[ClientProfileResultBaseField::SEQUENCE_ID]) ? $data[ClientProfileResultBaseField::SEQUENCE_ID] : null,
+            isset($data[ClientProfileResultBaseField::USER_MERCHANT_ID]) ? $data[ClientProfileResultBaseField::USER_MERCHANT_ID] : null,
+            isset($data[ClientProfileResultBaseField::ACCOUNT_STATUS]) ? $data[ClientProfileResultBaseField::ACCOUNT_STATUS] : null,
+            isset($data[ClientProfileResultBaseField::REG_DATE]) ? $data[ClientProfileResultBaseField::REG_DATE] : null,
+            isset($data[ClientProfileResultBaseField::PHONE]) ? $data[ClientProfileResultBaseField::PHONE] : null,
+            isset($data[ClientProfileResultBaseField::PHONE_CONFIRMED]) ? $data[ClientProfileResultBaseField::PHONE_CONFIRMED] : null,
+            isset($data[ClientProfileResultBaseField::EMAIL]) ? $data[ClientProfileResultBaseField::EMAIL] : null,
+            isset($data[ClientProfileResultBaseField::EMAIL_CONFIRMED]) ? $data[ClientProfileResultBaseField::EMAIL_CONFIRMED] : null,
+            isset($data[ClientProfileResultBaseField::USER_NAME]) ? $data[ClientProfileResultBaseField::USER_NAME] : null,
+            isset($data[ClientProfileResultBaseField::PASSWORD]) ? $data[ClientProfileResultBaseField::PASSWORD] : null,
+            isset($data[ClientProfileResultBaseField::COMPANY_NAME]) ? $data[ClientProfileResultBaseField::COMPANY_NAME] : null,
+            isset($data[ClientProfileResultBaseField::WEBSITE_URL]) ? $data[ClientProfileResultBaseField::WEBSITE_URL] : null,
+            isset($data[ClientProfileResultBaseField::INDUSTRY]) ? $data[ClientProfileResultBaseField::INDUSTRY] : null,
+            isset($data[ClientProfileResultBaseField::FULLNAME]) ? $data[ClientProfileResultBaseField::FULLNAME] : null,
+            isset($data[ClientProfileResultBaseField::HAS_MIDDLE_NAME]) ? $data[ClientProfileResultBaseField::HAS_MIDDLE_NAME] : null,
+            isset($data[ClientProfileResultBaseField::BIRTH_DATE]) ? $data[ClientProfileResultBaseField::BIRTH_DATE] : null,
+            isset($data[ClientProfileResultBaseField::GENDER]) ? $data[ClientProfileResultBaseField::GENDER] : null,
+            isset($data[ClientProfileResultBaseField::MARITAL_STATUS]) ? $data[ClientProfileResultBaseField::MARITAL_STATUS] : null,
+            isset($data[ClientProfileResultBaseField::NATIONALITY]) ? $data[ClientProfileResultBaseField::NATIONALITY] : null,
+            isset($data[ClientProfileResultBaseField::EDUCATION]) ? $data[ClientProfileResultBaseField::EDUCATION] : null,
+            isset($data[ClientProfileResultBaseField::EMPLOYMENT_STATUS]) ? $data[ClientProfileResultBaseField::EMPLOYMENT_STATUS] : null,
+            isset($data[ClientProfileResultBaseField::SOURCE_OF_FUNDS]) ? $data[ClientProfileResultBaseField::SOURCE_OF_FUNDS] : null,
+            isset($data[ClientProfileResultBaseField::DOCUMENT_COUNTRY]) ? $data[ClientProfileResultBaseField::DOCUMENT_COUNTRY] : null,
+            isset($data[ClientProfileResultBaseField::DOCUMENT_CONFIRMED]) ? $data[ClientProfileResultBaseField::DOCUMENT_CONFIRMED] : null,
+            isset($data[ClientProfileResultBaseField::REG_NUMBER]) ? $data[ClientProfileResultBaseField::REG_NUMBER] : null,
+            isset($data[ClientProfileResultBaseField::ISSUE_DATE]) ? $data[ClientProfileResultBaseField::ISSUE_DATE] : null,
+            isset($data[ClientProfileResultBaseField::EXPIRY_DATE]) ? $data[ClientProfileResultBaseField::EXPIRY_DATE] : null,
+            isset($data[ClientProfileResultBaseField::VAT_NUMBER]) ? $data[ClientProfileResultBaseField::VAT_NUMBER] : null,
+            isset($data[ClientProfileResultBaseField::VAT_CONFIRMED]) ? $data[ClientProfileResultBaseField::VAT_CONFIRMED] : null,
+            isset($data[ClientProfileResultBaseField::DECLARATION_OF_TRUST]) ? $data[ClientProfileResultBaseField::DECLARATION_OF_TRUST] : null,
+            isset($data[ClientProfileResultBaseField::DESCRIPTION]) ? $data[ClientProfileResultBaseField::DESCRIPTION] : null,
+            isset($data[ClientProfileResultBaseField::COUNTRY]) ? $data[ClientProfileResultBaseField::COUNTRY] : null,
+            isset($data[ClientProfileResultBaseField::STATE]) ? $data[ClientProfileResultBaseField::STATE] : null,
+            isset($data[ClientProfileResultBaseField::CITY]) ? $data[ClientProfileResultBaseField::CITY] : null,
+            isset($data[ClientProfileResultBaseField::ZIP]) ? $data[ClientProfileResultBaseField::ZIP] : null,
+            isset($data[ClientProfileResultBaseField::ADDRESS]) ? $data[ClientProfileResultBaseField::ADDRESS] : null,
+            isset($data[ClientProfileResultBaseField::ADDRESS_CONFIRMED]) ? $data[ClientProfileResultBaseField::ADDRESS_CONFIRMED] : null,
+            isset($data[ClientProfileResultBaseField::PURPOSE_TO_OPEN_ACCOUNT]) ? $data[ClientProfileResultBaseField::PURPOSE_TO_OPEN_ACCOUNT] : null,
+            isset($data[ClientProfileResultBaseField::ONE_OPERATION_LIMIT]) ? $data[ClientProfileResultBaseField::ONE_OPERATION_LIMIT] : null,
+            isset($data[ClientProfileResultBaseField::DAILY_LIMIT]) ? $data[ClientProfileResultBaseField::DAILY_LIMIT] : null,
+            isset($data[ClientProfileResultBaseField::WEEKLY_LIMIT]) ? $data[ClientProfileResultBaseField::WEEKLY_LIMIT] : null,
+            isset($data[ClientProfileResultBaseField::MONTHLY_LIMIT]) ? $data[ClientProfileResultBaseField::MONTHLY_LIMIT] : null,
+            isset($data[ClientProfileResultBaseField::ANNUAL_LIMIT]) ? $data[ClientProfileResultBaseField::ANNUAL_LIMIT] : null,
+            isset($data[ClientProfileResultBaseField::ACTIVE_FEATURES]) ? $data[ClientProfileResultBaseField::ACTIVE_FEATURES] : null,
+            isset($data[ClientProfileResultBaseField::PROMOTIONS]) ? $data[ClientProfileResultBaseField::PROMOTIONS] : null
+        );
+    }
+
+    /**
      * Get Account configuration status object from Covery
      *
      * @return AccountConfigurationStatusResult

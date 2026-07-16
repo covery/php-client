@@ -195,6 +195,110 @@ class Facade
     }
 
     /**
+     * Creates client management individual profile (POST) and returns result
+     *
+     * @param IndividualProfileInterface $profile
+     * @return IndividualProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function createIndividualProfile(IndividualProfileInterface $profile)
+    {
+        return self::getClient()->createIndividualProfile($profile);
+    }
+
+    /**
+     * Updates client management individual profile (PUT) and returns result
+     *
+     * @param IndividualProfileInterface $profile
+     * @return IndividualProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function updateIndividualProfile(IndividualProfileInterface $profile)
+    {
+        return self::getClient()->updateIndividualProfile($profile);
+    }
+
+    /**
+     * Fetches current relationships (POST) for a given receiver and/or provider
+     *
+     * @param RelationshipsInterface $query Built via Relationships\Builder::reviewQuery()
+     * @return RelationshipsResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function getRelationships(RelationshipsInterface $query)
+    {
+        return self::getClient()->getRelationships($query);
+    }
+
+    /**
+     * Creates or changes relationships between client profiles (PUT)
+     *
+     * @param RelationshipsInterface $relationships
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function putRelationships(RelationshipsInterface $relationships)
+    {
+        return self::getClient()->putRelationships($relationships);
+    }
+
+    /**
+     * Deletes relationships between client profiles (DELETE)
+     *
+     * @param RelationshipsInterface $relationships
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function deleteRelationships(RelationshipsInterface $relationships)
+    {
+        return self::getClient()->deleteRelationships($relationships);
+    }
+
+    /**
+     * Creates client management entity profile (POST) and returns result
+     *
+     * @param EntityProfileInterface $profile
+     * @return EntityProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function createEntityProfile(EntityProfileInterface $profile)
+    {
+        return self::getClient()->createEntityProfile($profile);
+    }
+
+    /**
+     * Updates client management entity profile (PUT) and returns result
+     *
+     * @param EntityProfileInterface $profile
+     * @return EntityProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function updateEntityProfile(EntityProfileInterface $profile)
+    {
+        return self::getClient()->updateEntityProfile($profile);
+    }
+
+    /**
+     * Fetches client management client profile (POST) by client_profile_id
+     *
+     * @param ClientProfileInterface $profile
+     * @return ClientProfileResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function getClientProfile(ClientProfileInterface $profile)
+    {
+        return self::getClient()->getClientProfile($profile);
+    }
+
+    /**
      * Get account configuration status and return result object
      *
      * @return AccountConfigurationStatusResult

@@ -13,7 +13,6 @@ class BuildPostbackEventTest extends TestCase
         // Full data
         $result = Builder::postBackEvent(
             123456,
-            "someTransactionStatus",
             "someCode",
             "someReason",
             "someSecure3d",
@@ -29,7 +28,6 @@ class BuildPostbackEventTest extends TestCase
 
         self::assertSame(Builder::EVENT_POSTBACK, $result->getType());
         self::assertCount(1, $result->getIdentities());
-        self::assertSame('someTransactionStatus', $result['transaction_status']);
         self::assertSame('someCode', $result['code']);
         self::assertSame('someReason', $result['reason']);
         self::assertSame('someSecure3d', $result['secure3d']);
@@ -41,7 +39,7 @@ class BuildPostbackEventTest extends TestCase
         self::assertSame('z1234fcdfd23', $result['payment_account_id']);
         self::assertSame('someMerchantAdviceCode', $result['merchant_advice_code']);
         self::assertSame('someMerchantAdviceText', $result['merchant_advice_text']);
-        self::assertCount(13, $result);
+        self::assertCount(12, $result);
         $validator->validate($result);
 
         // Minimal data with request id
