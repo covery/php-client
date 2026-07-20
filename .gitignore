@@ -2,3 +2,4 @@
 /vendor/
 /*.iml
 /*.php
+/tests/.phpunit.result.cache

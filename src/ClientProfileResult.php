@@ -292,144 +292,52 @@ class ClientProfileResult implements \JsonSerializable
         $activeFeatures,
         $promotions
     ) {
-        if (!empty($clientProfileId) && !is_int($clientProfileId)) {
-            throw new \InvalidArgumentException('ClientProfileId must be int');
-        }
-        if (!empty($sequenceId) && !is_string($sequenceId)) {
-            throw new \InvalidArgumentException('SequenceId must be string');
-        }
-        if (!empty($userMerchantId) && !is_string($userMerchantId)) {
-            throw new \InvalidArgumentException('UserMerchantId must be string');
-        }
-        if (!empty($accountStatus) && !is_string($accountStatus)) {
-            throw new \InvalidArgumentException('AccountStatus must be string');
-        }
-        if (!empty($regDate) && !is_int($regDate)) {
-            throw new \InvalidArgumentException('RegDate must be int');
-        }
-        if (!empty($phone) && !is_string($phone)) {
-            throw new \InvalidArgumentException('Phone must be string');
-        }
-        if (!empty($phoneConfirmed) && !is_bool($phoneConfirmed)) {
-            throw new \InvalidArgumentException('PhoneConfirmed must be bool');
-        }
-        if (!empty($email) && !is_string($email)) {
-            throw new \InvalidArgumentException('Email must be string');
-        }
-        if (!empty($emailConfirmed) && !is_bool($emailConfirmed)) {
-            throw new \InvalidArgumentException('EmailConfirmed must be bool');
-        }
-        if (!empty($userName) && !is_string($userName)) {
-            throw new \InvalidArgumentException('UserName must be string');
-        }
-        if (!empty($password) && !is_string($password)) {
-            throw new \InvalidArgumentException('Password must be string');
-        }
-        if (!empty($companyName) && !is_string($companyName)) {
-            throw new \InvalidArgumentException('CompanyName must be string');
-        }
-        if (!empty($websiteUrl) && !is_string($websiteUrl)) {
-            throw new \InvalidArgumentException('WebsiteUrl must be string');
-        }
-        if (!empty($industry) && !is_string($industry)) {
-            throw new \InvalidArgumentException('Industry must be string');
-        }
-        if (!empty($fullname) && !is_string($fullname)) {
-            throw new \InvalidArgumentException('Fullname must be string');
-        }
-        if (!empty($hasMiddleName) && !is_bool($hasMiddleName)) {
-            throw new \InvalidArgumentException('HasMiddleName must be bool');
-        }
-        if (!empty($birthDate) && !is_int($birthDate)) {
-            throw new \InvalidArgumentException('BirthDate must be int');
-        }
-        if (!empty($gender) && !is_string($gender)) {
-            throw new \InvalidArgumentException('Gender must be string');
-        }
-        if (!empty($maritalStatus) && !is_string($maritalStatus)) {
-            throw new \InvalidArgumentException('MaritalStatus must be string');
-        }
-        if (!empty($nationality) && !is_string($nationality)) {
-            throw new \InvalidArgumentException('Nationality must be string');
-        }
-        if (!empty($education) && !is_string($education)) {
-            throw new \InvalidArgumentException('Education must be string');
-        }
-        if (!empty($employmentStatus) && !is_string($employmentStatus)) {
-            throw new \InvalidArgumentException('EmploymentStatus must be string');
-        }
-        if (!empty($sourceOfFunds) && !is_string($sourceOfFunds)) {
-            throw new \InvalidArgumentException('SourceOfFunds must be string');
-        }
-        if (!empty($documentCountry) && !is_string($documentCountry)) {
-            throw new \InvalidArgumentException('DocumentCountry must be string');
-        }
-        if (!empty($documentConfirmed) && !is_bool($documentConfirmed)) {
-            throw new \InvalidArgumentException('DocumentConfirmed must be bool');
-        }
-        if (!empty($regNumber) && !is_string($regNumber)) {
-            throw new \InvalidArgumentException('RegNumber must be string');
-        }
-        if (!empty($issueDate) && !is_int($issueDate)) {
-            throw new \InvalidArgumentException('IssueDate must be int');
-        }
-        if (!empty($expiryDate) && !is_int($expiryDate)) {
-            throw new \InvalidArgumentException('ExpiryDate must be int');
-        }
-        if (!empty($vatNumber) && !is_string($vatNumber)) {
-            throw new \InvalidArgumentException('VatNumber must be string');
-        }
-        if (!empty($vatConfirmed) && !is_bool($vatConfirmed)) {
-            throw new \InvalidArgumentException('VatConfirmed must be bool');
-        }
-        if (!empty($declarationOfTrust) && !is_bool($declarationOfTrust)) {
-            throw new \InvalidArgumentException('DeclarationOfTrust must be bool');
-        }
-        if (!empty($description) && !is_string($description)) {
-            throw new \InvalidArgumentException('Description must be string');
-        }
-        if (!empty($country) && !is_string($country)) {
-            throw new \InvalidArgumentException('Country must be string');
-        }
-        if (!empty($state) && !is_string($state)) {
-            throw new \InvalidArgumentException('State must be string');
-        }
-        if (!empty($city) && !is_string($city)) {
-            throw new \InvalidArgumentException('City must be string');
-        }
-        if (!empty($zip) && !is_string($zip)) {
-            throw new \InvalidArgumentException('Zip must be string');
-        }
-        if (!empty($address) && !is_string($address)) {
-            throw new \InvalidArgumentException('Address must be string');
-        }
-        if (!empty($addressConfirmed) && !is_bool($addressConfirmed)) {
-            throw new \InvalidArgumentException('AddressConfirmed must be bool');
-        }
-        if (!empty($purposeToOpenAccount) && !is_string($purposeToOpenAccount)) {
-            throw new \InvalidArgumentException('PurposeToOpenAccount must be string');
-        }
-        if (!empty($oneOperationLimit) && !is_int($oneOperationLimit) && !is_float($oneOperationLimit)) {
-            throw new \InvalidArgumentException('OneOperationLimit must be float');
-        }
-        if (!empty($dailyLimit) && !is_int($dailyLimit) && !is_float($dailyLimit)) {
-            throw new \InvalidArgumentException('DailyLimit must be float');
-        }
-        if (!empty($weeklyLimit) && !is_int($weeklyLimit) && !is_float($weeklyLimit)) {
-            throw new \InvalidArgumentException('WeeklyLimit must be float');
-        }
-        if (!empty($monthlyLimit) && !is_int($monthlyLimit) && !is_float($monthlyLimit)) {
-            throw new \InvalidArgumentException('MonthlyLimit must be float');
-        }
-        if (!empty($annualLimit) && !is_int($annualLimit) && !is_float($annualLimit)) {
-            throw new \InvalidArgumentException('AnnualLimit must be float');
-        }
-        if (!empty($activeFeatures) && !is_array($activeFeatures)) {
-            throw new \InvalidArgumentException('ActiveFeatures must be array');
-        }
-        if (!empty($promotions) && !is_array($promotions)) {
-            throw new \InvalidArgumentException('Promotions must be array');
-        }
+        Validation::optionalInt($clientProfileId, 'ClientProfileId must be int');
+        Validation::optionalString($sequenceId, 'SequenceId must be string');
+        Validation::optionalString($userMerchantId, 'UserMerchantId must be string');
+        Validation::optionalString($accountStatus, 'AccountStatus must be string');
+        Validation::optionalInt($regDate, 'RegDate must be int');
+        Validation::optionalString($phone, 'Phone must be string');
+        Validation::optionalBool($phoneConfirmed, 'PhoneConfirmed must be bool');
+        Validation::optionalString($email, 'Email must be string');
+        Validation::optionalBool($emailConfirmed, 'EmailConfirmed must be bool');
+        Validation::optionalString($userName, 'UserName must be string');
+        Validation::optionalString($password, 'Password must be string');
+        Validation::optionalString($companyName, 'CompanyName must be string');
+        Validation::optionalString($websiteUrl, 'WebsiteUrl must be string');
+        Validation::optionalString($industry, 'Industry must be string');
+        Validation::optionalString($fullname, 'Fullname must be string');
+        Validation::optionalBool($hasMiddleName, 'HasMiddleName must be bool');
+        Validation::optionalInt($birthDate, 'BirthDate must be int');
+        Validation::optionalString($gender, 'Gender must be string');
+        Validation::optionalString($maritalStatus, 'MaritalStatus must be string');
+        Validation::optionalString($nationality, 'Nationality must be string');
+        Validation::optionalString($education, 'Education must be string');
+        Validation::optionalString($employmentStatus, 'EmploymentStatus must be string');
+        Validation::optionalString($sourceOfFunds, 'SourceOfFunds must be string');
+        Validation::optionalString($documentCountry, 'DocumentCountry must be string');
+        Validation::optionalBool($documentConfirmed, 'DocumentConfirmed must be bool');
+        Validation::optionalString($regNumber, 'RegNumber must be string');
+        Validation::optionalInt($issueDate, 'IssueDate must be int');
+        Validation::optionalInt($expiryDate, 'ExpiryDate must be int');
+        Validation::optionalString($vatNumber, 'VatNumber must be string');
+        Validation::optionalBool($vatConfirmed, 'VatConfirmed must be bool');
+        Validation::optionalBool($declarationOfTrust, 'DeclarationOfTrust must be bool');
+        Validation::optionalString($description, 'Description must be string');
+        Validation::optionalString($country, 'Country must be string');
+        Validation::optionalString($state, 'State must be string');
+        Validation::optionalString($city, 'City must be string');
+        Validation::optionalString($zip, 'Zip must be string');
+        Validation::optionalString($address, 'Address must be string');
+        Validation::optionalBool($addressConfirmed, 'AddressConfirmed must be bool');
+        Validation::optionalString($purposeToOpenAccount, 'PurposeToOpenAccount must be string');
+        Validation::optionalNumber($oneOperationLimit, 'OneOperationLimit must be float');
+        Validation::optionalNumber($dailyLimit, 'DailyLimit must be float');
+        Validation::optionalNumber($weeklyLimit, 'WeeklyLimit must be float');
+        Validation::optionalNumber($monthlyLimit, 'MonthlyLimit must be float');
+        Validation::optionalNumber($annualLimit, 'AnnualLimit must be float');
+        Validation::optionalArray($activeFeatures, 'ActiveFeatures must be array');
+        Validation::optionalArray($promotions, 'Promotions must be array');
 
         $this->clientProfileId = $clientProfileId;
         $this->sequenceId = $sequenceId;

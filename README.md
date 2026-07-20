@@ -1,7 +1,9 @@
 # Covery Client
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/covery/client.svg?style=flat-square)](https://packagist.org/packages/covery/client)
-[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.0-blue.svg?style=flat-square)](http://php.net/)
+[![Tests](https://github.com/sergeykolesnik/php-client/actions/workflows/tests.yml/badge.svg?branch=code-quality-check-and-proof-on-github)](https://github.com/sergeykolesnik/php-client/actions/workflows/tests.yml)
+[![Code Quality](https://scrutinizer-ci.com/g/sergeykolesnik/php-client/badges/quality-score.png?b=code-quality-check-and-proof-on-github)](https://scrutinizer-ci.com/g/sergeykolesnik/php-client/?branch=code-quality-check-and-proof-on-github)
+[![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.1-blue.svg?style=flat-square)](http://php.net/)
 
 Official PHP Covery Client
 
@@ -296,6 +298,13 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.8.0`
+  * Raised the minimum PHP version from 8.0 to 8.1 (PHP 8.0 is end-of-life)
+  * Switched continuous integration from Travis CI to GitHub Actions (tests run on PHP 8.1, 8.2 and 8.3) and added a PHPStan (level 5) static-analysis check
+  * Fixed a fatal error in `Credentials\Sha256`: it called `GuzzleHttp\Psr7\stream_for()`, a function removed in `guzzlehttp/psr7` 2.x — it now uses `Utils::streamFor()`
+  * Fixed the SSL/`curl_exec` handling in the `Curl`/`PersistentCurl` transports to guard the response type before parsing
+  * Corrected numerous incorrect or too-narrow PHPDoc type annotations across the builders and result classes
+  * Internal code-quality refactoring with no changes to the public API or behaviour: shared validation helpers, `Builder` split into per-domain traits, and extracted `ValidatorV1Schema`, `FieldTypeChecker`, `ResponseHandler` and `Validation` classes
 * `1.7.3`
   * `Transport\WithCustomHost` now accepts a host with a port (e.g. `localhost:8083`) and applies the port via a proper URI component, so it keeps working with stricter host validation in newer `guzzlehttp/psr7` versions
 * `1.7.2`

@@ -1,5 +1,24 @@
-# inherit defaults
+# inherit default checks
 inherit: true
+
+build:
+  environment:
+    php: '8.1'
+  nodes:
+    analysis:
+      dependencies:
+        override:
+          - composer install --prefer-dist --no-progress
+      tests:
+        override:
+          - php-scrutinizer-run
+    php-tests:
+      dependencies:
+        override:
+          - composer install --prefer-dist --no-progress
+      tests:
+        override:
+          - command: vendor/bin/phpunit -c tests/phpunit.xml
 
 checks:
   php: true

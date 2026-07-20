@@ -64,7 +64,7 @@ class AccountConfigurationStatusResult
      */
     private $amlServiceStatus;
     /**
-     * @var string|null
+     * @var int|null
      */
     private $dowJonesDataBaseDate;
     /**
@@ -108,51 +108,21 @@ class AccountConfigurationStatusResult
         $dowJonesDataBaseDate,
         $kycProvider
     ) {
-        if (!empty($actualEventTypes) && !is_array($actualEventTypes)) {
-            throw new \InvalidArgumentException("Actual Event Types must be array");
-        }
-        if (!empty($baseCurrency) && !is_string($baseCurrency)) {
-            throw new \InvalidArgumentException("Base Currency must be string");
-        }
-        if (!empty($decisionCallbackUrl) && !is_string($decisionCallbackUrl)) {
-            throw new \InvalidArgumentException("Decision Callback Url must be string");
-        }
-        if (!empty($manualDecisionCallbackUrl) && !is_string($manualDecisionCallbackUrl)) {
-            throw new \InvalidArgumentException("Manual Decision Callback Url must be string");
-        }
-        if (!empty($ongoingMonitoringWebhookUrl) && !is_string($ongoingMonitoringWebhookUrl)) {
-            throw new \InvalidArgumentException("Ongoing Monitoring Webhook Url must be string");
-        }
-        if (!empty($documentStorageWebhookUrl) && !is_string($documentStorageWebhookUrl)) {
-            throw new \InvalidArgumentException("Document Storage Webhook Url Url must be string");
-        }
-        if (!empty($fraudAlertCallbackUrl) && !is_string($fraudAlertCallbackUrl)) {
-            throw new \InvalidArgumentException("Fraud Alert Callback Url must be string");
-        }
-        if (!empty($cardIdGeneration) && !is_bool($cardIdGeneration)) {
-            throw new \InvalidArgumentException("Card Id Generation must be string");
-        }
-        if (!empty($deviceFingerprintGeneration) && !is_bool($deviceFingerprintGeneration)) {
-            throw new \InvalidArgumentException("Device Fingerprint Generation must be string");
-        }
-        if (!empty($sequenceIdGeneration) && !is_bool($sequenceIdGeneration)) {
-            throw new \InvalidArgumentException("Sequence Id Generation must be string");
-        }
-        if (!empty($sequenceIdGenerationMethod) && !is_string($sequenceIdGenerationMethod)) {
-            throw new \InvalidArgumentException("Sequence Id Generation Method must be string");
-        }
-        if (!empty($amlService) && !is_string($amlService)) {
-            throw new \InvalidArgumentException("Aml Service must be string");
-        }
-        if (!empty($amlServiceStatus) && !is_bool($amlServiceStatus)) {
-            throw new \InvalidArgumentException("Aml Service Status must be string");
-        }
-        if (!empty($dowJonesDataBaseDate) && !is_int($dowJonesDataBaseDate)) {
-            throw new \InvalidArgumentException("Dow Jones Data Base Date must be integer");
-        }
-        if (!empty($kycProvider) && !is_string($kycProvider)) {
-            throw new \InvalidArgumentException("Kyc Provider must be string");
-        }
+        self::assertOptional($actualEventTypes, 'is_array', "Actual Event Types must be array");
+        self::assertOptional($baseCurrency, 'is_string', "Base Currency must be string");
+        self::assertOptional($decisionCallbackUrl, 'is_string', "Decision Callback Url must be string");
+        self::assertOptional($manualDecisionCallbackUrl, 'is_string', "Manual Decision Callback Url must be string");
+        self::assertOptional($ongoingMonitoringWebhookUrl, 'is_string', "Ongoing Monitoring Webhook Url must be string");
+        self::assertOptional($documentStorageWebhookUrl, 'is_string', "Document Storage Webhook Url Url must be string");
+        self::assertOptional($fraudAlertCallbackUrl, 'is_string', "Fraud Alert Callback Url must be string");
+        self::assertOptional($cardIdGeneration, 'is_bool', "Card Id Generation must be string");
+        self::assertOptional($deviceFingerprintGeneration, 'is_bool', "Device Fingerprint Generation must be string");
+        self::assertOptional($sequenceIdGeneration, 'is_bool', "Sequence Id Generation must be string");
+        self::assertOptional($sequenceIdGenerationMethod, 'is_string', "Sequence Id Generation Method must be string");
+        self::assertOptional($amlService, 'is_string', "Aml Service must be string");
+        self::assertOptional($amlServiceStatus, 'is_bool', "Aml Service Status must be string");
+        self::assertOptional($dowJonesDataBaseDate, 'is_int', "Dow Jones Data Base Date must be integer");
+        self::assertOptional($kycProvider, 'is_string', "Kyc Provider must be string");
 
         $this->actualEventTypes = $actualEventTypes;
         $this->baseCurrency = $baseCurrency;
@@ -289,5 +259,20 @@ class AccountConfigurationStatusResult
     public function getKycProvider()
     {
         return $this->kycProvider;
+    }
+
+    /**
+     * Validates that a non-empty value satisfies the given type check.
+     *
+     * @param mixed    $value   Value to validate; empty values are always accepted
+     * @param callable $check   Type-check callback (e.g. 'is_string', 'is_bool')
+     * @param string   $message Exception message thrown when the check fails
+     * @throws \InvalidArgumentException
+     */
+    private static function assertOptional($value, callable $check, $message)
+    {
+        if (!empty($value) && !$check($value)) {
+            throw new \InvalidArgumentException($message);
+        }
     }
 }

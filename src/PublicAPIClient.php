@@ -40,6 +40,10 @@ class PublicAPIClient
      * @var int
      */
     private $responseStatusCode;
+    /**
+     * @var ResponseHandler
+     */
+    private $responseHandler;
 
     /**
      * Client constructor.
@@ -56,6 +60,7 @@ class PublicAPIClient
         $this->transport = $transport;
         $this->logger = $logger === null ? new NullLogger() : $logger;
         $this->validator = new ValidatorV1();
+        $this->responseHandler = new ResponseHandler($this->logger);
     }
 
     /**
@@ -69,7 +74,7 @@ class PublicAPIClient
      */
     public function send(RequestInterface $request, $sign = true)
     {
-        $requestPrepared = $this->prepareRequest($request);
+        $requestPrepared = $this->responseHandler->prepareRequest($request);
         if ($sign) {
             $requestSigned = $this->credentials->signRequest($requestPrepared);
         } else {
@@ -90,102 +95,12 @@ class PublicAPIClient
         $this->logger->debug('Received status code ' . $code);
 
         if ($code >= 400) {
-            $this->handleNot200($response);
+            $this->responseHandler->handleNot200($response);
         }
 
         return $response->getBody()->getContents();
     }
 
-    /**
-     * Utility method, that prepares and signs request
-     *
-     * @param RequestInterface $request
-     * @return RequestInterface
-     */
-    private function prepareRequest(RequestInterface $request)
-    {
-        // Checking hostname presence
-        $uri = $request->getUri();
-        if ($uri->getHost() == '') {
-            $request = $request->withUri(
-                $uri->withHost(TransportInterface::DEFAULT_HOST)->withScheme(TransportInterface::DEFAULT_SCHEME)
-            );
-        }
-
-        return $request;
-    }
-
-    /**
-     * Utility function, that handles error response from Covery
-     *
-     * @param ResponseInterface $response
-     * @throws Exception
-     */
-    private function handleNot200(ResponseInterface $response)
-    {
-        // Analyzing response
-        if ($response->hasHeader('X-Maxwell-Status') && $response->hasHeader('X-Maxwell-Error-Message')) {
-            // Extended data available
-            $message = $response->getHeaderLine('X-Maxwell-Error-Message');
-            $type = $response->getHeaderLine('X-Maxwell-Error-Type');
-
-            //throw slate data exception
-            if (strpos($type, 'StaleDataException') !== false) {
-                $this->logger->error($message);
-                throw new StaleDataException($message, $response->getStatusCode());
-            }
-
-            if (strpos($type, 'AuthorizationRequiredException') !== false) {
-                $this->logger->error('Authentication failure ' . $message);
-                throw new AuthException($message, $response->getStatusCode());
-            }
-
-            switch ($message) {
-                case 'Empty auth token':
-                case 'Empty signature':
-                case 'Empty nonce':
-                    $this->logger->error('Authentication failure ' . $message);
-                    throw new AuthException($message, $response->getStatusCode());
-            }
-
-            $this->logger->error('Covery error ' . $message);
-            throw new DeliveredException($message, $response->getStatusCode());
-        } elseif ($response->hasHeader('X-General-Failure')) {
-            // Remote fatal error
-            throw new DeliveredException('Antifraud fatal error', $response->getStatusCode());
-        }
-
-        throw new Exception("Communication failed with status code {$response->getStatusCode()}");
-    }
-
-    /**
-     * Utility method, that reads JSON data
-     *
-     * @param $string
-     * @return mixed|null
-     * @throws Exception
-     */
-    private function readJson($string)
-    {
-        if (!is_string($string)) {
-            throw new Exception("Unable to read JSON - not a string received");
-        }
-        if (strlen($string) === 0) {
-            return null;
-        }
-
-        $data = json_decode($string, true);
-        if ($data === null) {
-            $message = 'Unable to decode JSON';
-            if (function_exists('json_last_error_msg')) {
-                $message = json_last_error_msg();
-            }
-
-            throw new Exception($message);
-        }
-
-        return $data;
-    }
 
     /**
      * Sends envelope to Covery and returns it's ID on Covery side
@@ -201,7 +116,7 @@ class PublicAPIClient
         $this->validator->validate($envelope);
 
         // Sending
-        $data = $this->readJson($this->send(new Event($envelope)));
+        $data = $this->responseHandler->readJson($this->send(new Event($envelope)));
 
         if (!is_array($data) || !isset($data['requestId']) || !is_int($data['requestId'])) {
             throw new Exception("Malformed response");
@@ -224,7 +139,7 @@ class PublicAPIClient
         $this->validator->validate($envelope);
 
         // Sending
-        $data = $this->readJson($this->send(new Postback($envelope)));
+        $data = $this->responseHandler->readJson($this->send(new Postback($envelope)));
 
         if (!is_array($data) || !isset($data['requestId']) || empty($data['requestId']) || !is_int($data['requestId'])) {
             throw new Exception("Malformed response");
@@ -246,7 +161,7 @@ class PublicAPIClient
         $this->validator->validate($envelope);
 
         // Sending
-        $data = $this->readJson($this->send(new Decision($envelope)));
+        $data = $this->responseHandler->readJson($this->send(new Decision($envelope)));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -263,8 +178,8 @@ class PublicAPIClient
                 $data[ResultBaseField::ACCEPT],
                 $data[ResultBaseField::REJECT],
                 $data[ResultBaseField::MANUAL],
-                isset($data[ResultBaseField::REASON]) ? $data[ResultBaseField::REASON] : null,
-                isset($data[ResultBaseField::ACTION]) ? $data[ResultBaseField::ACTION] : null,
+                $this->optional($data, ResultBaseField::REASON),
+                $this->optional($data, ResultBaseField::ACTION),
                 array_filter($data, function ($field) {
                     return !in_array($field, ResultBaseField::getAll());
                 }, ARRAY_FILTER_USE_KEY)
@@ -289,7 +204,7 @@ class PublicAPIClient
         $this->validator->validate($envelope);
 
         // Sending
-        $data = $this->readJson($this->send(new KycProof($envelope)));
+        $data = $this->responseHandler->readJson($this->send(new KycProof($envelope)));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -300,14 +215,11 @@ class PublicAPIClient
                 $data[KycProofResultBaseField::REQUEST_ID],
                 $data[KycProofResultBaseField::TYPE],
                 $data[KycProofResultBaseField::CREATED_AT],
-                isset($data[KycProofResultBaseField::VERIFICATION_VIDEO]) ? $data[KycProofResultBaseField::VERIFICATION_VIDEO] : null,
-                isset($data[KycProofResultBaseField::FACE_PROOF]) ? $data[KycProofResultBaseField::FACE_PROOF] : null,
-                isset($data[KycProofResultBaseField::DOCUMENT_PROOF]) ? $data[KycProofResultBaseField::DOCUMENT_PROOF] : null,
-                isset($data[KycProofResultBaseField::DOCUMENT_TWO_PROOF]) ? $data[KycProofResultBaseField::DOCUMENT_TWO_PROOF] : null,
-                isset($data[KycProofResultBaseField::CONSENT_PROOF]) ? $data[KycProofResultBaseField::CONSENT_PROOF] : null,
-                array_filter($data, function ($field) {
-                    return !in_array($field, KycProofResultBaseField::getAll());
-                }, ARRAY_FILTER_USE_KEY)
+                $this->optional($data, KycProofResultBaseField::VERIFICATION_VIDEO),
+                $this->optional($data, KycProofResultBaseField::FACE_PROOF),
+                $this->optional($data, KycProofResultBaseField::DOCUMENT_PROOF),
+                $this->optional($data, KycProofResultBaseField::DOCUMENT_TWO_PROOF),
+                $this->optional($data, KycProofResultBaseField::CONSENT_PROOF)
             );
         } catch (\Exception $error) {
             throw new Exception('Malformed response', 0, $error);
@@ -323,7 +235,7 @@ class PublicAPIClient
     public function sendCardId(CardIdInterface $cardId)
     {
         // Sending
-        $data = $this->readJson($this->send(new CardId($cardId)));
+        $data = $this->responseHandler->readJson($this->send(new CardId($cardId)));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -346,7 +258,7 @@ class PublicAPIClient
      */
     public function sendDocumentStorage(DocumentStorageInterface $document)
     {
-        $data = $this->readJson($this->send(new DocumentStorage($document)));
+        $data = $this->responseHandler->readJson($this->send(new DocumentStorage($document)));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -411,7 +323,7 @@ class PublicAPIClient
      */
     private function sendDocumentConnection(DocumentConnectionInterface $documentConnection, $method)
     {
-        $this->readJson($this->send(new \Covery\Client\Requests\DocumentConnection($documentConnection, $method)));
+        $this->responseHandler->readJson($this->send(new \Covery\Client\Requests\DocumentConnection($documentConnection, $method)));
         if ($this->responseStatusCode >= 300) {
             throw new Exception("Malformed response");
         }
@@ -456,7 +368,7 @@ class PublicAPIClient
      */
     private function sendIndividualProfile(IndividualProfileInterface $profile, $method)
     {
-        $data = $this->readJson($this->send(new \Covery\Client\Requests\IndividualProfile($profile, $method)));
+        $data = $this->responseHandler->readJson($this->send(new \Covery\Client\Requests\IndividualProfile($profile, $method)));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -479,7 +391,7 @@ class PublicAPIClient
      */
     public function getRelationships(RelationshipsInterface $query)
     {
-        $data = $this->readJson($this->send(new \Covery\Client\Requests\Relationships($query, 'POST')));
+        $data = $this->responseHandler->readJson($this->send(new \Covery\Client\Requests\Relationships($query, 'POST')));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -529,7 +441,7 @@ class PublicAPIClient
      */
     private function sendRelationships(RelationshipsInterface $relationships, $method)
     {
-        $this->readJson($this->send(new \Covery\Client\Requests\Relationships($relationships, $method)));
+        $this->responseHandler->readJson($this->send(new \Covery\Client\Requests\Relationships($relationships, $method)));
         if ($this->responseStatusCode >= 300) {
             throw new Exception("Malformed response");
         }
@@ -574,7 +486,7 @@ class PublicAPIClient
      */
     private function sendEntityProfile(EntityProfileInterface $profile, $method)
     {
-        $data = $this->readJson($this->send(new \Covery\Client\Requests\EntityProfile($profile, $method)));
+        $data = $this->responseHandler->readJson($this->send(new \Covery\Client\Requests\EntityProfile($profile, $method)));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -597,7 +509,7 @@ class PublicAPIClient
      */
     public function getClientProfile(ClientProfileInterface $profile)
     {
-        $data = $this->readJson($this->send(new \Covery\Client\Requests\ClientProfile($profile)));
+        $data = $this->responseHandler->readJson($this->send(new \Covery\Client\Requests\ClientProfile($profile)));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -605,51 +517,51 @@ class PublicAPIClient
 
         return new ClientProfileResult(
             $data[ClientProfileResultBaseField::CLIENT_PROFILE_ID],
-            isset($data[ClientProfileResultBaseField::SEQUENCE_ID]) ? $data[ClientProfileResultBaseField::SEQUENCE_ID] : null,
-            isset($data[ClientProfileResultBaseField::USER_MERCHANT_ID]) ? $data[ClientProfileResultBaseField::USER_MERCHANT_ID] : null,
-            isset($data[ClientProfileResultBaseField::ACCOUNT_STATUS]) ? $data[ClientProfileResultBaseField::ACCOUNT_STATUS] : null,
-            isset($data[ClientProfileResultBaseField::REG_DATE]) ? $data[ClientProfileResultBaseField::REG_DATE] : null,
-            isset($data[ClientProfileResultBaseField::PHONE]) ? $data[ClientProfileResultBaseField::PHONE] : null,
-            isset($data[ClientProfileResultBaseField::PHONE_CONFIRMED]) ? $data[ClientProfileResultBaseField::PHONE_CONFIRMED] : null,
-            isset($data[ClientProfileResultBaseField::EMAIL]) ? $data[ClientProfileResultBaseField::EMAIL] : null,
-            isset($data[ClientProfileResultBaseField::EMAIL_CONFIRMED]) ? $data[ClientProfileResultBaseField::EMAIL_CONFIRMED] : null,
-            isset($data[ClientProfileResultBaseField::USER_NAME]) ? $data[ClientProfileResultBaseField::USER_NAME] : null,
-            isset($data[ClientProfileResultBaseField::PASSWORD]) ? $data[ClientProfileResultBaseField::PASSWORD] : null,
-            isset($data[ClientProfileResultBaseField::COMPANY_NAME]) ? $data[ClientProfileResultBaseField::COMPANY_NAME] : null,
-            isset($data[ClientProfileResultBaseField::WEBSITE_URL]) ? $data[ClientProfileResultBaseField::WEBSITE_URL] : null,
-            isset($data[ClientProfileResultBaseField::INDUSTRY]) ? $data[ClientProfileResultBaseField::INDUSTRY] : null,
-            isset($data[ClientProfileResultBaseField::FULLNAME]) ? $data[ClientProfileResultBaseField::FULLNAME] : null,
-            isset($data[ClientProfileResultBaseField::HAS_MIDDLE_NAME]) ? $data[ClientProfileResultBaseField::HAS_MIDDLE_NAME] : null,
-            isset($data[ClientProfileResultBaseField::BIRTH_DATE]) ? $data[ClientProfileResultBaseField::BIRTH_DATE] : null,
-            isset($data[ClientProfileResultBaseField::GENDER]) ? $data[ClientProfileResultBaseField::GENDER] : null,
-            isset($data[ClientProfileResultBaseField::MARITAL_STATUS]) ? $data[ClientProfileResultBaseField::MARITAL_STATUS] : null,
-            isset($data[ClientProfileResultBaseField::NATIONALITY]) ? $data[ClientProfileResultBaseField::NATIONALITY] : null,
-            isset($data[ClientProfileResultBaseField::EDUCATION]) ? $data[ClientProfileResultBaseField::EDUCATION] : null,
-            isset($data[ClientProfileResultBaseField::EMPLOYMENT_STATUS]) ? $data[ClientProfileResultBaseField::EMPLOYMENT_STATUS] : null,
-            isset($data[ClientProfileResultBaseField::SOURCE_OF_FUNDS]) ? $data[ClientProfileResultBaseField::SOURCE_OF_FUNDS] : null,
-            isset($data[ClientProfileResultBaseField::DOCUMENT_COUNTRY]) ? $data[ClientProfileResultBaseField::DOCUMENT_COUNTRY] : null,
-            isset($data[ClientProfileResultBaseField::DOCUMENT_CONFIRMED]) ? $data[ClientProfileResultBaseField::DOCUMENT_CONFIRMED] : null,
-            isset($data[ClientProfileResultBaseField::REG_NUMBER]) ? $data[ClientProfileResultBaseField::REG_NUMBER] : null,
-            isset($data[ClientProfileResultBaseField::ISSUE_DATE]) ? $data[ClientProfileResultBaseField::ISSUE_DATE] : null,
-            isset($data[ClientProfileResultBaseField::EXPIRY_DATE]) ? $data[ClientProfileResultBaseField::EXPIRY_DATE] : null,
-            isset($data[ClientProfileResultBaseField::VAT_NUMBER]) ? $data[ClientProfileResultBaseField::VAT_NUMBER] : null,
-            isset($data[ClientProfileResultBaseField::VAT_CONFIRMED]) ? $data[ClientProfileResultBaseField::VAT_CONFIRMED] : null,
-            isset($data[ClientProfileResultBaseField::DECLARATION_OF_TRUST]) ? $data[ClientProfileResultBaseField::DECLARATION_OF_TRUST] : null,
-            isset($data[ClientProfileResultBaseField::DESCRIPTION]) ? $data[ClientProfileResultBaseField::DESCRIPTION] : null,
-            isset($data[ClientProfileResultBaseField::COUNTRY]) ? $data[ClientProfileResultBaseField::COUNTRY] : null,
-            isset($data[ClientProfileResultBaseField::STATE]) ? $data[ClientProfileResultBaseField::STATE] : null,
-            isset($data[ClientProfileResultBaseField::CITY]) ? $data[ClientProfileResultBaseField::CITY] : null,
-            isset($data[ClientProfileResultBaseField::ZIP]) ? $data[ClientProfileResultBaseField::ZIP] : null,
-            isset($data[ClientProfileResultBaseField::ADDRESS]) ? $data[ClientProfileResultBaseField::ADDRESS] : null,
-            isset($data[ClientProfileResultBaseField::ADDRESS_CONFIRMED]) ? $data[ClientProfileResultBaseField::ADDRESS_CONFIRMED] : null,
-            isset($data[ClientProfileResultBaseField::PURPOSE_TO_OPEN_ACCOUNT]) ? $data[ClientProfileResultBaseField::PURPOSE_TO_OPEN_ACCOUNT] : null,
-            isset($data[ClientProfileResultBaseField::ONE_OPERATION_LIMIT]) ? $data[ClientProfileResultBaseField::ONE_OPERATION_LIMIT] : null,
-            isset($data[ClientProfileResultBaseField::DAILY_LIMIT]) ? $data[ClientProfileResultBaseField::DAILY_LIMIT] : null,
-            isset($data[ClientProfileResultBaseField::WEEKLY_LIMIT]) ? $data[ClientProfileResultBaseField::WEEKLY_LIMIT] : null,
-            isset($data[ClientProfileResultBaseField::MONTHLY_LIMIT]) ? $data[ClientProfileResultBaseField::MONTHLY_LIMIT] : null,
-            isset($data[ClientProfileResultBaseField::ANNUAL_LIMIT]) ? $data[ClientProfileResultBaseField::ANNUAL_LIMIT] : null,
-            isset($data[ClientProfileResultBaseField::ACTIVE_FEATURES]) ? $data[ClientProfileResultBaseField::ACTIVE_FEATURES] : null,
-            isset($data[ClientProfileResultBaseField::PROMOTIONS]) ? $data[ClientProfileResultBaseField::PROMOTIONS] : null
+            $this->optional($data, ClientProfileResultBaseField::SEQUENCE_ID),
+            $this->optional($data, ClientProfileResultBaseField::USER_MERCHANT_ID),
+            $this->optional($data, ClientProfileResultBaseField::ACCOUNT_STATUS),
+            $this->optional($data, ClientProfileResultBaseField::REG_DATE),
+            $this->optional($data, ClientProfileResultBaseField::PHONE),
+            $this->optional($data, ClientProfileResultBaseField::PHONE_CONFIRMED),
+            $this->optional($data, ClientProfileResultBaseField::EMAIL),
+            $this->optional($data, ClientProfileResultBaseField::EMAIL_CONFIRMED),
+            $this->optional($data, ClientProfileResultBaseField::USER_NAME),
+            $this->optional($data, ClientProfileResultBaseField::PASSWORD),
+            $this->optional($data, ClientProfileResultBaseField::COMPANY_NAME),
+            $this->optional($data, ClientProfileResultBaseField::WEBSITE_URL),
+            $this->optional($data, ClientProfileResultBaseField::INDUSTRY),
+            $this->optional($data, ClientProfileResultBaseField::FULLNAME),
+            $this->optional($data, ClientProfileResultBaseField::HAS_MIDDLE_NAME),
+            $this->optional($data, ClientProfileResultBaseField::BIRTH_DATE),
+            $this->optional($data, ClientProfileResultBaseField::GENDER),
+            $this->optional($data, ClientProfileResultBaseField::MARITAL_STATUS),
+            $this->optional($data, ClientProfileResultBaseField::NATIONALITY),
+            $this->optional($data, ClientProfileResultBaseField::EDUCATION),
+            $this->optional($data, ClientProfileResultBaseField::EMPLOYMENT_STATUS),
+            $this->optional($data, ClientProfileResultBaseField::SOURCE_OF_FUNDS),
+            $this->optional($data, ClientProfileResultBaseField::DOCUMENT_COUNTRY),
+            $this->optional($data, ClientProfileResultBaseField::DOCUMENT_CONFIRMED),
+            $this->optional($data, ClientProfileResultBaseField::REG_NUMBER),
+            $this->optional($data, ClientProfileResultBaseField::ISSUE_DATE),
+            $this->optional($data, ClientProfileResultBaseField::EXPIRY_DATE),
+            $this->optional($data, ClientProfileResultBaseField::VAT_NUMBER),
+            $this->optional($data, ClientProfileResultBaseField::VAT_CONFIRMED),
+            $this->optional($data, ClientProfileResultBaseField::DECLARATION_OF_TRUST),
+            $this->optional($data, ClientProfileResultBaseField::DESCRIPTION),
+            $this->optional($data, ClientProfileResultBaseField::COUNTRY),
+            $this->optional($data, ClientProfileResultBaseField::STATE),
+            $this->optional($data, ClientProfileResultBaseField::CITY),
+            $this->optional($data, ClientProfileResultBaseField::ZIP),
+            $this->optional($data, ClientProfileResultBaseField::ADDRESS),
+            $this->optional($data, ClientProfileResultBaseField::ADDRESS_CONFIRMED),
+            $this->optional($data, ClientProfileResultBaseField::PURPOSE_TO_OPEN_ACCOUNT),
+            $this->optional($data, ClientProfileResultBaseField::ONE_OPERATION_LIMIT),
+            $this->optional($data, ClientProfileResultBaseField::DAILY_LIMIT),
+            $this->optional($data, ClientProfileResultBaseField::WEEKLY_LIMIT),
+            $this->optional($data, ClientProfileResultBaseField::MONTHLY_LIMIT),
+            $this->optional($data, ClientProfileResultBaseField::ANNUAL_LIMIT),
+            $this->optional($data, ClientProfileResultBaseField::ACTIVE_FEATURES),
+            $this->optional($data, ClientProfileResultBaseField::PROMOTIONS)
         );
     }
 
@@ -663,7 +575,7 @@ class PublicAPIClient
     public function getAccountConfigurationStatus()
     {
         // Sending
-        $data = $this->readJson($this->send(new \Covery\Client\Requests\AccountConfigurationStatus()));
+        $data = $this->responseHandler->readJson($this->send(new \Covery\Client\Requests\AccountConfigurationStatus()));
 
         if (!is_array($data)) {
             throw new Exception("Malformed response");
@@ -686,5 +598,17 @@ class PublicAPIClient
             $data[AccountConfigurationStatusResultBaseField::DOW_JONES_DATA_BASE_DATE],
             $data[AccountConfigurationStatusResultBaseField::KYC_PROVIDER]
         );
+    }
+
+    /**
+     * Returns $data[$key] when present, null otherwise.
+     *
+     * @param array $data
+     * @param string $key
+     * @return mixed|null
+     */
+    private function optional(array $data, $key)
+    {
+        return isset($data[$key]) ? $data[$key] : null;
     }
 }
