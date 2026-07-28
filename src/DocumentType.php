@@ -14,7 +14,7 @@ class DocumentType
     const INVOICE = 'invoice';
     const RECEIPT = 'receipt';
     const UTILITY_BILL = 'utility_bill';
-    const PERSINAL_PHOTO = 'personal_photo';
+    const PERSONAL_PHOTO = 'personal_photo';
     const OTHER = 'other';
 
     public static function getAll()
@@ -30,7 +30,7 @@ class DocumentType
             self::INVOICE,
             self::RECEIPT,
             self::UTILITY_BILL,
-            self::PERSINAL_PHOTO,
+            self::PERSONAL_PHOTO,
             self::OTHER
         ];
     }
