@@ -470,6 +470,74 @@ class PublicAPIClient
     }
 
     /**
+     * Fetches current relationships (POST) for a given receiver and/or provider
+     *
+     * @param RelationshipsInterface $query Built via Relationships\Builder::reviewQuery()
+     * @return RelationshipsResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public function getRelationships(RelationshipsInterface $query)
+    {
+        $data = $this->readJson($this->send(new \Covery\Client\Requests\Relationships($query, 'POST')));
+
+        if (!is_array($data)) {
+            throw new Exception("Malformed response");
+        }
+
+        try {
+            return new RelationshipsResult($data);
+        } catch (\Exception $error) {
+            throw new Exception('Malformed response', 0, $error);
+        }
+    }
+
+    /**
+     * Creates or changes relationships between client profiles (PUT)
+     *
+     * @param RelationshipsInterface $relationships
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function putRelationships(RelationshipsInterface $relationships)
+    {
+        return $this->sendRelationships($relationships, 'PUT');
+    }
+
+    /**
+     * Deletes relationships between client profiles (DELETE)
+     *
+     * @param RelationshipsInterface $relationships
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public function deleteRelationships(RelationshipsInterface $relationships)
+    {
+        return $this->sendRelationships($relationships, 'DELETE');
+    }
+
+    /**
+     * Sends relationships with given HTTP method and returns status code
+     *
+     * @param RelationshipsInterface $relationships
+     * @param string $method
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    private function sendRelationships(RelationshipsInterface $relationships, $method)
+    {
+        $this->readJson($this->send(new \Covery\Client\Requests\Relationships($relationships, $method)));
+        if ($this->responseStatusCode >= 300) {
+            throw new Exception("Malformed response");
+        }
+
+        return $this->responseStatusCode;
+    }
+
+    /**
      * Creates client management entity profile (POST) and returns result
      *
      * @param EntityProfileInterface $profile
