@@ -17,7 +17,11 @@ class WithCustomHostTest extends TestCase
 
         $mock = self::getMockBuilder('Covery\\Client\\TransportInterface')->getMock();
         $mock->expects(self::exactly(1))->method('send')->with(self::callback(function(\Psr\Http\Message\RequestInterface $req) {
-            return strval($req->getUri()) == 'https://test.local:8083/api/postback';
+            $uri = $req->getUri();
+            // Port must be a proper URI component, not part of the host
+            return strval($uri) == 'https://test.local:8083/api/postback'
+                && $uri->getHost() === 'test.local'
+                && $uri->getPort() === 8083;
         }));
         $custom = new \Covery\Client\Transport\WithCustomHost($mock, 'test.local:8083', 'https');
         $custom->send(new \Covery\Client\Requests\Postback($result));
