@@ -1,8 +1,8 @@
 # Covery Client
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/covery/client.svg?style=flat-square)](https://packagist.org/packages/covery/client)
-[![Tests](https://github.com/sergeykolesnik/php-client/actions/workflows/tests.yml/badge.svg?branch=code-quality-check-and-proof-on-github)](https://github.com/sergeykolesnik/php-client/actions/workflows/tests.yml)
-[![Code Quality](https://scrutinizer-ci.com/g/sergeykolesnik/php-client/badges/quality-score.png?b=code-quality-check-and-proof-on-github)](https://scrutinizer-ci.com/g/sergeykolesnik/php-client/?branch=code-quality-check-and-proof-on-github)
+[![Tests](https://github.com/covery/php-client/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/covery/php-client/actions/workflows/tests.yml)
+[![Code Quality](https://scrutinizer-ci.com/g/covery/php-client/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/covery/php-client/?branch=master)
 [![PHP Version](https://img.shields.io/badge/PHP-%3E%3D8.1-blue.svg?style=flat-square)](http://php.net/)
 
 Official PHP Covery Client
