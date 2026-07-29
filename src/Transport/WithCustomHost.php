@@ -20,6 +20,10 @@ class WithCustomHost implements TransportInterface
      */
     private $host;
     /**
+     * @var int|null
+     */
+    private $port;
+    /**
      * @var string
      */
     private $scheme;
@@ -33,7 +37,7 @@ class WithCustomHost implements TransportInterface
      * WithCustomUrl constructor.
      *
      * @param TransportInterface $transport
-     * @param string $host
+     * @param string $host Hostname, optionally with port ("example.com:8083")
      * @param string $scheme
      */
     public function __construct(TransportInterface $transport, $host, $scheme = 'https')
@@ -48,8 +52,18 @@ class WithCustomHost implements TransportInterface
             throw new \InvalidArgumentException('Scheme must be string');
         }
 
+        // Split an optional port off the host so it is applied via
+        // Uri::withPort() instead of being stuffed into the host component.
+        // A port inside the host component is not valid per RFC 3986 and may
+        // be rejected by stricter PSR-7 host validation.
+        $parsed = parse_url('//' . $host);
+        if ($parsed === false || !isset($parsed['host'])) {
+            throw new \InvalidArgumentException('Host is malformed');
+        }
+
         $this->transport = $transport;
-        $this->host = $host;
+        $this->host = $parsed['host'];
+        $this->port = isset($parsed['port']) ? $parsed['port'] : null;
         $this->scheme = $scheme;
     }
 
@@ -58,10 +72,11 @@ class WithCustomHost implements TransportInterface
      */
     public function send(RequestInterface $request)
     {
-        $request = $request->withUri(
-            $request->getUri()->withHost($this->host)->withScheme($this->scheme)
-        );
+        $uri = $request->getUri()->withHost($this->host)->withScheme($this->scheme);
+        if ($this->port !== null) {
+            $uri = $uri->withPort($this->port);
+        }
 
-        return $this->transport->send($request);
+        return $this->transport->send($request->withUri($uri));
     }
 }

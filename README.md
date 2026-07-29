@@ -296,6 +296,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.7.3`
+  * `Transport\WithCustomHost` now accepts a host with a port (e.g. `localhost:8083`) and applies the port via a proper URI component, so it keeps working with stricter host validation in newer `guzzlehttp/psr7` versions
 * `1.7.2`
   * Removed `transaction_status` field from postback event
 * `1.7.1`
