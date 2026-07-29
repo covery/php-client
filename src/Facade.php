@@ -221,6 +221,45 @@ class Facade
     }
 
     /**
+     * Fetches current relationships (POST) for a given receiver and/or provider
+     *
+     * @param RelationshipsInterface $query Built via Relationships\Builder::reviewQuery()
+     * @return RelationshipsResult
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function getRelationships(RelationshipsInterface $query)
+    {
+        return self::getClient()->getRelationships($query);
+    }
+
+    /**
+     * Creates or changes relationships between client profiles (PUT)
+     *
+     * @param RelationshipsInterface $relationships
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function putRelationships(RelationshipsInterface $relationships)
+    {
+        return self::getClient()->putRelationships($relationships);
+    }
+
+    /**
+     * Deletes relationships between client profiles (DELETE)
+     *
+     * @param RelationshipsInterface $relationships
+     * @return int
+     * @throws Exception
+     * @throws IoException
+     */
+    public static function deleteRelationships(RelationshipsInterface $relationships)
+    {
+        return self::getClient()->deleteRelationships($relationships);
+    }
+
+    /**
      * Creates client management entity profile (POST) and returns result
      *
      * @param EntityProfileInterface $profile

@@ -184,4 +184,27 @@ class Psr7RequestsTest extends TestCase
         self::assertSame('PUT', $req->getMethod());
         self::assertSame('/api/clientManagement/entityProfile', strval($req->getUri()));
     }
+
+    public function testRelationships()
+    {
+        $relationships = \Covery\Client\Relationships\Builder::create()
+            ->addRelationship(1449049571, 1449049572, \Covery\Client\RelationshipType::OWNER_COMPANY, 'KKK', 100.0)
+            ->build();
+
+        // PUT (create/change) - default method
+        $req = new \Covery\Client\Requests\Relationships($relationships);
+        self::assertInstanceOf('Psr\Http\Message\RequestInterface', $req);
+        self::assertSame(
+            '{"relationships":[{"relationship_receiver":1449049571,"relationship_provider":1449049572,"relationship_type":"owner_company","provider_role":"KKK","provider_share_of_ownership":100}]}',
+            $req->getBody()->getContents()
+        );
+        self::assertSame('PUT', $req->getMethod());
+        self::assertFalse($req->hasHeader('X-Auth-Token'));
+        self::assertSame('/api/clientManagement/relationships', strval($req->getUri()));
+
+        // DELETE
+        $req = new \Covery\Client\Requests\Relationships($relationships, 'DELETE');
+        self::assertSame('DELETE', $req->getMethod());
+        self::assertSame('/api/clientManagement/relationships', strval($req->getUri()));
+    }
 }

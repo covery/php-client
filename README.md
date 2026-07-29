@@ -178,6 +178,31 @@ $profile = Builder::updateEntityProfileEvent($clientProfileId, 'userMerchantId')
 $result = Facade::updateEntityProfile($profile);
 ```
 
+Client Management relationships example:
+```php
+use Covery\Client\Facade;
+use Covery\Client\Relationships\Builder;
+use Covery\Client\RelationshipType;
+
+$relationships = Builder::create()
+    ->addRelationship($receiverProfileId, $providerProfileId, RelationshipType::OWNER_COMPANY)
+    ->addRelationship($receiverProfileId, $providerProfileId, RelationshipType::RELATED_PERSON, 'role', 100.00)
+    ->build();
+
+// Create or change relationships (PUT)
+$statusCode = Facade::putRelationships($relationships);
+
+// Delete relationships (DELETE)
+$statusCode = Facade::deleteRelationships($relationships);
+
+// Review relationships (POST) - by receiver and/or provider
+$query = Builder::reviewQuery($receiverProfileId, $providerProfileId);
+$result = Facade::getRelationships($query);
+foreach ($result->getRelationships() as $relationship) {
+    $type = $relationship->getRelationshipType();
+}
+```
+
 Client Management client profile fetch example:
 ```php
 use Covery\Client\Facade;
@@ -271,6 +296,9 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.7.1`
+  * Added Client Management relationships endpoint (`PUT`/`DELETE` `api/clientManagement/relationships`) via `putRelationships` and `deleteRelationships` methods
+  * Added Client Management relationships review endpoint (`POST` `api/clientManagement/relationships`) via `getRelationships` method
 * `1.7.0`
   * Added Client Management individual profile endpoint (`POST`/`PUT` `api/clientManagement/individualProfile`) via `createIndividualProfile` and `updateIndividualProfile` methods
   * Added Client Management entity profile endpoint (`POST`/`PUT` `api/clientManagement/entityProfile`) via `createEntityProfile` and `updateEntityProfile` methods
