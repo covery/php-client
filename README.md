@@ -296,6 +296,8 @@ You may provide the following as envelopes:
 
 <a name="changelog"></a>
 ## Changelog
+* `1.7.2`
+  * Removed `transaction_status` field from postback event
 * `1.7.1`
   * Added Client Management relationships endpoint (`PUT`/`DELETE` `api/clientManagement/relationships`) via `putRelationships` and `deleteRelationships` methods
   * Added Client Management relationships review endpoint (`POST` `api/clientManagement/relationships`) via `getRelationships` method

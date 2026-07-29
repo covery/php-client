@@ -1948,7 +1948,6 @@ class Builder
      * Returns builder for postback request
      *
      * @param int $requestId
-     * @param string|null $transactionStatus
      * @param string|null $code
      * @param string|null $reason
      * @param string|null $secure3d
@@ -1964,7 +1963,6 @@ class Builder
      */
     public static function postBackEvent(
         $requestId,
-        $transactionStatus = null,
         $code = null,
         $reason = null,
         $secure3d = null,
@@ -1980,7 +1978,6 @@ class Builder
         $builder = new self(self::EVENT_POSTBACK, '');
         return $builder->addPostBackData(
             $requestId,
-            $transactionStatus,
             $code,
             $reason,
             $secure3d,
@@ -3893,7 +3890,6 @@ class Builder
      * Provides postback information to envelope
      *
      * @param int $requestId
-     * @param string|null $transactionStatus
      * @param string|null $code
      * @param string|null $reason
      * @param string|null $secure3d
@@ -3909,7 +3905,6 @@ class Builder
      */
     public function addPostbackData(
         $requestId,
-        $transactionStatus = null,
         $code = null,
         $reason = null,
         $secure3d = null,
@@ -3924,9 +3919,6 @@ class Builder
     ) {
         if (!is_int($requestId)) {
             throw new \InvalidArgumentException('Request ID must be integer');
-        }
-        if ($transactionStatus !== null && !is_string($transactionStatus)) {
-            throw new \InvalidArgumentException('Transaction status must be string');
         }
         if ($code !== null && !is_string($code)) {
             throw new \InvalidArgumentException('Code must be string');
@@ -3963,7 +3955,6 @@ class Builder
         }
 
         $this->replace('request_id', $requestId);
-        $this->replace('transaction_status', $transactionStatus);
         $this->replace('code', $code);
         $this->replace('reason', $reason);
         $this->replace('secure3d', $secure3d);

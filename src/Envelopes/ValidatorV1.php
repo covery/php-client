@@ -137,7 +137,6 @@ class ValidatorV1
         'second_gender' => 'string(255)',
         'second_country' => 'string(255)',
         'agent_id' => 'string(255)',
-        'transaction_status' => 'string(255)',
         'code' => 'string(255)',
         'reason' => 'string(255)',
         'secure3d' => 'string(255)',
@@ -544,7 +543,6 @@ class ValidatorV1
             'mandatory' => array(),
             'optional' => array(
                 'request_id',
-                'transaction_status',
                 'code',
                 'reason',
                 'secure3d',
