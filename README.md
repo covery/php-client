@@ -15,6 +15,7 @@ Official PHP Covery Client
   * [Results](#results)
   * [Exceptions](#exceptions)
   * [Error loggers](#loggers)
+* [Breaking Changes](#breaking-changes)
 * [Changelog](#changelog)
 
 <a name="howto"></a>
@@ -294,12 +295,18 @@ You may provide the following as envelopes:
 * You can also write your own logger class extended from AbstractLogger
 
 
+<a name="breaking-changes"></a>
+## Breaking Changes
+* `1.7.2` — Removed `transaction_status` field from the postback event (`Builder::postbackEvent()`). Postback identifies the original event via `request_id`; this field is no longer sent or validated.
+* `1.4.0` — Removed `transaction_id` field from the postback event. Use `request_id` to identify the original event instead.
+
+
 <a name="changelog"></a>
 ## Changelog
 * `1.7.3`
   * `Transport\WithCustomHost` now accepts a host with a port (e.g. `localhost:8083`) and applies the port via a proper URI component, so it keeps working with stricter host validation in newer `guzzlehttp/psr7` versions
 * `1.7.2`
-  * Removed `transaction_status` field from postback event
+  * **Breaking Changes**: Removed `transaction_status` field from postback event
 * `1.7.1`
   * Added Client Management relationships endpoint (`PUT`/`DELETE` `api/clientManagement/relationships`) via `putRelationships` and `deleteRelationships` methods
   * Added Client Management relationships review endpoint (`POST` `api/clientManagement/relationships`) via `getRelationships` method
@@ -331,7 +338,7 @@ You may provide the following as envelopes:
 * `1.4.1`
   * Added optional `mrz_authority` and `mrz_issue_date` fields for document event
 * `1.4.0` 
-  * **Removed transaction_id field from postback event** 
+  * **Breaking Changes**: Removed transaction_id field from postback event
   * Renamed MediaStorage method to DocumentMethod
   * Renamed MediaConnection method to DocumentConnection
   * Renamed UploadMediaFile method to DocumentMediaFile.
