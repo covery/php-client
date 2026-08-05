@@ -85,16 +85,12 @@ class Builder
         $translatedFrom = null,
         $translatedTo = null
     ) {
-        if (!is_string($userMerchantId)) {
-            throw new \InvalidArgumentException('User Merchant Id must be string');
-        }
+        $this->assertString($userMerchantId, 'User Merchant Id must be string');
         if (empty($userMerchantId)) {
             throw new \InvalidArgumentException('User Merchant Id type is empty');
         }
 
-        if (!is_string($documentType)) {
-            throw new \InvalidArgumentException('Document Type must be a string');
-        }
+        $this->assertString($documentType, 'Document Type must be a string');
         if (empty($documentType)) {
             throw new \InvalidArgumentException('Document Type is empty');
         }
@@ -106,17 +102,9 @@ class Builder
             );
         }
 
-        if ($documentCountry !== null && !is_string($documentCountry)) {
-            throw new \InvalidArgumentException('Document Country Id must be string');
-        }
-
-        if ($sequenceId !== null && !is_string($sequenceId)) {
-            throw new \InvalidArgumentException('Sequence Id must be string');
-        }
-
-        if ($groupId !== null && !is_string($groupId)) {
-            throw new \InvalidArgumentException('Group Id must be string');
-        }
+        $this->assertOptionalString($documentCountry, 'Document Country Id must be string');
+        $this->assertOptionalString($sequenceId, 'Sequence Id must be string');
+        $this->assertOptionalString($groupId, 'Group Id must be string');
 
         if (!empty($fileName)) {
             if (!is_string($fileName)) {
@@ -127,21 +115,11 @@ class Builder
             }
         }
 
-        if (!is_bool($ocr)) {
-            throw new \InvalidArgumentException('OCR must be boolean');
-        }
+        $this->assertBool($ocr, 'OCR must be boolean');
+        $this->assertInt($numberOfPages, 'Number Of Pages must be int');
 
-        if (!is_int($numberOfPages)) {
-            throw new \InvalidArgumentException('Number Of Pages must be int');
-        }
-
-        if ($translatedFrom !== null && !is_string($translatedFrom)) {
-            throw new \InvalidArgumentException('Translated From must be string');
-        }
-
-        if ($translatedTo !== null && !is_string($translatedTo)) {
-            throw new \InvalidArgumentException('Translated To must be string');
-        }
+        $this->assertOptionalString($translatedFrom, 'Translated From must be string');
+        $this->assertOptionalString($translatedTo, 'Translated To must be string');
 
         $this->replace('user_merchant_id', $userMerchantId);
         $this->replace('document_type', $documentType);
@@ -181,6 +159,34 @@ class Builder
     {
         if ($value !== null && $value !== '' && $value !== 0 && $value !== 0.0) {
             $this->data[$key] = $value;
+        }
+    }
+
+    private function assertString($value, $message)
+    {
+        if (!is_string($value)) {
+            throw new \InvalidArgumentException($message);
+        }
+    }
+
+    private function assertOptionalString($value, $message)
+    {
+        if ($value !== null && !is_string($value)) {
+            throw new \InvalidArgumentException($message);
+        }
+    }
+
+    private function assertBool($value, $message)
+    {
+        if (!is_bool($value)) {
+            throw new \InvalidArgumentException($message);
+        }
+    }
+
+    private function assertInt($value, $message)
+    {
+        if (!is_int($value)) {
+            throw new \InvalidArgumentException($message);
         }
     }
 }

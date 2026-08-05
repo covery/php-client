@@ -1,0 +1,25 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$userId$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/DocumentStorage/Builder.php
+
+		-
+			message: '#^Call to function is_null\(\) with float\|int\<0, max\> will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: src/Envelopes/Builder.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int\<min, 27\>\|int\<29, 34\>\|int\<36, 57\>\|int\<61, max\> and 60 will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Transport/Curl.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between int\<min, 27\>\|int\<29, 34\>\|int\<36, 57\>\|int\<61, max\> and 60 will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Transport/PersistentCurl.php

@@ -70,11 +70,12 @@ class PersistentCurl implements TransportInterface
         curl_setopt($this->curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $request->getBody()->getContents());
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($this->curl, CURLOPT_HEADER, 1);
+        curl_setopt($this->curl, CURLOPT_HEADER, true);
 
         try {
             $request->getBody()->close();
         } catch (\Exception $ignore) {
+            // Closing the request body is best-effort cleanup; ignore failures and proceed.
         }
 
         $response = curl_exec($this->curl);
@@ -104,7 +105,7 @@ class PersistentCurl implements TransportInterface
             throw new IoException('Curl error ' . $error, intval($errno));
         }
 
-        if ($response === false) {
+        if (!is_string($response)) {
             $this->curl = null;
             throw new IoException(sprintf('Curl error. Received status %s, curl error %s', $status, $error));
         }

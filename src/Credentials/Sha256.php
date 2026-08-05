@@ -64,7 +64,7 @@ class Sha256 implements CredentialsInterface
             $stream->rewind();
         } else {
             $stream->close();
-            $stream = \GuzzleHttp\Psr7\stream_for($body);
+            $stream = \GuzzleHttp\Psr7\Utils::streamFor($body);
         }
 
         return $request

@@ -1,0 +1,11 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - src
+    # The builders accept untyped parameters and validate them at runtime, so
+    # PHPDoc types must not be treated as guaranteed - otherwise every defensive
+    # is_*() check is reported as redundant.
+    treatPhpDocTypesAsCertain: false
